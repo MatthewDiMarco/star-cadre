@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -59,20 +60,27 @@ public class GameScreen implements Screen { // TODO big refactor: modular archit
         camera = new OrthographicCamera();
         viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
-        textureAtlas = new TextureAtlas("images.atlas");
+        Texture bg0 = new Texture("backgrounds-0.png");
+        bg0.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+        Texture bg1 = new Texture("backgrounds-1.png");
+        bg1.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+        Texture bg2 = new Texture("backgrounds-2.png");
+        bg2.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+        Texture bg3 = new Texture("backgrounds-3.png");
+        bg3.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
 
         backgrounds = new TextureRegion[4];
-        backgrounds[0] = textureAtlas.findRegion("Starscape00");
-        backgrounds[1] = textureAtlas.findRegion("Starscape01");
-        backgrounds[2] = textureAtlas.findRegion("Starscape02");
-        backgrounds[3] = textureAtlas.findRegion("Starscape03");
+        backgrounds[0] = new TextureRegion(bg0, 0, 0, bg0.getWidth(), bg1.getHeight()*2);
+        backgrounds[1] = new TextureRegion(bg1, 0, 0, bg1.getWidth(), bg1.getHeight()*2);
+        backgrounds[2] = new TextureRegion(bg2, 0, 0, bg2.getWidth(), bg2.getHeight()*2);
+        backgrounds[3] = new TextureRegion(bg3, 0, 0, bg3.getWidth(), bg3.getHeight()*2);
         backgroundMaxScrollSpeed = (float)(WORLD_HEIGHT) / 4;
 
-        playerShipRegion = textureAtlas.findRegion("playerShip2_blue");
+        textureAtlas = new TextureAtlas("textures.atlas");
+        playerShipRegion = textureAtlas.findRegion("playerShip3_blue");
         enemyShipRegion = textureAtlas.findRegion("enemyRed3");
-        playerShieldRegion = textureAtlas.findRegion("shield2");
-        enemyShieldRegion = textureAtlas.findRegion("shield1");
-        enemyShieldRegion.flip(false, true);
+        playerShieldRegion = textureAtlas.findRegion("shield3");
+        enemyShieldRegion = textureAtlas.findRegion("shield3"); // TODO don't load twice!!
         playerLaserRegion = textureAtlas.findRegion("laserBlue03");
         enemyLaserRegion = textureAtlas.findRegion("laserRed03");
         explosionTexture = new Texture("explosion.png");
@@ -368,7 +376,7 @@ public class GameScreen implements Screen { // TODO big refactor: modular archit
         backgroundOffsets[0] += deltaTime * backgroundMaxScrollSpeed / 8;
         backgroundOffsets[1] += deltaTime * backgroundMaxScrollSpeed / 4;
         backgroundOffsets[2] += deltaTime * backgroundMaxScrollSpeed / 2;
-        backgroundOffsets[3] += deltaTime * backgroundMaxScrollSpeed ;
+        backgroundOffsets[3] += deltaTime * backgroundMaxScrollSpeed;
 
         for (int ii = 0; ii < backgroundOffsets.length; ii++) {
             if (backgroundOffsets[ii] > WORLD_HEIGHT) {

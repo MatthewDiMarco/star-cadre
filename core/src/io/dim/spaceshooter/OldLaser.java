@@ -4,12 +4,12 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Laser {
+public class OldLaser {
     float movementSpeed;
     Rectangle boundingBox;
     TextureRegion textureRegion;
 
-    public Laser(float xPos, float yPos, float width, float height,
+    public OldLaser(float xPos, float yPos, float width, float height,
         float movementSpeed, TextureRegion textureRegion) {
         this.movementSpeed = movementSpeed;
         this.boundingBox = new Rectangle(xPos, yPos, width, height);

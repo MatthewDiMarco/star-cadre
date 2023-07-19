@@ -6,11 +6,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import io.dim.spaceshooter.EntityFactory;
 import io.dim.spaceshooter.model.ParallaxBackground;
 import io.dim.spaceshooter.model.World;
-import io.dim.spaceshooter.model.ship.PlayerShipEntity;
 import java.util.Stack;
 
 public class PlayState extends ApplicationState {
@@ -23,6 +22,7 @@ public class PlayState extends ApplicationState {
 
 
     private ParallaxBackground parallaxBackground;
+    private final EntityFactory entityFactory;
     private World world;
 
     public PlayState(
@@ -31,9 +31,6 @@ public class PlayState extends ApplicationState {
         Stack<ApplicationState> manager) {
         super(camera, viewport, manager);
 
-        textureAtlas = new TextureAtlas("textures.atlas");
-        TextureRegion playerShipRegion = textureAtlas.findRegion("playerShip3_blue");
-
         backgrounds[0] = new Texture("backgrounds-0.png");
         backgrounds[1] = new Texture("backgrounds-1.png");
         backgrounds[2] = new Texture("backgrounds-2.png");
@@ -41,10 +38,12 @@ public class PlayState extends ApplicationState {
             backgrounds, WORLD_WIDTH, WORLD_HEIGHT,
             true, false);
 
-        world = new World(WORLD_WIDTH, WORLD_HEIGHT);
-        world.entities.add(new PlayerShipEntity(
-            (float)WORLD_WIDTH / 2, (float)WORLD_HEIGHT / 4,
-            10, 10, 64, playerShipRegion, viewport));
+        textureAtlas = new TextureAtlas("textures.atlas");
+        entityFactory = new EntityFactory(textureAtlas);
+        world = new World(WORLD_WIDTH, WORLD_HEIGHT, entityFactory);
+        world.player = entityFactory.createPlayer(
+            (float)WORLD_WIDTH / 2,
+            (float)WORLD_HEIGHT / 4, viewport);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class PlayState extends ApplicationState {
     @Override
     public void update(final float deltaTime) {
         parallaxBackground.scroll(deltaTime);
-        world.tickEntities(deltaTime);
+        world.updateEntities(deltaTime);
     }
 
     @Override

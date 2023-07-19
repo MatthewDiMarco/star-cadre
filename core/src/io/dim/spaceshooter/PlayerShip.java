@@ -17,13 +17,13 @@ public class PlayerShip extends Ship { // TODO extension bad
     }
 
     @Override
-    public Laser[] fireLasers() {
-        Laser[] lasers = new Laser[2];
-        lasers[0] = new Laser(
+    public OldLaser[] fireLasers() {
+        OldLaser[] lasers = new OldLaser[2];
+        lasers[0] = new OldLaser(
             boundingBox.x + boundingBox.width * 0.07f,
             boundingBox.y + boundingBox.height * 0.45f,
             laserWidth, laserHeight, laserMovementSpeed, laserTexture);
-        lasers[1] = new Laser(
+        lasers[1] = new OldLaser(
             boundingBox.x + boundingBox.width * 0.93f,
             boundingBox.y + boundingBox.height * 0.45f,
             laserWidth, laserHeight, laserMovementSpeed, laserTexture);

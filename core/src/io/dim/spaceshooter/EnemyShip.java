@@ -42,13 +42,13 @@ public class EnemyShip extends Ship { // TODO extension bad
     }
 
     @Override
-    public Laser[] fireLasers() {
-        Laser[] lasers = new Laser[2];
-        lasers[0] = new Laser(
+    public OldLaser[] fireLasers() {
+        OldLaser[] lasers = new OldLaser[2];
+        lasers[0] = new OldLaser(
             boundingBox.x + boundingBox.width * 0.18f,
             boundingBox.y - laserHeight,
             laserWidth, laserHeight, laserMovementSpeed, laserTexture);
-        lasers[1] = new Laser(boundingBox.x + boundingBox.width * 0.82f,
+        lasers[1] = new OldLaser(boundingBox.x + boundingBox.width * 0.82f,
             boundingBox.y - laserHeight,
             laserWidth, laserHeight, laserMovementSpeed, laserTexture);
         timeSinceLastShot = 0;

@@ -49,8 +49,8 @@ public class GameScreen implements Screen { // TODO big refactor: modular archit
     private float enemySpawnTimer = 0;
     private PlayerShip playerShip;
     private List<EnemyShip> enemyShips;
-    private List<Laser> playerLasers; // TODO update to GDX collections
-    private List<Laser> enemyLasers;
+    private List<OldLaser> playerLasers; // TODO update to GDX collections
+    private List<OldLaser> enemyLasers;
     private List<Explosion> explosionList; // TODO put explosion png into atlas
     private int score = 0;
     BitmapFont font;
@@ -291,9 +291,9 @@ public class GameScreen implements Screen { // TODO big refactor: modular archit
 
     private void detectCollisions() {
         // for each player laser, check it intersects an enemy ship
-        ListIterator<Laser> laserIterator = playerLasers.listIterator();
+        ListIterator<OldLaser> laserIterator = playerLasers.listIterator();
         while (laserIterator.hasNext()) {
-            Laser laser = laserIterator.next();
+            OldLaser laser = laserIterator.next();
             ListIterator<EnemyShip> enemyShipListIterator = enemyShips.listIterator();
             while (enemyShipListIterator.hasNext()) {
                 EnemyShip enemyShip = enemyShipListIterator.next();
@@ -316,7 +316,7 @@ public class GameScreen implements Screen { // TODO big refactor: modular archit
         // for each enemy laser, check it intersects the player ship
         laserIterator = enemyLasers.listIterator();
         while (laserIterator.hasNext()) {
-            Laser laser = laserIterator.next();
+            OldLaser laser = laserIterator.next();
             if (playerShip.intersects(laser.boundingBox)) {
                 playerShip.hitAndCheckDestroyed(laser);
                 laserIterator.remove();
@@ -339,8 +339,8 @@ public class GameScreen implements Screen { // TODO big refactor: modular archit
 
     private void renderLasers(float deltaTime) {
         if (playerShip.canFireLaser()) {
-            Laser[] lasers = playerShip.fireLasers();
-            for (Laser laser: lasers) {
+            OldLaser[] lasers = playerShip.fireLasers();
+            for (OldLaser laser: lasers) {
                 playerLasers.add(laser);
             }
         }
@@ -348,13 +348,13 @@ public class GameScreen implements Screen { // TODO big refactor: modular archit
         while (enemyShipListIterator.hasNext()) {
             EnemyShip enemyShip = enemyShipListIterator.next();
             if (enemyShip.canFireLaser()) {
-                Laser[] lasers = enemyShip.fireLasers();
+                OldLaser[] lasers = enemyShip.fireLasers();
                 enemyLasers.addAll(Arrays.asList(lasers));
             }
         }
-        ListIterator<Laser> iterator = playerLasers.listIterator();
+        ListIterator<OldLaser> iterator = playerLasers.listIterator();
         while (iterator.hasNext()) {
-            Laser laser = iterator.next();
+            OldLaser laser = iterator.next();
             laser.draw(batch);
             laser.boundingBox.y += laser.movementSpeed * deltaTime;
             if (laser.boundingBox.y > WORLD_HEIGHT) {
@@ -363,7 +363,7 @@ public class GameScreen implements Screen { // TODO big refactor: modular archit
         }
         iterator = enemyLasers.listIterator();
         while (iterator.hasNext()) {
-            Laser laser = iterator.next();
+            OldLaser laser = iterator.next();
             laser.draw(batch);
             laser.boundingBox.y -= laser.movementSpeed * deltaTime;
             if (laser.boundingBox.y + laser.boundingBox.height < 0) {

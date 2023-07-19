@@ -37,13 +37,13 @@ public abstract class Ship { // abstract = disgusting TODO fix
         return timeSinceLastShot - timeBetweenShots >= 0;
     }
 
-    public abstract Laser[] fireLasers(); // gross!
+    public abstract OldLaser[] fireLasers(); // gross!
 
     public boolean intersects(Rectangle otherRectangle) {
         return boundingBox.overlaps(otherRectangle);
     }
 
-    public boolean hitAndCheckDestroyed(Laser laser) {
+    public boolean hitAndCheckDestroyed(OldLaser laser) {
         if (shieldHealth > 0) {
             shieldHealth--;
             return false;

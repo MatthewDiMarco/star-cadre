@@ -6,15 +6,16 @@ import io.dim.spaceshooter.model.Entity;
 
 public abstract class ShipEntity extends Entity {
 
-    // TODO more fields to come
-    public float movementSpeed;
-    public TextureRegion shipTexture;
+    public float fireRate;
+    protected float timeSinceLastShot;
+    protected final TextureRegion shipTexture;
 
-    public ShipEntity(float xOrigin, float yOrigin, float width, float height, float movementSpeed,
-        TextureRegion shipTexture) {
-        super(xOrigin, yOrigin, width, height);
-        this.movementSpeed = movementSpeed;
+    public ShipEntity(float xOrigin, float yOrigin, float width, float height,
+        float movementSpeed, float fireRate, TextureRegion shipTexture) {
+        super(xOrigin, yOrigin, width, height, movementSpeed);
         this.shipTexture = shipTexture;
+        this.fireRate = fireRate;
+        this.timeSinceLastShot = 0;
     }
 
     @Override

@@ -9,14 +9,12 @@ import io.dim.spaceshooter.model.ship.PlayerShipEntity;
 
 public class EntityFactory {
 
-    private final TextureAtlas atlas;
     private TextureRegion playerTexture;
     private TextureRegion alienBasicTexture;
     private TextureRegion playerLaserTexture;
     private TextureRegion alienLaserTexture;
 
     public EntityFactory(TextureAtlas atlas) {
-        this.atlas = atlas;
         this.playerTexture = atlas.findRegion("playerShip3_blue");
         this.alienBasicTexture = atlas.findRegion("enemyRed3");
         this.playerLaserTexture = atlas.findRegion("laserBlue01");

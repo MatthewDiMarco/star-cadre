@@ -33,13 +33,4 @@ public abstract class ShipEntity extends Entity {
             boundingBox.width,
             boundingBox.height);
     }
-
-    protected float[] findScreenLimits(float screenWidth, float screenHeight) {
-        return new float[] {
-            screenHeight - this.boundingBox.y - this.boundingBox.height, // up
-            screenWidth - this.boundingBox.x - this.boundingBox.width, // right
-            -this.boundingBox.y, // down
-            -this.boundingBox.x // left
-        };
-    }
 }

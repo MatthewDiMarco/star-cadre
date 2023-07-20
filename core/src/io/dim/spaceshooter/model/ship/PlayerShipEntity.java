@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.model.World;
+import io.dim.spaceshooter.util.EntityUtils;
 
 public class PlayerShipEntity extends ShipEntity {
 
@@ -20,39 +21,40 @@ public class PlayerShipEntity extends ShipEntity {
     @Override
     public void step(World world, float deltaTime) {
         super.step(world, deltaTime);
-        float[] limits = findScreenLimits(world.width, world.height);
-        float upLimit = limits[0];
-        float rightLimit = limits[1];
-        float downLimit = limits[2];
-        float leftLimit = limits[3];
+        float[] boundaryDistances = EntityUtils
+            .calcBoundaryDistances(this.boundingBox, world.width, world.height);
 
         // TODO movement speed would feel better with acceleration
-        if ((Gdx.input.isKeyPressed(Input.Keys.RIGHT) ||
-            Gdx.input.isKeyPressed(Input.Keys.D)) && rightLimit > 0) {
-            this.translate(Math.min(
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) ||
+            Gdx.input.isKeyPressed(Input.Keys.W)) {
+            this.translate(
+                0f,
                 movementSpeed * deltaTime,
-                rightLimit), 0f);
+                boundaryDistances);
         }
 
-        if ((Gdx.input.isKeyPressed(Input.Keys.UP) ||
-            Gdx.input.isKeyPressed(Input.Keys.W)) && upLimit > 0) {
-            this.translate(0f, Math.min(
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) ||
+            Gdx.input.isKeyPressed(Input.Keys.D)) {
+            this.translate(
                 movementSpeed * deltaTime,
-                upLimit));
+                0,
+                boundaryDistances);
         }
 
-        if ((Gdx.input.isKeyPressed(Input.Keys.LEFT) ||
-            Gdx.input.isKeyPressed(Input.Keys.A)) && leftLimit < 0) {
-            this.translate(Math.max(
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) ||
+            Gdx.input.isKeyPressed(Input.Keys.S)) {
+            this.translate(
+                0f,
                 -movementSpeed * deltaTime,
-                leftLimit), 0f);
+                boundaryDistances);
         }
 
-        if ((Gdx.input.isKeyPressed(Input.Keys.DOWN) ||
-            Gdx.input.isKeyPressed(Input.Keys.S)) && downLimit < 0) {
-            this.translate(0f, Math.max(
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) ||
+            Gdx.input.isKeyPressed(Input.Keys.A)) {
+            this.translate(
                 -movementSpeed * deltaTime,
-                downLimit));
+                0f,
+                boundaryDistances);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
@@ -60,28 +62,15 @@ public class PlayerShipEntity extends ShipEntity {
         }
 
         if (Gdx.input.isTouched()) {
-            fireLaser(world);
-
             Vector2 touchPoint = viewportRef.unproject(
                 new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
-            Vector2 playerShipCentre = new Vector2(
-                this.boundingBox.x + this.boundingBox.width / 2,
-                this.boundingBox.y + this.boundingBox.height / 2);
-
-            float touchDistance = touchPoint.dst(playerShipCentre);
-
-            final float MOVEMENT_THRESHOLD = 0.5f;
-            if (touchDistance > MOVEMENT_THRESHOLD) {
-                float xTouchDiff = touchPoint.x - playerShipCentre.x;
-                float yTouchDiff = touchPoint.y - playerShipCentre.y;
-                float xMove = xTouchDiff / touchDistance * movementSpeed * deltaTime;
-                float yMove = yTouchDiff / touchDistance * movementSpeed * deltaTime;
-
-                this.translate(
-                    Math.min(Math.max(xMove, leftLimit), rightLimit),
-                    Math.min(Math.max(yMove, downLimit), upLimit));
-            }
+            fireLaser(world);
+            this.translate(
+                touchPoint,
+                movementSpeed * deltaTime,
+                0.5f,
+                boundaryDistances);
         }
     }
 

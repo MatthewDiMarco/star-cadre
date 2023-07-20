@@ -22,7 +22,6 @@ public class PlayState extends ApplicationState {
 
 
     private ParallaxBackground parallaxBackground;
-    private final EntityFactory entityFactory;
     private World world;
 
     public PlayState(
@@ -39,11 +38,15 @@ public class PlayState extends ApplicationState {
             true, false);
 
         textureAtlas = new TextureAtlas("textures.atlas");
-        entityFactory = new EntityFactory(textureAtlas);
-        world = new World(WORLD_WIDTH, WORLD_HEIGHT, entityFactory);
-        world.player = entityFactory.createPlayer(
+        world = new World(WORLD_WIDTH, WORLD_HEIGHT, new EntityFactory(textureAtlas));
+        world.player = world.entityFactory.createPlayer(
             (float)WORLD_WIDTH / 2,
             (float)WORLD_HEIGHT / 4, viewport);
+
+        // temp
+        world.hostiles.add(world.entityFactory.createAlienBasic(
+            (float)WORLD_WIDTH / 2,
+            (float)WORLD_HEIGHT + 10));
     }
 
     @Override

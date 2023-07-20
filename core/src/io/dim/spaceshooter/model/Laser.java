@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Laser extends Entity {
 
-    public int direction;
+    public int direction; // TODO: direction vector
     protected final TextureRegion laserTexture;
 
     public Laser(float xOrigin, float yOrigin, float width, float height,

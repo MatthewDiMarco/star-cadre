@@ -19,10 +19,12 @@ public class PlayerShipEntity extends ShipEntity {
 
     @Override
     public void step(World world, float deltaTime) {
-        float leftLimit = -this.boundingBox.x;
-        float downLimit = -this.boundingBox.y;
-        float rightLimit = world.width - this.boundingBox.x - this.boundingBox.width;
-        float upLimit = world.height - this.boundingBox.y - this.boundingBox.height;
+        super.step(world, deltaTime);
+        float[] limits = findScreenLimits(world.width, world.height);
+        float upLimit = limits[0];
+        float rightLimit = limits[1];
+        float downLimit = limits[2];
+        float leftLimit = limits[3];
 
         // TODO movement speed would feel better with acceleration
         if ((Gdx.input.isKeyPressed(Input.Keys.RIGHT) ||
@@ -53,17 +55,13 @@ public class PlayerShipEntity extends ShipEntity {
                 downLimit));
         }
 
-        this.timeSinceLastShot += deltaTime;
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            if (timeSinceLastShot - fireRate >= 0) {
-                world.playerLasers.add(world.entityFactory.createPlayerLaser(
-                    boundingBox.x + boundingBox.width * 0.5f,
-                    boundingBox.y + boundingBox.height * 1.1f));
-                timeSinceLastShot = 0;
-            }
+            fireLaser(world);
         }
 
         if (Gdx.input.isTouched()) {
+            fireLaser(world);
+
             Vector2 touchPoint = viewportRef.unproject(
                 new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
@@ -73,22 +71,26 @@ public class PlayerShipEntity extends ShipEntity {
 
             float touchDistance = touchPoint.dst(playerShipCentre);
 
-            float MOVEMENT_THRESHOLD = 0.5f;
+            final float MOVEMENT_THRESHOLD = 0.5f;
             if (touchDistance > MOVEMENT_THRESHOLD) {
                 float xTouchDiff = touchPoint.x - playerShipCentre.x;
                 float yTouchDiff = touchPoint.y - playerShipCentre.y;
                 float xMove = xTouchDiff / touchDistance * movementSpeed * deltaTime;
                 float yMove = yTouchDiff / touchDistance * movementSpeed * deltaTime;
 
-                // TODO probably easiest to pack screen collision code into reusable function
-                if (xMove > 0) xMove = Math.min(xMove, rightLimit);
-                else xMove = Math.max(xMove, leftLimit);
-
-                if (yMove > 0) yMove = Math.min(yMove, upLimit);
-                else yMove = Math.max(yMove, downLimit);
-
-                this.translate(xMove, yMove);
+                this.translate(
+                    Math.min(Math.max(xMove, leftLimit), rightLimit),
+                    Math.min(Math.max(yMove, downLimit), upLimit));
             }
+        }
+    }
+
+    protected void fireLaser(World world) {
+        if (timeSinceLastShot - fireRate >= 0) {
+            world.playerLasers.add(world.entityFactory.createPlayerLaser(
+                boundingBox.x + boundingBox.width * 0.5f,
+                boundingBox.y + boundingBox.height * 1.1f));
+            timeSinceLastShot = 0;
         }
     }
 }

@@ -15,24 +15,45 @@ public class World {
     public final EntityFactory entityFactory;
 
     public PlayerShipEntity player;
-    public List<Laser> playerLasers;
+    public List<Laser> playerLasers; // TODO replace with libGDX collections
+    public List<Laser> alienLasers;
+    public List<Entity> hostiles; // TODO maybe combine all these lists into a map?
 
     public World(int width, int height, EntityFactory entityFactory) {
         this.width = width;
         this.height = height;
         this.entityFactory = entityFactory;
         this.playerLasers = new ArrayList<>();
+        this.alienLasers = new ArrayList<>();
+        this.hostiles = new ArrayList<>();
     }
 
     public void updateEntities(float deltaTime) {
         player.step(this, deltaTime);
-        ListIterator<Laser> iterator = playerLasers.listIterator();
-        while (iterator.hasNext()) {
-            Laser laser = iterator.next();
+
+        ListIterator<Laser> laserIterator;
+        laserIterator = playerLasers.listIterator();
+        while (laserIterator.hasNext()) {
+            Laser laser = laserIterator.next();
             laser.step(this, deltaTime);
             if (laser.boundingBox.y > height) {
-                iterator.remove();
+                laserIterator.remove();
             }
+        }
+        laserIterator = alienLasers.listIterator();
+        while (laserIterator.hasNext()) {
+            Laser laser = laserIterator.next();
+            laser.step(this, deltaTime);
+            if (laser.boundingBox.y < -10) {
+                laserIterator.remove();
+            }
+        }
+
+        ListIterator<Entity> hostileIterator;
+        hostileIterator = hostiles.listIterator();
+        while (hostileIterator.hasNext()) {
+            Entity hostile = hostileIterator.next();
+            hostile.step(this, deltaTime);
         }
     }
 
@@ -40,6 +61,12 @@ public class World {
         player.draw(batch);
         for (Laser laser : playerLasers) {
             laser.draw(batch);
+        }
+        for (Laser laser : alienLasers) {
+            laser.draw(batch);
+        }
+        for (Entity hostile : hostiles) {
+            hostile.draw(batch);
         }
     }
 }

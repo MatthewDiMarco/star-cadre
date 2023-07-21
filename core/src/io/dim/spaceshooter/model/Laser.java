@@ -6,25 +6,28 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Laser extends Entity {
 
     public int direction; // TODO: direction vector
+    public int strength;
+
     protected final TextureRegion laserTexture;
 
     public Laser(float xOrigin, float yOrigin, float width, float height,
-        float movementSpeed, int direction, TextureRegion laserTexture) {
+        float movementSpeed, int direction, int strength, TextureRegion laserTexture) {
         super(xOrigin, yOrigin, width, height, movementSpeed);
         this.direction = direction;
+        this.strength = strength;
         this.laserTexture = laserTexture;
     }
 
     @Override
     public void step(World world, float deltaTime) {
-        boundingBox.y += (movementSpeed * deltaTime) * Math.signum(direction);
+        hitBox.y += (movementSpeed * deltaTime) * Math.signum(direction);
     }
 
     @Override
     public void draw(SpriteBatch batch) {
         batch.draw(
             laserTexture,
-            boundingBox.x, boundingBox.y,
-            boundingBox.width, boundingBox.height);
+            hitBox.x, hitBox.y,
+            hitBox.width, hitBox.height);
     }
 }

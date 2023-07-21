@@ -29,30 +29,17 @@ public class PlayState extends ApplicationState {
         Viewport viewport,
         Stack<ApplicationState> manager) {
         super(camera, viewport, manager);
-
-        backgrounds[0] = new Texture("backgrounds-0.png");
-        backgrounds[1] = new Texture("backgrounds-1.png");
-        backgrounds[2] = new Texture("backgrounds-2.png");
-        parallaxBackground = new ParallaxBackground(
-            backgrounds, WORLD_WIDTH, WORLD_HEIGHT,
-            true, false);
-
-        textureAtlas = new TextureAtlas("textures.atlas");
-        world = new World(WORLD_WIDTH, WORLD_HEIGHT, new EntityFactory(textureAtlas));
-        world.player = world.entityFactory.createPlayer(
-            (float)WORLD_WIDTH / 2,
-            (float)WORLD_HEIGHT / 4, viewport);
-
-        // temp
-        world.hostiles.add(world.entityFactory.createAlienBasic(
-            (float)WORLD_WIDTH / 2,
-            (float)WORLD_HEIGHT + 10));
+        init();
     }
 
     @Override
     public void handleInput() {
         if (Gdx.input.isKeyPressed(Keys.P)) {
             System.out.println("TODO: PAUSE"); // TODO
+        }
+
+        if (Gdx.input.isKeyPressed(Keys.R)) {
+            init();
         }
     }
 
@@ -76,5 +63,25 @@ public class PlayState extends ApplicationState {
             bg.dispose();
         }
         textureAtlas.dispose();
+    }
+
+    private void init() {
+        backgrounds[0] = new Texture("backgrounds-0.png");
+        backgrounds[1] = new Texture("backgrounds-1.png");
+        backgrounds[2] = new Texture("backgrounds-2.png");
+        parallaxBackground = new ParallaxBackground(
+            backgrounds, WORLD_WIDTH, WORLD_HEIGHT,
+            true, false);
+
+        textureAtlas = new TextureAtlas("textures.atlas");
+        world = new World(WORLD_WIDTH, WORLD_HEIGHT, new EntityFactory(textureAtlas));
+        world.player = world.entityFactory.createPlayer(
+            (float)WORLD_WIDTH / 2,
+            (float)WORLD_HEIGHT / 4, viewport);
+
+        // temp
+        world.aliens.add(world.entityFactory.createAlienBasic(
+            (float)WORLD_WIDTH / 2,
+            (float)WORLD_HEIGHT + 10));
     }
 }

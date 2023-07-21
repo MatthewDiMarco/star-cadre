@@ -9,10 +9,10 @@ import io.dim.spaceshooter.model.ship.PlayerShipEntity;
 
 public class EntityFactory {
 
-    private TextureRegion playerTexture;
-    private TextureRegion alienBasicTexture;
-    private TextureRegion playerLaserTexture;
-    private TextureRegion alienLaserTexture;
+    private final TextureRegion playerTexture;
+    private final TextureRegion alienBasicTexture;
+    private final TextureRegion playerLaserTexture;
+    private final TextureRegion alienLaserTexture;
 
     public EntityFactory(TextureAtlas atlas) {
         this.playerTexture = atlas.findRegion("playerShip3_blue");
@@ -28,7 +28,7 @@ public class EntityFactory {
         Viewport viewportRef) {
         return new PlayerShipEntity(
             xOrigin, yOrigin, 10, 10,
-            64, 0.15f, playerTexture, viewportRef);
+            64, 3, 0.15f, playerTexture, viewportRef);
     }
 
     public Laser createPlayerLaser(
@@ -37,7 +37,7 @@ public class EntityFactory {
         return new Laser(xOrigin, yOrigin,
             (float)playerLaserTexture.getRegionWidth()/6,
             (float)playerLaserTexture.getRegionHeight()/6,
-            182, 1, playerLaserTexture);
+            182, 1, 1, playerLaserTexture);
     }
 
     public Laser createAlienLaser(
@@ -46,7 +46,7 @@ public class EntityFactory {
         return new Laser(xOrigin, yOrigin,
             (float)alienLaserTexture.getRegionWidth()/6,
             (float)alienLaserTexture.getRegionHeight()/6,
-            64, -1, alienLaserTexture);
+            48, -1, 1, alienLaserTexture);
     }
 
     public AiBasicShipEntity createAlienBasic(
@@ -54,7 +54,7 @@ public class EntityFactory {
         float yOrigin) {
         return new AiBasicShipEntity(
             xOrigin, yOrigin, 8, 8,
-            92, 0.5f, 1f, alienBasicTexture);
+            24, 5, 0.75f, 1f, alienBasicTexture);
     }
 
 }

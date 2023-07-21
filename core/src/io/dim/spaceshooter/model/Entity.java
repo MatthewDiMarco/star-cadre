@@ -6,18 +6,18 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class Entity {
 
-    public Rectangle boundingBox;
+    public Rectangle hitBox;
     public float movementSpeed;
 
     public Entity(float xOrigin, float yOrigin, float width, float height, float movementSpeed) {
         this.movementSpeed = movementSpeed;
-        this.boundingBox = new Rectangle(
+        this.hitBox = new Rectangle(
             xOrigin - width / 2,
             yOrigin - height / 2,
             width, height);
     }
     public void translate(float xAmount, float yAmount) {
-        boundingBox.setPosition(boundingBox.x + xAmount, boundingBox.y + yAmount);
+        hitBox.setPosition(hitBox.x + xAmount, hitBox.y + yAmount);
     }
 
     public void translate(float xAmount, float yAmount, float[] boundaryDistances) {
@@ -32,8 +32,8 @@ public abstract class Entity {
         float proximityThreshold,
         float[] boundaryDistances) {
         Vector2 entityCentrePoint = new Vector2(
-            this.boundingBox.x + this.boundingBox.width / 2,
-            this.boundingBox.y + this.boundingBox.height / 2);
+            this.hitBox.x + this.hitBox.width / 2,
+            this.hitBox.y + this.hitBox.height / 2);
 
         float distanceToPoint = point.dst(entityCentrePoint);
 
@@ -45,6 +45,10 @@ public abstract class Entity {
 
             this.translate(xMove, yMove, boundaryDistances);
         }
+    }
+
+    public boolean intersects(Entity entity) {
+        return hitBox.overlaps(entity.hitBox);
     }
 
     public abstract void step(World world, float deltaTime);

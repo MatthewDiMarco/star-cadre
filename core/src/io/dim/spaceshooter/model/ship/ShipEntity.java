@@ -4,55 +4,64 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.dim.spaceshooter.model.Entity;
-import io.dim.spaceshooter.model.Laser;
-import io.dim.spaceshooter.model.World;
+import io.dim.spaceshooter.model.LaserEntity;
+import io.dim.spaceshooter.model.EntityManager;
 
 public abstract class ShipEntity extends Entity {
 
-    public static final float INVLUNERABILITY_TIME = 0.5f;
+    public static final float INVULNERABILITY_ALPHA_LOW = 0.25f;
+    public static final float INVULNERABILITY_ALPHA_JUMP_RATE = 0.1f;
 
     public int hp;
     public int hpMax;
     public float fireRate;
-    public boolean functional;
     public boolean invulnerable;
-    public float alpha;
+    public float invulnerabilityTime;
 
     protected float timeSinceLastShot;
     protected float timeSinceLastHit;
+    protected float alpha;
     protected final TextureRegion shipTexture;
 
     public ShipEntity(float xOrigin, float yOrigin, float width, float height,
-        float movementSpeed, int hp, float fireRate, TextureRegion shipTexture) {
+        float movementSpeed, int hp, float invulnerabilityTime, float fireRate,
+        TextureRegion shipTexture) {
         super(xOrigin, yOrigin, width, height, movementSpeed);
         this.hp = hp;
         this.hpMax = hp;
         this.fireRate = fireRate;
-        this.functional = true;
         this.invulnerable = false;
-        this.alpha = 1f;
+        this.invulnerabilityTime = invulnerabilityTime;
         this.timeSinceLastShot = 0;
         this.timeSinceLastHit = 0;
+        this.alpha = 1f;
         this.shipTexture = shipTexture;
     }
 
-    public void hit(Laser laser) {
-        if (!invulnerable && functional) {
-            alpha = 0.25f;
+    public void hit(LaserEntity laser) {
+        if (!invulnerable) {
             hp = Math.max(hp - laser.strength, 0);
             if (hp == 0) {
-                functional = false;
+                disposable = true;
             }
+            alpha = INVULNERABILITY_ALPHA_LOW;
         }
+        invulnerable = true;
+        timeSinceLastHit = 0;
     }
 
     @Override
-    public void step(World world, float deltaTime) {
+    public void step(EntityManager entityManager, float deltaTime) {
         this.timeSinceLastShot = Math.min(fireRate, timeSinceLastShot + deltaTime);
-        this.timeSinceLastHit = Math.min(INVLUNERABILITY_TIME, timeSinceLastHit + deltaTime);
-        if (timeSinceLastHit == INVLUNERABILITY_TIME) invulnerable = false;
-        if (functional) this.alpha = Math.min(1f, alpha + 0.1f);
-        if (invulnerable) this.alpha = (alpha + 0.1f) % 1;
+        this.timeSinceLastHit = Math.min(invulnerabilityTime, timeSinceLastHit + deltaTime);
+
+        if (invulnerable) {
+            this.alpha = (alpha + INVULNERABILITY_ALPHA_JUMP_RATE) % 1;
+            if (timeSinceLastHit - invulnerabilityTime >= 0) {
+                invulnerable = false;
+                alpha = 1f;
+            }
+        }
     }
 
     @Override

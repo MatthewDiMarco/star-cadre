@@ -8,14 +8,17 @@ public abstract class Entity {
 
     public Rectangle hitBox;
     public float movementSpeed;
+    public boolean disposable;
 
     public Entity(float xOrigin, float yOrigin, float width, float height, float movementSpeed) {
-        this.movementSpeed = movementSpeed;
         this.hitBox = new Rectangle(
             xOrigin - width / 2,
             yOrigin - height / 2,
             width, height);
+        this.movementSpeed = movementSpeed;
+        disposable = false;
     }
+
     public void translate(float xAmount, float yAmount) {
         hitBox.setPosition(hitBox.x + xAmount, hitBox.y + yAmount);
     }
@@ -51,6 +54,7 @@ public abstract class Entity {
         return hitBox.overlaps(entity.hitBox);
     }
 
-    public abstract void step(World world, float deltaTime);
+    public abstract void step(EntityManager entityManager, float deltaTime);
+
     public abstract void draw(SpriteBatch batch);
 }

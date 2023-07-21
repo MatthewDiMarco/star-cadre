@@ -3,7 +3,8 @@ package io.dim.spaceshooter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import io.dim.spaceshooter.model.Laser;
+import io.dim.spaceshooter.model.LaserEntity;
+import io.dim.spaceshooter.model.LaserEntity.LaserTarget;
 import io.dim.spaceshooter.model.ship.AiBasicShipEntity;
 import io.dim.spaceshooter.model.ship.PlayerShipEntity;
 
@@ -18,7 +19,7 @@ public class EntityFactory {
         this.playerTexture = atlas.findRegion("playerShip3_blue");
         this.alienBasicTexture = atlas.findRegion("enemyRed3");
         this.playerLaserTexture = atlas.findRegion("laserBlue01");
-        this.alienLaserTexture = atlas.findRegion("laserRed01");
+        this.alienLaserTexture = atlas.findRegion("laserRed06");
         this.alienLaserTexture.flip(false, true);
     }
 
@@ -28,25 +29,27 @@ public class EntityFactory {
         Viewport viewportRef) {
         return new PlayerShipEntity(
             xOrigin, yOrigin, 10, 10,
-            64, 3, 0.15f, playerTexture, viewportRef);
+            64, 3, 0.5f, 0.15f,
+            playerTexture, viewportRef);
     }
 
-    public Laser createPlayerLaser(
+    public LaserEntity createPlayerLaser(
         float xOrigin,
         float yOrigin) {
-        return new Laser(xOrigin, yOrigin,
+        return new LaserEntity(xOrigin, yOrigin,
             (float)playerLaserTexture.getRegionWidth()/6,
             (float)playerLaserTexture.getRegionHeight()/6,
-            182, 1, 1, playerLaserTexture);
+            182, 1, 1, LaserTarget.ALIEN,
+            playerLaserTexture);
     }
 
-    public Laser createAlienLaser(
+    public LaserEntity createAlienLaser(
         float xOrigin,
         float yOrigin) {
-        return new Laser(xOrigin, yOrigin,
+        return new LaserEntity(xOrigin, yOrigin,
             (float)alienLaserTexture.getRegionWidth()/6,
             (float)alienLaserTexture.getRegionHeight()/6,
-            48, -1, 1, alienLaserTexture);
+            48, -1, 1, LaserTarget.PLAYER, alienLaserTexture);
     }
 
     public AiBasicShipEntity createAlienBasic(
@@ -54,7 +57,8 @@ public class EntityFactory {
         float yOrigin) {
         return new AiBasicShipEntity(
             xOrigin, yOrigin, 8, 8,
-            24, 5, 0.75f, 1f, alienBasicTexture);
+            24, 5, 0.1f, 0.75f,
+            alienBasicTexture, 1f);
     }
 
 }

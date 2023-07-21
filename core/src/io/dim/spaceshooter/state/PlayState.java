@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.EntityFactory;
 import io.dim.spaceshooter.model.ParallaxBackground;
-import io.dim.spaceshooter.model.World;
+import io.dim.spaceshooter.model.EntityManager;
 import java.util.Stack;
 
 public class PlayState extends ApplicationState {
@@ -22,7 +22,7 @@ public class PlayState extends ApplicationState {
 
 
     private ParallaxBackground parallaxBackground;
-    private World world;
+    private EntityManager entityManager;
 
     public PlayState(
         OrthographicCamera camera,
@@ -46,14 +46,14 @@ public class PlayState extends ApplicationState {
     @Override
     public void update(final float deltaTime) {
         parallaxBackground.scroll(deltaTime);
-        world.updateEntities(deltaTime);
+        entityManager.updateEntities(deltaTime);
     }
 
     @Override
     public void render(SpriteBatch batch) {
         batch.begin();
         parallaxBackground.draw(batch);
-        world.drawEntities(batch);
+        entityManager.drawEntities(batch);
         batch.end();
     }
 
@@ -74,13 +74,12 @@ public class PlayState extends ApplicationState {
             true, false);
 
         textureAtlas = new TextureAtlas("textures.atlas");
-        world = new World(WORLD_WIDTH, WORLD_HEIGHT, new EntityFactory(textureAtlas));
-        world.player = world.entityFactory.createPlayer(
+        entityManager = new EntityManager(WORLD_WIDTH, WORLD_HEIGHT, new EntityFactory(textureAtlas));
+        entityManager.playerRef = entityManager.factory.createPlayer(
             (float)WORLD_WIDTH / 2,
             (float)WORLD_HEIGHT / 4, viewport);
-
-        // temp
-        world.aliens.add(world.entityFactory.createAlienBasic(
+        entityManager.ships.add(entityManager.playerRef);
+        entityManager.ships.add(entityManager.factory.createAlienBasic( // temp
             (float)WORLD_WIDTH / 2,
             (float)WORLD_HEIGHT + 10));
     }

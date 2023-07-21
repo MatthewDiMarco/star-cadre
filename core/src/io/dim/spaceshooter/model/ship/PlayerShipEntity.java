@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import io.dim.spaceshooter.model.EntityManager;
+import io.dim.spaceshooter.EntityManager;
 import io.dim.spaceshooter.util.EntityUtils;
 
 public class PlayerShipEntity extends ShipEntity {

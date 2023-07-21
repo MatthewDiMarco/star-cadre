@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.EntityFactory;
 import io.dim.spaceshooter.model.ParallaxBackground;
-import io.dim.spaceshooter.model.EntityManager;
+import io.dim.spaceshooter.EntityManager;
 import java.util.Stack;
 
 public class PlayState extends ApplicationState {

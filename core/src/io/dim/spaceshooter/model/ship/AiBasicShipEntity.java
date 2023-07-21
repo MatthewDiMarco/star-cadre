@@ -2,7 +2,7 @@ package io.dim.spaceshooter.model.ship;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import io.dim.spaceshooter.model.EntityManager;
+import io.dim.spaceshooter.EntityManager;
 import io.dim.spaceshooter.util.EntityUtils;
 
 public class AiBasicShipEntity extends ShipEntity {

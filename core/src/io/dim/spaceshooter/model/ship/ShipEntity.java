@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.dim.spaceshooter.model.Entity;
 import io.dim.spaceshooter.model.LaserEntity;
-import io.dim.spaceshooter.model.EntityManager;
+import io.dim.spaceshooter.EntityManager;
 
 public abstract class ShipEntity extends Entity {
 

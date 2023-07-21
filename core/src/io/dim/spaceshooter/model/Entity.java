@@ -3,6 +3,7 @@ package io.dim.spaceshooter.model;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import io.dim.spaceshooter.EntityManager;
 
 public abstract class Entity {
 

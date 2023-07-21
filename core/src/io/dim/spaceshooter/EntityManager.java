@@ -1,8 +1,9 @@
-package io.dim.spaceshooter.model;
+package io.dim.spaceshooter;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import io.dim.spaceshooter.EntityFactory;
+import io.dim.spaceshooter.model.Entity;
+import io.dim.spaceshooter.model.LaserEntity;
 import io.dim.spaceshooter.model.ship.PlayerShipEntity;
 import io.dim.spaceshooter.model.ship.ShipEntity;
 import java.util.ArrayList;

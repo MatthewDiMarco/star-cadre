@@ -1,8 +1,8 @@
-package io.dim.spaceshooter.model.ship;
+package io.dim.spaceshooter.entity.ship;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import io.dim.spaceshooter.EntityManager;
+import io.dim.spaceshooter.handler.EntityHandler;
 import io.dim.spaceshooter.util.EntityUtils;
 
 public class AiBasicShipEntity extends ShipEntity {
@@ -22,25 +22,25 @@ public class AiBasicShipEntity extends ShipEntity {
     }
 
     @Override
-    public void step(EntityManager entityManager, float deltaTime) {
-        super.step(entityManager, deltaTime);
+    public void onStep(EntityHandler entityHandler, float deltaTime) {
+        super.onStep(entityHandler, deltaTime);
         timeSinceLastDirectionChange += deltaTime;
         if (timeSinceLastDirectionChange > directionChangeFrequency) {
             EntityUtils.randomizePoint(travelPoint,
-                (int)(entityManager.boundary.width/5),
-                (int)(entityManager.boundary.height/1.5f),
-                (int)(entityManager.boundary.width/1.25f),
-                (int)(entityManager.boundary.height/1.1f));
+                (int)(entityHandler.boundary.width/5),
+                (int)(entityHandler.boundary.height/1.5f),
+                (int)(entityHandler.boundary.width/1.25f),
+                (int)(entityHandler.boundary.height/1.1f));
             timeSinceLastDirectionChange -= directionChangeFrequency;
         }
 
         float[] boundaryDistances = EntityUtils.calcBoundaryDistances(
             this.hitBox,
-            entityManager.boundary.width,
-            entityManager.boundary.height);
-        boundaryDistances[2] = entityManager.boundary.height/2 - hitBox.y; // half screen
+            entityHandler.boundary.width,
+            entityHandler.boundary.height);
+        boundaryDistances[2] = entityHandler.boundary.height/2 - hitBox.y; // half screen
 
-        fireLaser(entityManager);
+        fireLaser(entityHandler);
         this.translate(
             travelPoint,
             movementSpeed * deltaTime,
@@ -48,9 +48,9 @@ public class AiBasicShipEntity extends ShipEntity {
             boundaryDistances);
     }
 
-    protected void fireLaser(EntityManager entityManager) {
+    protected void fireLaser(EntityHandler entityHandler) {
         if (timeSinceLastShot - fireRate >= 0) {
-            entityManager.lasers.add(entityManager.factory.createAlienLaser(
+            entityHandler.lasers.add(entityHandler.factory.createAlienLaser(
                 hitBox.x + hitBox.width * 0.5f,
                 hitBox.y + hitBox.height * 0.1f));
             timeSinceLastShot = 0;

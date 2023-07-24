@@ -1,9 +1,10 @@
-package io.dim.spaceshooter.model;
+package io.dim.spaceshooter.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import io.dim.spaceshooter.EntityManager;
-import io.dim.spaceshooter.model.ship.ShipEntity;
+import io.dim.spaceshooter.handler.EntityHandler;
+import io.dim.spaceshooter.entity.ship.ShipEntity;
+import io.dim.spaceshooter.handler.ParticleHandler;
 
 public class LaserEntity extends Entity {
 
@@ -26,39 +27,43 @@ public class LaserEntity extends Entity {
     }
 
     @Override
-    public void step(EntityManager entityManager, float deltaTime) {
+    public void onStep(EntityHandler entityHandler, float deltaTime) {
         hitBox.y += (movementSpeed * deltaTime) * Math.signum(direction);
 
-        if (hitBox.y > entityManager.boundary.height || hitBox.y < -10) {
+        if (hitBox.y > entityHandler.boundary.height || hitBox.y < -10) {
             disposable = true;
         }
 
         if (laserTarget == LaserTarget.ALIEN) {
-            for (ShipEntity ship : entityManager.ships) {
+            for (ShipEntity ship : entityHandler.ships) {
                 if (!ship.invulnerable &&
-                    ship != entityManager.playerRef &&
+                    ship != entityHandler.playerRef &&
                     ship.intersects(this)) {
                     ship.hit(this);
-                    entityManager.particleManager.createLaserBlueEffect(
-                        hitBox.x + hitBox.width / 2,
-                        hitBox.y + hitBox.height);
                     disposable = true;
                 }
             }
         } else {
-            if (!entityManager.playerRef.invulnerable &&
-                entityManager.playerRef.intersects(this)) {
-                entityManager.playerRef.hit(this);
-                entityManager.particleManager.createLaserRedEffect(
-                    hitBox.x + hitBox.width / 2,
-                    hitBox.y);
-                disposable = true;
+            if (entityHandler.playerRef.intersects(this)) {
+                entityHandler.playerRef.hit(this);
             }
         }
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void onDeath(EntityHandler entityHandler, ParticleHandler particleHandler) {
+        float xx = hitBox.x + hitBox.width / 2;
+        float yy = direction > 0 ? hitBox.y + hitBox.height : hitBox.y;
+
+        if (laserTarget == LaserTarget.ALIEN) {
+            particleHandler.createLaserBlueEffect(xx, yy);
+        } else {
+            particleHandler.createLaserRedEffect(xx, yy);
+        }
+    }
+
+    @Override
+    public void onDraw(SpriteBatch batch) {
         batch.draw(
             laserTexture,
             hitBox.x, hitBox.y,

@@ -4,16 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import io.dim.spaceshooter.EntityFactory;
-import io.dim.spaceshooter.ParticleManager;
-import io.dim.spaceshooter.model.ParallaxBackground;
-import io.dim.spaceshooter.EntityManager;
+import io.dim.spaceshooter.factory.EntityFactory;
+import io.dim.spaceshooter.handler.ParticleHandler;
+import io.dim.spaceshooter.handler.ParallaxHandler;
+import io.dim.spaceshooter.handler.EntityHandler;
 import java.util.Stack;
 
 public class PlayState extends ApplicationState {
@@ -25,8 +22,10 @@ public class PlayState extends ApplicationState {
     private final Texture[] backgrounds = new Texture[3];
 
 
-    private ParallaxBackground parallaxBackground;
-    private EntityManager entityManager;
+    private ParallaxHandler parallaxHandler;
+    private EntityHandler entityHandler;
+    private boolean gameRunning = true;
+    private boolean stepping = true;
 
     public PlayState(
         OrthographicCamera camera,
@@ -37,27 +36,20 @@ public class PlayState extends ApplicationState {
     }
 
     @Override
-    public void handleInput() {
-        if (Gdx.input.isKeyPressed(Keys.P)) {
-            System.out.println("TODO: PAUSE"); // TODO
-        }
-
-        if (Gdx.input.isKeyPressed(Keys.R)) {
-            init();
-        }
-    }
-
-    @Override
     public void update(final float deltaTime) {
-        parallaxBackground.scroll(deltaTime);
-        entityManager.updateEntities(deltaTime);
+        handleInput();
+        if (stepping) {
+            parallaxHandler.update(deltaTime);
+            entityHandler.update(deltaTime);
+            if (!gameRunning) stepping = false;
+        }
     }
 
     @Override
     public void render(SpriteBatch batch) {
         batch.begin();
-        parallaxBackground.draw(batch);
-        entityManager.drawEntities(batch);
+        parallaxHandler.render(batch);
+        entityHandler.render(batch);
         batch.end();
     }
 
@@ -67,31 +59,45 @@ public class PlayState extends ApplicationState {
         for (Texture bg : backgrounds) {
             bg.dispose();
         }
-        // TODO particle manager?
+    }
+
+    private void handleInput() {
+        if (Gdx.input.isKeyJustPressed(Keys.P)) {
+            gameRunning = !gameRunning;
+            if (!stepping) stepping = true;
+        }
+        if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
+            stepping = true;
+        }
+        if (Gdx.input.isKeyJustPressed(Keys.R)) {
+            init();
+        }
     }
 
     private void init() {
-        backgrounds[0] = new Texture("backgrounds-0.png");
-        backgrounds[1] = new Texture("backgrounds-1.png");
-        backgrounds[2] = new Texture("backgrounds-2.png");
-        parallaxBackground = new ParallaxBackground(
+        backgrounds[0] = new Texture("backgrounds/backgrounds-0.png");
+        backgrounds[1] = new Texture("backgrounds/backgrounds-1.png");
+        backgrounds[2] = new Texture("backgrounds/backgrounds-2.png");
+        parallaxHandler = new ParallaxHandler(
             backgrounds, WORLD_WIDTH, WORLD_HEIGHT,
             true, false);
 
-        textureAtlas = new TextureAtlas("textures.atlas");
-        entityManager = new EntityManager(
+        textureAtlas = new TextureAtlas("textures/textures.atlas");
+        entityHandler = new EntityHandler(
             WORLD_WIDTH, WORLD_HEIGHT,
             new EntityFactory(textureAtlas),
-            new ParticleManager(textureAtlas));
-        entityManager.playerRef = entityManager.factory.createPlayer(
+            new ParticleHandler(textureAtlas));
+        entityHandler.playerRef = entityHandler.factory.createPlayer(
             (float)WORLD_WIDTH / 2,
             (float)WORLD_HEIGHT / 4, viewport);
-        entityManager.ships.add(entityManager.playerRef);
+        entityHandler.ships.add(entityHandler.playerRef);
 
         // temp
-        entityManager.ships.add(entityManager.factory.createAlienBasic(
+        entityHandler.ships.add(entityHandler.factory.createAlienBasic(
             (float)WORLD_WIDTH / 2,
             (float)WORLD_HEIGHT + 10));
 
+        gameRunning = true;
+        stepping = true;
     }
 }

@@ -32,10 +32,8 @@ public class EntityUtils {
         Vector2 point,
         int xx, int yy,
         int width, int height) {
-        point.x = random
-            .nextInt(width - xx) + xx;
-        point.y = random
-            .nextInt(height - yy) + yy;
+        point.x = random.nextInt(width - xx) + xx;
+        point.y = random.nextInt(height - yy) + yy;
     }
 
 }

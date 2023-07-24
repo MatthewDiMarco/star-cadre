@@ -1,11 +1,12 @@
-package io.dim.spaceshooter.model;
+package io.dim.spaceshooter.handler;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import io.dim.spaceshooter.ApplicationObject;
 
-public class ParallaxBackground {
+public class ParallaxHandler implements ApplicationObject {
 
     public static final float MAX_SCROLL_SPEED = 32f;
 
@@ -16,7 +17,7 @@ public class ParallaxBackground {
     private final boolean verticalRepeat;
     private final boolean horizontalRepeat;
 
-    public ParallaxBackground(
+    public ParallaxHandler(
         Texture[] backgrounds,
         float worldWidth,
         float worldHeight,
@@ -39,7 +40,8 @@ public class ParallaxBackground {
     }
 
     // TODO allow for toggling speed of x/y scroll
-    public void scroll(float deltaTime) {
+    @Override
+    public void update(float deltaTime) {
         int base = backgroundOffsets.length * 2;
         for (int ii = 0; ii < backgroundOffsets.length; ii++) {
             backgroundOffsets[ii][0] += deltaTime * MAX_SCROLL_SPEED / base;
@@ -48,7 +50,8 @@ public class ParallaxBackground {
         }
     }
 
-    public void draw(SpriteBatch batch) {
+    @Override
+    public void render(SpriteBatch batch) {
         for (int ii = 0; ii < backgroundOffsets.length; ii++) {
             if (verticalRepeat && backgroundOffsets[ii][0] > worldHeight) {
                 backgroundOffsets[ii][0] = 0;

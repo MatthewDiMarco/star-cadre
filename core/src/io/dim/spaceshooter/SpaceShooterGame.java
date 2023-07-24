@@ -9,12 +9,9 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.state.ApplicationState;
 import io.dim.spaceshooter.state.PlayState;
-import java.util.Random;
 import java.util.Stack;
 
 public class SpaceShooterGame extends ApplicationAdapter {
-
-	public static Random random = new Random();
 
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -33,7 +30,6 @@ public class SpaceShooterGame extends ApplicationAdapter {
 
 	@Override
 	public void render() {
-		applicationStateManager.peek().handleInput();
 		applicationStateManager.peek().update(Gdx.graphics.getDeltaTime());
 		applicationStateManager.peek().render(batch);
 
@@ -52,6 +48,8 @@ public class SpaceShooterGame extends ApplicationAdapter {
 	@Override
 	public void dispose() {
 		batch.dispose();
-		// TODO dispose of states
+		for (ApplicationState appState : applicationStateManager) {
+			appState.dispose();
+		}
 	}
 }

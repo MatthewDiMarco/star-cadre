@@ -1,11 +1,11 @@
-package io.dim.spaceshooter.model.ship;
+package io.dim.spaceshooter.entity.ship;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import io.dim.spaceshooter.EntityManager;
+import io.dim.spaceshooter.handler.EntityHandler;
 import io.dim.spaceshooter.util.EntityUtils;
 
 public class PlayerShipEntity extends ShipEntity {
@@ -21,12 +21,12 @@ public class PlayerShipEntity extends ShipEntity {
     }
 
     @Override
-    public void step(EntityManager entityManager, float deltaTime) {
-        super.step(entityManager, deltaTime);
+    public void onStep(EntityHandler entityHandler, float deltaTime) {
+        super.onStep(entityHandler, deltaTime);
         float[] boundaryDistances = EntityUtils.calcBoundaryDistances(
             this.hitBox,
-            entityManager.boundary.width,
-            entityManager.boundary.height);
+            entityHandler.boundary.width,
+            entityHandler.boundary.height);
 
         // TODO movement speed would feel better with acceleration
         if (Gdx.input.isKeyPressed(Input.Keys.UP) ||
@@ -62,14 +62,14 @@ public class PlayerShipEntity extends ShipEntity {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            fireLaser(entityManager);
+            fireLaser(entityHandler);
         }
 
         if (Gdx.input.isTouched()) {
             Vector2 touchPoint = viewportRef.unproject( // TODO replace w/ Lambda
                 new Vector2(Gdx.input.getX(), Gdx.input.getY()));
 
-            fireLaser(entityManager);
+            fireLaser(entityHandler);
             this.translate(
                 touchPoint,
                 movementSpeed * deltaTime,
@@ -78,9 +78,9 @@ public class PlayerShipEntity extends ShipEntity {
         }
     }
 
-    protected void fireLaser(EntityManager entityManager) {
+    protected void fireLaser(EntityHandler entityHandler) {
         if (timeSinceLastShot - fireRate >= 0) {
-            entityManager.lasers.add(entityManager.factory.createPlayerLaser(
+            entityHandler.lasers.add(entityHandler.factory.createPlayerLaser(
                 hitBox.x + hitBox.width * 0.5f,
                 hitBox.y + hitBox.height * 1.1f));
             timeSinceLastShot = 0;

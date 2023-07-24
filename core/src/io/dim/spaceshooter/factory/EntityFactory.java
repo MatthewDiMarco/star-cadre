@@ -1,12 +1,12 @@
-package io.dim.spaceshooter;
+package io.dim.spaceshooter.factory;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import io.dim.spaceshooter.model.LaserEntity;
-import io.dim.spaceshooter.model.LaserEntity.LaserTarget;
-import io.dim.spaceshooter.model.ship.AiBasicShipEntity;
-import io.dim.spaceshooter.model.ship.PlayerShipEntity;
+import io.dim.spaceshooter.entity.LaserEntity;
+import io.dim.spaceshooter.entity.LaserEntity.LaserTarget;
+import io.dim.spaceshooter.entity.ship.AiBasicShipEntity;
+import io.dim.spaceshooter.entity.ship.PlayerShipEntity;
 
 public class EntityFactory {
 

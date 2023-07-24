@@ -1,44 +1,48 @@
-package io.dim.spaceshooter;
+package io.dim.spaceshooter.handler;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import io.dim.spaceshooter.model.Entity;
-import io.dim.spaceshooter.model.LaserEntity;
-import io.dim.spaceshooter.model.ship.PlayerShipEntity;
-import io.dim.spaceshooter.model.ship.ShipEntity;
+import io.dim.spaceshooter.factory.EntityFactory;
+import io.dim.spaceshooter.entity.Entity;
+import io.dim.spaceshooter.entity.LaserEntity;
+import io.dim.spaceshooter.entity.ship.PlayerShipEntity;
+import io.dim.spaceshooter.entity.ship.ShipEntity;
+import io.dim.spaceshooter.ApplicationObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class EntityManager {
+public class EntityHandler implements ApplicationObject {
 
     public final Rectangle boundary;
     public final EntityFactory factory;
-    public ParticleManager particleManager;
+    public ParticleHandler particleHandler;
     public PlayerShipEntity playerRef;
     public List<ShipEntity> ships;
     public List<LaserEntity> lasers; // TODO replace with libGDX collections
 
-    public EntityManager(int width, int height, EntityFactory factory,
-        ParticleManager particleManager) {
+    public EntityHandler(int width, int height, EntityFactory factory,
+        ParticleHandler particleHandler) {
         boundary = new Rectangle(0, 0, width, height);
         this.factory = factory;
-        this.particleManager = particleManager;
+        this.particleHandler = particleHandler;
         this.ships = new ArrayList<>();
         this.lasers = new ArrayList<>();
 
     }
 
-    public void updateEntities(float deltaTime) {
+    @Override
+    public void update(float deltaTime) {
         stepAll((List<Entity>)(List<?>)ships, deltaTime);
         stepAll((List<Entity>)(List<?>)lasers, deltaTime);
-        particleManager.updateParticles(deltaTime);
+        particleHandler.update(deltaTime);
     }
 
-    public void drawEntities(SpriteBatch batch) {
-        for (Entity ship : ships) ship.draw(batch);
-        for (LaserEntity laser : lasers) laser.draw(batch);
-        particleManager.drawParticles(batch);
+    @Override
+    public void render(SpriteBatch batch) {
+        for (Entity ship : ships) ship.onDraw(batch);
+        for (LaserEntity laser : lasers) laser.onDraw(batch);
+        particleHandler.render(batch);
     }
 
     private void stepAll(List<Entity> entities, float deltaTime) {
@@ -46,9 +50,10 @@ public class EntityManager {
         while (iterator.hasNext()) {
             Entity entity = iterator.next();
             if (entity.disposable) {
+                entity.onDeath(this, particleHandler);
                 iterator.remove();
             } else {
-                entity.step(this, deltaTime);
+                entity.onStep(this, deltaTime);
             }
         }
     }

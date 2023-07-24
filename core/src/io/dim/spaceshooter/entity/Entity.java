@@ -1,9 +1,10 @@
-package io.dim.spaceshooter.model;
+package io.dim.spaceshooter.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import io.dim.spaceshooter.EntityManager;
+import io.dim.spaceshooter.handler.EntityHandler;
+import io.dim.spaceshooter.handler.ParticleHandler;
 
 public abstract class Entity {
 
@@ -55,7 +56,10 @@ public abstract class Entity {
         return hitBox.overlaps(entity.hitBox);
     }
 
-    public abstract void step(EntityManager entityManager, float deltaTime);
+    public abstract void onStep(EntityHandler entityHandler, float deltaTime);
 
-    public abstract void draw(SpriteBatch batch);
+    public abstract void onDeath(EntityHandler entityHandler, ParticleHandler particleHandler);
+
+    public abstract void onDraw(SpriteBatch batch);
+
 }

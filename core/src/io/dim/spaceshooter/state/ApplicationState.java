@@ -1,12 +1,11 @@
 package io.dim.spaceshooter.state;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import io.dim.spaceshooter.ApplicationObject;
 import java.util.Stack;
 
-// TODO consider replacing as interface
-public abstract class ApplicationState {
+public abstract class ApplicationState implements ApplicationObject {
 
     protected OrthographicCamera camera;
     protected Viewport viewport;
@@ -21,12 +20,6 @@ public abstract class ApplicationState {
         this.manager = manager;
 
     }
-
-    public abstract void handleInput();
-
-    public abstract void update(float deltaTime);
-
-    public abstract void render(SpriteBatch batch);
 
     public abstract void dispose();
 }

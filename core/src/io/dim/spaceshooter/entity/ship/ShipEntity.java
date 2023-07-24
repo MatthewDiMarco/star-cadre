@@ -1,11 +1,12 @@
-package io.dim.spaceshooter.model.ship;
+package io.dim.spaceshooter.entity.ship;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import io.dim.spaceshooter.model.Entity;
-import io.dim.spaceshooter.model.LaserEntity;
-import io.dim.spaceshooter.EntityManager;
+import io.dim.spaceshooter.entity.Entity;
+import io.dim.spaceshooter.entity.LaserEntity;
+import io.dim.spaceshooter.handler.EntityHandler;
+import io.dim.spaceshooter.handler.ParticleHandler;
 
 public abstract class ShipEntity extends Entity {
 
@@ -40,18 +41,20 @@ public abstract class ShipEntity extends Entity {
 
     public void hit(LaserEntity laser) {
         if (!invulnerable) {
+            laser.disposable = true;
             hp = Math.max(hp - laser.strength, 0);
             if (hp == 0) {
                 disposable = true;
             }
+
+            invulnerable = true;
+            timeSinceLastHit = 0;
             alpha = INVULNERABILITY_ALPHA_LOW;
         }
-        invulnerable = true;
-        timeSinceLastHit = 0;
     }
 
     @Override
-    public void step(EntityManager entityManager, float deltaTime) {
+    public void onStep(EntityHandler entityHandler, float deltaTime) {
         this.timeSinceLastShot = Math.min(fireRate, timeSinceLastShot + deltaTime);
         this.timeSinceLastHit = Math.min(invulnerabilityTime, timeSinceLastHit + deltaTime);
 
@@ -65,7 +68,14 @@ public abstract class ShipEntity extends Entity {
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
+    public void onDeath(EntityHandler entityHandler, ParticleHandler particleHandler) {
+        particleHandler.createExplosionEffect(
+            hitBox.x + hitBox.width / 2,
+            hitBox.y + hitBox.height / 2);
+    }
+
+    @Override
+    public void onDraw(SpriteBatch batch) {
         Color cc = batch.getColor();
         batch.setColor(cc.r, cc.g, cc.b, alpha);
         batch.draw(

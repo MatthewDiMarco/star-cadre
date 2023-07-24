@@ -39,6 +39,9 @@ public class LaserEntity extends Entity {
                     ship != entityManager.playerRef &&
                     ship.intersects(this)) {
                     ship.hit(this);
+                    entityManager.particleManager.createLaserBlueEffect(
+                        hitBox.x + hitBox.width / 2,
+                        hitBox.y + hitBox.height);
                     disposable = true;
                 }
             }
@@ -46,6 +49,9 @@ public class LaserEntity extends Entity {
             if (!entityManager.playerRef.invulnerable &&
                 entityManager.playerRef.intersects(this)) {
                 entityManager.playerRef.hit(this);
+                entityManager.particleManager.createLaserRedEffect(
+                    hitBox.x + hitBox.width / 2,
+                    hitBox.y);
                 disposable = true;
             }
         }

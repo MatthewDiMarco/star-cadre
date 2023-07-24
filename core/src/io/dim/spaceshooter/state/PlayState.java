@@ -4,10 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.EntityFactory;
+import io.dim.spaceshooter.ParticleManager;
 import io.dim.spaceshooter.model.ParallaxBackground;
 import io.dim.spaceshooter.EntityManager;
 import java.util.Stack;
@@ -59,10 +63,11 @@ public class PlayState extends ApplicationState {
 
     @Override
     public void dispose() {
+        textureAtlas.dispose();
         for (Texture bg : backgrounds) {
             bg.dispose();
         }
-        textureAtlas.dispose();
+        // TODO particle manager?
     }
 
     private void init() {
@@ -74,13 +79,19 @@ public class PlayState extends ApplicationState {
             true, false);
 
         textureAtlas = new TextureAtlas("textures.atlas");
-        entityManager = new EntityManager(WORLD_WIDTH, WORLD_HEIGHT, new EntityFactory(textureAtlas));
+        entityManager = new EntityManager(
+            WORLD_WIDTH, WORLD_HEIGHT,
+            new EntityFactory(textureAtlas),
+            new ParticleManager(textureAtlas));
         entityManager.playerRef = entityManager.factory.createPlayer(
             (float)WORLD_WIDTH / 2,
             (float)WORLD_HEIGHT / 4, viewport);
         entityManager.ships.add(entityManager.playerRef);
-        entityManager.ships.add(entityManager.factory.createAlienBasic( // temp
+
+        // temp
+        entityManager.ships.add(entityManager.factory.createAlienBasic(
             (float)WORLD_WIDTH / 2,
             (float)WORLD_HEIGHT + 10));
+
     }
 }

@@ -1,446 +1,383 @@
 textures.png
-size: 256, 977
+size: 236, 812
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-cockpitRed
-  rotate: false
-  xy: 0, 0
-  size: 51, 75
-  orig: 51, 75
-  offset: 0, 0
-  index: 0
-cockpitRed
-  rotate: false
-  xy: 51, 0
-  size: 40, 40
-  orig: 40, 40
-  offset: 0, 0
-  index: 1
-cockpitRed
-  rotate: false
-  xy: 91, 0
-  size: 42, 56
-  orig: 42, 56
-  offset: 0, 0
-  index: 2
-cockpitRed
-  rotate: false
-  xy: 133, 0
-  size: 60, 61
-  orig: 60, 61
-  offset: 0, 0
-  index: 3
-cockpitRed
-  rotate: false
-  xy: 193, 0
-  size: 47, 67
-  orig: 47, 67
-  offset: 0, 0
-  index: 4
-cockpitRed
-  rotate: false
-  xy: 0, 75
-  size: 48, 75
-  orig: 48, 75
-  offset: 0, 0
-  index: 5
-cockpitRed
-  rotate: false
-  xy: 48, 75
-  size: 42, 67
-  orig: 42, 67
-  offset: 0, 0
-  index: 6
-cockpitRed
-  rotate: false
-  xy: 90, 75
-  size: 41, 71
-  orig: 41, 71
-  offset: 0, 0
-  index: 7
 enemyRed1
   rotate: false
-  xy: 131, 75
+  xy: 0, 0
   size: 93, 84
   orig: 93, 84
   offset: 0, 0
   index: -1
 enemyRed2
   rotate: false
-  xy: 0, 159
+  xy: 93, 0
   size: 104, 84
   orig: 104, 84
   offset: 0, 0
   index: -1
 enemyRed3
   rotate: false
-  xy: 104, 159
+  xy: 0, 84
   size: 103, 84
   orig: 103, 84
   offset: 0, 0
   index: -1
 enemyRed4
   rotate: false
-  xy: 0, 243
+  xy: 103, 84
   size: 82, 84
   orig: 82, 84
   offset: 0, 0
   index: -1
 enemyRed5
   rotate: false
-  xy: 82, 243
+  xy: 0, 168
   size: 97, 84
   orig: 97, 84
   offset: 0, 0
   index: -1
 laserBlue01
   rotate: false
-  xy: 179, 243
+  xy: 97, 168
   size: 9, 54
   orig: 9, 54
   offset: 0, 0
   index: -1
 laserBlue02
   rotate: false
-  xy: 188, 243
+  xy: 106, 168
   size: 13, 37
   orig: 13, 37
   offset: 0, 0
   index: -1
 laserBlue03
   rotate: false
-  xy: 201, 243
+  xy: 119, 168
   size: 9, 37
   orig: 9, 37
   offset: 0, 0
   index: -1
 laserBlue04
   rotate: false
-  xy: 210, 243
+  xy: 128, 168
   size: 13, 37
   orig: 13, 37
   offset: 0, 0
   index: -1
 laserBlue05
   rotate: false
-  xy: 223, 243
+  xy: 141, 168
   size: 9, 37
   orig: 9, 37
   offset: 0, 0
   index: -1
 laserBlue06
   rotate: false
-  xy: 232, 243
+  xy: 150, 168
   size: 13, 37
   orig: 13, 37
   offset: 0, 0
   index: -1
 laserBlue07
   rotate: false
-  xy: 245, 243
+  xy: 163, 168
   size: 9, 37
   orig: 9, 37
   offset: 0, 0
   index: -1
 laserBlue08
   rotate: false
-  xy: 0, 327
+  xy: 172, 168
   size: 48, 46
   orig: 48, 46
   offset: 0, 0
   index: -1
 laserBlue09
   rotate: false
-  xy: 48, 327
+  xy: 0, 252
   size: 48, 46
   orig: 48, 46
   offset: 0, 0
   index: -1
 laserBlue10
   rotate: false
-  xy: 96, 327
+  xy: 48, 252
   size: 37, 37
   orig: 37, 37
   offset: 0, 0
   index: -1
 laserBlue11
   rotate: false
-  xy: 133, 327
+  xy: 85, 252
   size: 38, 37
   orig: 38, 37
   offset: 0, 0
   index: -1
 laserBlue12
   rotate: false
-  xy: 171, 327
+  xy: 123, 252
   size: 13, 57
   orig: 13, 57
   offset: 0, 0
   index: -1
 laserBlue13
   rotate: false
-  xy: 184, 327
+  xy: 136, 252
   size: 9, 57
   orig: 9, 57
   offset: 0, 0
   index: -1
 laserBlue14
   rotate: false
-  xy: 193, 327
+  xy: 145, 252
   size: 13, 57
   orig: 13, 57
   offset: 0, 0
   index: -1
 laserBlue15
   rotate: false
-  xy: 206, 327
+  xy: 158, 252
   size: 9, 57
   orig: 9, 57
   offset: 0, 0
   index: -1
 laserBlue16
   rotate: false
-  xy: 215, 327
+  xy: 167, 252
   size: 13, 54
   orig: 13, 54
   offset: 0, 0
   index: -1
 laserRed01
   rotate: false
-  xy: 228, 327
+  xy: 180, 252
   size: 9, 54
   orig: 9, 54
   offset: 0, 0
   index: -1
 laserRed02
   rotate: false
-  xy: 237, 327
+  xy: 189, 252
   size: 13, 37
   orig: 13, 37
   offset: 0, 0
   index: -1
 laserRed03
   rotate: false
-  xy: 0, 384
+  xy: 202, 252
   size: 9, 37
   orig: 9, 37
   offset: 0, 0
   index: -1
 laserRed04
   rotate: false
-  xy: 9, 384
+  xy: 211, 252
   size: 13, 37
   orig: 13, 37
   offset: 0, 0
   index: -1
 laserRed05
   rotate: false
-  xy: 22, 384
+  xy: 224, 252
   size: 9, 37
   orig: 9, 37
   offset: 0, 0
   index: -1
 laserRed06
   rotate: false
-  xy: 31, 384
+  xy: 0, 309
   size: 13, 37
   orig: 13, 37
   offset: 0, 0
   index: -1
 laserRed07
   rotate: false
-  xy: 44, 384
+  xy: 13, 309
   size: 9, 37
   orig: 9, 37
   offset: 0, 0
   index: -1
 laserRed08
   rotate: false
-  xy: 53, 384
+  xy: 22, 309
   size: 48, 46
   orig: 48, 46
   offset: 0, 0
   index: -1
 laserRed09
   rotate: false
-  xy: 101, 384
+  xy: 70, 309
   size: 48, 46
   orig: 48, 46
   offset: 0, 0
   index: -1
 laserRed10
   rotate: false
-  xy: 149, 384
+  xy: 118, 309
   size: 37, 36
   orig: 37, 36
   offset: 0, 0
   index: -1
 laserRed11
   rotate: false
-  xy: 186, 384
+  xy: 155, 309
   size: 37, 37
   orig: 37, 37
   offset: 0, 0
   index: -1
 laserRed12
   rotate: false
-  xy: 223, 384
+  xy: 192, 309
   size: 13, 57
   orig: 13, 57
   offset: 0, 0
   index: -1
 laserRed13
   rotate: false
-  xy: 236, 384
+  xy: 205, 309
   size: 9, 57
   orig: 9, 57
   offset: 0, 0
   index: -1
 laserRed14
   rotate: false
-  xy: 0, 441
+  xy: 214, 309
   size: 13, 57
   orig: 13, 57
   offset: 0, 0
   index: -1
 laserRed15
   rotate: false
-  xy: 13, 441
+  xy: 227, 309
   size: 9, 57
   orig: 9, 57
   offset: 0, 0
   index: -1
 laserRed16
   rotate: false
-  xy: 22, 441
+  xy: 0, 366
   size: 13, 54
   orig: 13, 54
   offset: 0, 0
   index: -1
 meteorBrown_big1
   rotate: false
-  xy: 35, 441
+  xy: 13, 366
   size: 101, 84
   orig: 101, 84
   offset: 0, 0
   index: -1
 meteorBrown_big2
   rotate: false
-  xy: 136, 441
+  xy: 114, 366
   size: 120, 98
   orig: 120, 98
   offset: 0, 0
   index: -1
 meteorBrown_big3
   rotate: false
-  xy: 0, 539
+  xy: 0, 464
   size: 89, 82
   orig: 89, 82
   offset: 0, 0
   index: -1
 meteorBrown_big4
   rotate: false
-  xy: 89, 539
+  xy: 89, 464
   size: 98, 96
   orig: 98, 96
   offset: 0, 0
   index: -1
 meteorBrown_med1
   rotate: false
-  xy: 187, 539
+  xy: 187, 464
   size: 43, 43
   orig: 43, 43
   offset: 0, 0
   index: -1
 meteorBrown_med3
   rotate: false
-  xy: 0, 635
+  xy: 0, 560
   size: 45, 40
   orig: 45, 40
   offset: 0, 0
   index: -1
 meteorBrown_small1
   rotate: false
-  xy: 45, 635
+  xy: 45, 560
   size: 28, 28
   orig: 28, 28
   offset: 0, 0
   index: -1
 meteorBrown_small2
   rotate: false
-  xy: 73, 635
+  xy: 73, 560
   size: 29, 26
   orig: 29, 26
   offset: 0, 0
   index: -1
 meteorBrown_tiny1
   rotate: false
-  xy: 102, 635
+  xy: 102, 560
   size: 18, 18
   orig: 18, 18
   offset: 0, 0
   index: -1
 meteorBrown_tiny2
   rotate: false
-  xy: 120, 635
+  xy: 120, 560
   size: 16, 15
   orig: 16, 15
   offset: 0, 0
   index: -1
+particle
+  rotate: false
+  xy: 136, 560
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 playerLife3_blue
   rotate: false
-  xy: 136, 635
+  xy: 168, 560
   size: 32, 26
   orig: 32, 26
   offset: 0, 0
   index: -1
 playerShip3_blue
   rotate: false
-  xy: 0, 675
+  xy: 0, 600
   size: 98, 75
   orig: 98, 75
   offset: 0, 0
   index: -1
+powerupYellow_bolt
+  rotate: false
+  xy: 98, 600
+  size: 34, 33
+  orig: 34, 33
+  offset: 0, 0
+  index: -1
+powerupYellow_shield
+  rotate: false
+  xy: 132, 600
+  size: 34, 33
+  orig: 34, 33
+  offset: 0, 0
+  index: -1
+powerupYellow_star
+  rotate: false
+  xy: 166, 600
+  size: 34, 33
+  orig: 34, 33
+  offset: 0, 0
+  index: -1
 shield3
   rotate: false
-  xy: 98, 675
+  xy: 0, 675
   size: 144, 137
   orig: 144, 137
-  offset: 0, 0
-  index: -1
-tank_explosion2
-  rotate: false
-  xy: 0, 812
-  size: 41, 41
-  orig: 41, 41
-  offset: 0, 0
-  index: -1
-tank_explosion3
-  rotate: false
-  xy: 41, 812
-  size: 60, 60
-  orig: 60, 60
-  offset: 0, 0
-  index: -1
-tank_explosion4
-  rotate: false
-  xy: 101, 812
-  size: 74, 74
-  orig: 74, 74
-  offset: 0, 0
-  index: -1
-tank_explosion9
-  rotate: false
-  xy: 175, 812
-  size: 59, 60
-  orig: 59, 60
-  offset: 0, 0
-  index: -1
-ufoRed
-  rotate: false
-  xy: 0, 886
-  size: 91, 91
-  orig: 91, 91
   offset: 0, 0
   index: -1

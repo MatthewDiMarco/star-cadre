@@ -17,7 +17,7 @@ public class EntityFactory {
 
     public EntityFactory(TextureAtlas atlas) {
         this.playerTexture = atlas.findRegion("playerShip3_blue");
-        this.alienBasicTexture = atlas.findRegion("enemyRed3");
+        this.alienBasicTexture = atlas.findRegion("enemyRed1");
         this.playerLaserTexture = atlas.findRegion("laserBlue01");
         this.alienLaserTexture = atlas.findRegion("laserRed06");
         this.alienLaserTexture.flip(false, true);
@@ -47,8 +47,8 @@ public class EntityFactory {
         float xOrigin,
         float yOrigin) {
         return new LaserEntity(xOrigin, yOrigin,
-            (float)alienLaserTexture.getRegionWidth()/6,
-            (float)alienLaserTexture.getRegionHeight()/6,
+            (float)alienLaserTexture.getRegionWidth()/8,
+            (float)alienLaserTexture.getRegionHeight()/8,
             48, -1, 1, LaserTarget.PLAYER, alienLaserTexture);
     }
 

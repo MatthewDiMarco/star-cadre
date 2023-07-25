@@ -48,12 +48,10 @@ public class AiBasicShipEntity extends ShipEntity {
             boundaryDistances);
     }
 
-    protected void fireLaser(EntityHandler entityHandler) {
-        if (timeSinceLastShot - fireRate >= 0) {
-            entityHandler.lasers.add(entityHandler.factory.createAlienLaser(
-                hitBox.x + hitBox.width * 0.5f,
-                hitBox.y + hitBox.height * 0.1f));
-            timeSinceLastShot = 0;
-        }
+    @Override
+    public void onFireLaser(EntityHandler entityHandler) {
+        entityHandler.lasers.add(entityHandler.factory.createAlienLaser(
+            hitBox.x + hitBox.width * 0.5f,
+            hitBox.y + hitBox.height * 0.1f));
     }
 }

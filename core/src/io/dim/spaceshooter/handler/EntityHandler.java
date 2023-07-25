@@ -45,12 +45,12 @@ public class EntityHandler implements ApplicationObject {
         particleHandler.render(batch);
     }
 
-    private void stepAll(List<Entity> entities, float deltaTime) {
+    private void stepAll(List<Entity> entities, float deltaTime) { // TODO destroy all entities out of bounds
         ListIterator<Entity> iterator = entities.listIterator();
         while (iterator.hasNext()) {
             Entity entity = iterator.next();
             if (entity.disposable) {
-                entity.onDeath(this, particleHandler);
+                entity.onDestroy(this, particleHandler); // TODO avoid particles if off screen
                 iterator.remove();
             } else {
                 entity.onStep(this, deltaTime);

@@ -78,12 +78,10 @@ public class PlayerShipEntity extends ShipEntity {
         }
     }
 
-    protected void fireLaser(EntityHandler entityHandler) {
-        if (timeSinceLastShot - fireRate >= 0) {
-            entityHandler.lasers.add(entityHandler.factory.createPlayerLaser(
-                hitBox.x + hitBox.width * 0.5f,
-                hitBox.y + hitBox.height * 1.1f));
-            timeSinceLastShot = 0;
-        }
+    @Override
+    public void onFireLaser(EntityHandler entityHandler) {
+        entityHandler.lasers.add(entityHandler.factory.createPlayerLaser(
+            hitBox.x + hitBox.width * 0.5f,
+            hitBox.y + hitBox.height * 1.1f));
     }
 }

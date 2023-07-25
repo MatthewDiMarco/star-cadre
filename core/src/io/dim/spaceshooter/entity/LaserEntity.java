@@ -51,7 +51,7 @@ public class LaserEntity extends Entity {
     }
 
     @Override
-    public void onDeath(EntityHandler entityHandler, ParticleHandler particleHandler) {
+    public void onDestroy(EntityHandler entityHandler, ParticleHandler particleHandler) {
         float xx = hitBox.x + hitBox.width / 2;
         float yy = direction > 0 ? hitBox.y + hitBox.height : hitBox.y;
 

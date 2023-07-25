@@ -36,18 +36,13 @@ public abstract class Entity {
         float speed,
         float proximityThreshold,
         float[] boundaryDistances) {
-        Vector2 entityCentrePoint = new Vector2(
-            this.hitBox.x + this.hitBox.width / 2,
-            this.hitBox.y + this.hitBox.height / 2);
-
+        Vector2 entityCentrePoint = getCenterPoint();
         float distanceToPoint = point.dst(entityCentrePoint);
-
         if (distanceToPoint > proximityThreshold) {
             float xTouchDiff = point.x - entityCentrePoint.x;
             float yTouchDiff = point.y - entityCentrePoint.y;
             float xMove = xTouchDiff / distanceToPoint * speed;
             float yMove = yTouchDiff / distanceToPoint * speed;
-
             this.translate(xMove, yMove, boundaryDistances);
         }
     }
@@ -56,9 +51,15 @@ public abstract class Entity {
         return hitBox.overlaps(entity.hitBox);
     }
 
+    public Vector2 getCenterPoint() {
+        return new Vector2(
+            this.hitBox.x + this.hitBox.width / 2,
+            this.hitBox.y + this.hitBox.height / 2);
+    }
+
     public abstract void onStep(EntityHandler entityHandler, float deltaTime);
 
-    public abstract void onDeath(EntityHandler entityHandler, ParticleHandler particleHandler);
+    public abstract void onDestroy(EntityHandler entityHandler, ParticleHandler particleHandler);
 
     public abstract void onDraw(SpriteBatch batch);
 

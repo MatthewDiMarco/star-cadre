@@ -39,20 +39,6 @@ public abstract class ShipEntity extends Entity {
         this.shipTexture = shipTexture;
     }
 
-    public void hit(LaserEntity laser) {
-        if (!invulnerable) {
-            laser.disposable = true;
-            hp = Math.max(hp - laser.strength, 0);
-            if (hp == 0) {
-                disposable = true;
-            }
-
-            invulnerable = true;
-            timeSinceLastHit = 0;
-            alpha = INVULNERABILITY_ALPHA_LOW;
-        }
-    }
-
     @Override
     public void onStep(EntityHandler entityHandler, float deltaTime) {
         this.timeSinceLastShot = Math.min(fireRate, timeSinceLastShot + deltaTime);
@@ -68,10 +54,11 @@ public abstract class ShipEntity extends Entity {
     }
 
     @Override
-    public void onDeath(EntityHandler entityHandler, ParticleHandler particleHandler) {
+    public void onDestroy(EntityHandler entityHandler, ParticleHandler particleHandler) {
         particleHandler.createExplosionEffect(
             hitBox.x + hitBox.width / 2,
-            hitBox.y + hitBox.height / 2);
+            hitBox.y + hitBox.height / 2,
+            Math.max(hitBox.width, hitBox.height) / 10);
     }
 
     @Override
@@ -85,5 +72,28 @@ public abstract class ShipEntity extends Entity {
             hitBox.width,
             hitBox.height);
         batch.setColor(cc.r, cc.g, cc.b, 1f);
+    }
+
+    public abstract void onFireLaser(EntityHandler entityHandler);
+
+    public void fireLaser(EntityHandler entityHandler) {
+        if (timeSinceLastShot - fireRate >= 0) {
+            this.onFireLaser(entityHandler);
+            timeSinceLastShot = 0;
+        }
+    }
+
+    public void hit(LaserEntity laser) {
+        if (!invulnerable) {
+            laser.disposable = true;
+            hp = Math.max(hp - laser.strength, 0);
+            if (hp == 0) {
+                disposable = true;
+            }
+
+            invulnerable = true;
+            timeSinceLastHit = 0;
+            alpha = INVULNERABILITY_ALPHA_LOW;
+        }
     }
 }

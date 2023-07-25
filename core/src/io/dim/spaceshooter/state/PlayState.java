@@ -92,12 +92,16 @@ public class PlayState extends ApplicationState {
             (float)WORLD_HEIGHT / 4, viewport);
         entityHandler.ships.add(entityHandler.playerRef);
 
+        gameRunning = true;
+        stepping = true;
+
         // temp
         entityHandler.ships.add(entityHandler.factory.createAlienBasic(
             (float)WORLD_WIDTH / 2,
             (float)WORLD_HEIGHT + 10));
 
-        gameRunning = true;
-        stepping = true;
+        entityHandler.ships.add(entityHandler.factory.createAlienPathTracer(
+            (float)WORLD_WIDTH / 2,
+            (float)WORLD_HEIGHT - 10));
     }
 }

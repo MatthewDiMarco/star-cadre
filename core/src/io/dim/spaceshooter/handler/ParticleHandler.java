@@ -69,8 +69,9 @@ public class ParticleHandler implements ApplicationObject {
         createEffect(effect, xx, yy);
     }
 
-    public void createExplosionEffect(float xx, float yy) {
+    public void createExplosionEffect(float xx, float yy, float scale) {
         PooledEffect effect = explosionPool.obtain();
+        effect.scaleEffect(scale);
         createEffect(effect, xx, yy);
     }
 

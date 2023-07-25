@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.state.ApplicationState;
-import io.dim.spaceshooter.state.PlayState;
+import io.dim.spaceshooter.state.GameState;
 import java.util.Stack;
 
 public class SpaceShooterGame extends ApplicationAdapter {
@@ -22,10 +22,10 @@ public class SpaceShooterGame extends ApplicationAdapter {
 	public void create() {
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
-		viewport = new StretchViewport(PlayState.WORLD_WIDTH, PlayState.WORLD_HEIGHT, camera);
+		viewport = new StretchViewport(GameState.WORLD_WIDTH, GameState.WORLD_HEIGHT, camera);
 
 		applicationStateManager = new Stack<>();
-		applicationStateManager.push(new PlayState(camera, viewport, applicationStateManager));
+		applicationStateManager.push(new GameState(camera, viewport, applicationStateManager));
 	}
 
 	@Override

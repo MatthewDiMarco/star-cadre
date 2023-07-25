@@ -1,10 +1,9 @@
-package io.dim.spaceshooter.entity;
+package io.dim.spaceshooter.gameobject.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import io.dim.spaceshooter.handler.EntityHandler;
-import io.dim.spaceshooter.entity.ship.ShipEntity;
-import io.dim.spaceshooter.handler.ParticleHandler;
+import io.dim.spaceshooter.gameobject.handler.GameHandler;
+import io.dim.spaceshooter.gameobject.entity.ship.ShipEntity;
 
 public class LaserEntity extends Entity {
 
@@ -16,8 +15,10 @@ public class LaserEntity extends Entity {
 
     protected final TextureRegion laserTexture;
 
-    public LaserEntity(float xOrigin, float yOrigin, float width, float height,
-        float movementSpeed, int direction, int strength,
+    public LaserEntity(float xOrigin, float yOrigin,
+        float width, float height,
+        float movementSpeed,
+        int direction, int strength,
         LaserTarget target, TextureRegion laserTexture) {
         super(xOrigin, yOrigin, width, height, movementSpeed);
         this.direction = direction;
@@ -27,38 +28,38 @@ public class LaserEntity extends Entity {
     }
 
     @Override
-    public void onStep(EntityHandler entityHandler, float deltaTime) {
+    public void onStep(GameHandler gameHandler, float deltaTime) {
         hitBox.y += (movementSpeed * deltaTime) * Math.signum(direction);
 
-        if (hitBox.y > entityHandler.boundary.height || hitBox.y < -10) {
+        if (hitBox.y > gameHandler.boundary.height || hitBox.y < -10) {
             disposable = true;
         }
 
         if (laserTarget == LaserTarget.ALIEN) {
-            for (ShipEntity ship : entityHandler.ships) {
-                if (!ship.invulnerable &&
-                    ship != entityHandler.playerRef &&
+            for (ShipEntity ship : gameHandler.ships) {
+                if (!ship.invulnerabilityEnabled &&
+                    ship != gameHandler.playerRef &&
                     ship.intersects(this)) {
                     ship.hit(this);
                     disposable = true;
                 }
             }
         } else {
-            if (entityHandler.playerRef.intersects(this)) {
-                entityHandler.playerRef.hit(this);
+            if (gameHandler.playerRef.intersects(this)) {
+                gameHandler.playerRef.hit(this);
             }
         }
     }
 
     @Override
-    public void onDestroy(EntityHandler entityHandler, ParticleHandler particleHandler) {
+    public void onDestroy(GameHandler gameHandler) {
         float xx = hitBox.x + hitBox.width / 2;
         float yy = direction > 0 ? hitBox.y + hitBox.height : hitBox.y;
 
         if (laserTarget == LaserTarget.ALIEN) {
-            particleHandler.createLaserBlueEffect(xx, yy);
+            gameHandler.particleHandler.createLaserBlueEffect(xx, yy);
         } else {
-            particleHandler.createLaserRedEffect(xx, yy);
+            gameHandler.particleHandler.createLaserRedEffect(xx, yy);
         }
     }
 

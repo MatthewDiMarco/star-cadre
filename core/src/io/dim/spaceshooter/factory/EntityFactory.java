@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import io.dim.spaceshooter.entity.LaserEntity;
-import io.dim.spaceshooter.entity.LaserEntity.LaserTarget;
-import io.dim.spaceshooter.entity.ship.AiBasicShipEntity;
-import io.dim.spaceshooter.entity.ship.PathTracerShipEntity;
-import io.dim.spaceshooter.entity.ship.PlayerShipEntity;
+import io.dim.spaceshooter.gameobject.entity.LaserEntity;
+import io.dim.spaceshooter.gameobject.entity.LaserEntity.LaserTarget;
+import io.dim.spaceshooter.gameobject.entity.ship.AiBasicShipEntity;
+import io.dim.spaceshooter.gameobject.entity.ship.PathTracerShipEntity;
+import io.dim.spaceshooter.gameobject.entity.ship.PlayerShipEntity;
 import io.dim.spaceshooter.util.MathUtil;
 
 public class EntityFactory {
@@ -29,6 +29,8 @@ public class EntityFactory {
     private final TextureRegion playerLaserTexture;
     private final TextureRegion alienLaserTexture;
 
+    private final Vector2[] pathFigEight;
+
     public EntityFactory(TextureAtlas atlas) {
         this.playerTexture = atlas.findRegion("playerShip3_blue");
         this.alienBasicTexture = atlas.findRegion("enemyRed1");
@@ -36,6 +38,7 @@ public class EntityFactory {
         this.playerLaserTexture = atlas.findRegion("laserBlue01");
         this.alienLaserTexture = atlas.findRegion("laserRed06");
         this.alienLaserTexture.flip(false, true);
+        this.pathFigEight = MathUtil.calcBSplinePath(PATH_BLUEPRINT_FIG_EIGHT, 100);
     }
 
     public PlayerShipEntity createPlayer(
@@ -44,7 +47,7 @@ public class EntityFactory {
         Viewport viewportRef) {
         return new PlayerShipEntity(
             xOrigin, yOrigin, 8, 8,
-            64, 3, 0.5f, 0.15f,
+            64, 3, 0.15f, 0.5f,
             playerTexture, viewportRef);
     }
 
@@ -72,7 +75,7 @@ public class EntityFactory {
         float yOrigin) {
         return new AiBasicShipEntity(
             xOrigin, yOrigin, 10, 10,
-            24, 5, 0.1f, 0.75f,
+            24, 5, 0.75f, 0.1f,
             alienBasic2Texture, 1f);
     }
 
@@ -81,10 +84,8 @@ public class EntityFactory {
         float yOrigin) {
         return new PathTracerShipEntity(
             xOrigin, yOrigin, 6, 6,
-            24, 1, 0.1f, 1f,
-            alienBasicTexture,
-            MathUtil.calcSplinePath(
-                PATH_BLUEPRINT_FIG_EIGHT, xOrigin, yOrigin - 20, 100));
+            32, 1, 0f, 0.1f,
+            alienBasicTexture, pathFigEight);
     }
 
 }

@@ -8,30 +8,32 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.factory.EntityFactory;
-import io.dim.spaceshooter.handler.ParticleHandler;
-import io.dim.spaceshooter.handler.ParallaxHandler;
-import io.dim.spaceshooter.handler.EntityHandler;
+import io.dim.spaceshooter.gameobject.handler.ParticleHandler;
+import io.dim.spaceshooter.gameobject.handler.ParallaxHandler;
+import io.dim.spaceshooter.gameobject.handler.GameHandler;
 import java.util.Stack;
 
-public class PlayState extends ApplicationState {
+public class GameState extends ApplicationState {
 
     public static final int WORLD_WIDTH = 72;
     public static final int WORLD_HEIGHT = 128;
 
-    private TextureAtlas textureAtlas;
+    private final TextureAtlas textureAtlas;
     private final Texture[] backgrounds = new Texture[3];
 
-
-    private ParallaxHandler parallaxHandler;
-    private EntityHandler entityHandler;
     private boolean gameRunning = true;
     private boolean stepping = true;
+    private GameHandler gameHandler;
 
-    public PlayState(
+    public GameState(
         OrthographicCamera camera,
         Viewport viewport,
         Stack<ApplicationState> manager) {
         super(camera, viewport, manager);
+        backgrounds[0] = new Texture("backgrounds/backgrounds-0.png");
+        backgrounds[1] = new Texture("backgrounds/backgrounds-1.png");
+        backgrounds[2] = new Texture("backgrounds/backgrounds-2.png");
+        textureAtlas = new TextureAtlas("textures/textures.atlas");
         init();
     }
 
@@ -39,8 +41,7 @@ public class PlayState extends ApplicationState {
     public void update(final float deltaTime) {
         handleInput();
         if (stepping) {
-            parallaxHandler.update(deltaTime);
-            entityHandler.update(deltaTime);
+            gameHandler.onStep(gameHandler, deltaTime);
             if (!gameRunning) stepping = false;
         }
     }
@@ -48,8 +49,7 @@ public class PlayState extends ApplicationState {
     @Override
     public void render(SpriteBatch batch) {
         batch.begin();
-        parallaxHandler.render(batch);
-        entityHandler.render(batch);
+        gameHandler.onDraw(batch);
         batch.end();
     }
 
@@ -75,33 +75,29 @@ public class PlayState extends ApplicationState {
     }
 
     private void init() {
-        backgrounds[0] = new Texture("backgrounds/backgrounds-0.png");
-        backgrounds[1] = new Texture("backgrounds/backgrounds-1.png");
-        backgrounds[2] = new Texture("backgrounds/backgrounds-2.png");
-        parallaxHandler = new ParallaxHandler(
-            backgrounds, WORLD_WIDTH, WORLD_HEIGHT,
-            true, false);
-
-        textureAtlas = new TextureAtlas("textures/textures.atlas");
-        entityHandler = new EntityHandler(
+        gameHandler = new GameHandler(
             WORLD_WIDTH, WORLD_HEIGHT,
             new EntityFactory(textureAtlas),
-            new ParticleHandler(textureAtlas));
-        entityHandler.playerRef = entityHandler.factory.createPlayer(
-            (float)WORLD_WIDTH / 2,
-            (float)WORLD_HEIGHT / 4, viewport);
-        entityHandler.ships.add(entityHandler.playerRef);
+            new ParticleHandler(textureAtlas),
+            new ParallaxHandler(backgrounds,
+                WORLD_WIDTH, WORLD_HEIGHT,
+                true, false));
+
+        gameHandler.playerRef = gameHandler.factory.createPlayer(
+                (float)WORLD_WIDTH / 2,
+                (float)WORLD_HEIGHT / 4, viewport);
+        gameHandler.ships.add(gameHandler.playerRef);
 
         gameRunning = true;
         stepping = true;
 
-        // temp
-        entityHandler.ships.add(entityHandler.factory.createAlienBasic(
+        // temp TODO delete
+        gameHandler.ships.add(gameHandler.factory.createAlienBasic(
             (float)WORLD_WIDTH / 2,
             (float)WORLD_HEIGHT + 10));
 
-        entityHandler.ships.add(entityHandler.factory.createAlienPathTracer(
+        gameHandler.ships.add(gameHandler.factory.createAlienPathTracer(
             (float)WORLD_WIDTH / 2,
-            (float)WORLD_HEIGHT - 10));
+            (float)WORLD_HEIGHT - 20));
     }
 }

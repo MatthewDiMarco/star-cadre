@@ -1,4 +1,4 @@
-package io.dim.spaceshooter.handler;
+package io.dim.spaceshooter.gameobject.handler;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
-import io.dim.spaceshooter.ApplicationObject;
+import io.dim.spaceshooter.gameobject.GameObject;
 
-public class ParticleHandler implements ApplicationObject {
+public class ParticleHandler implements GameObject {
 
     public ParticleEffectPool laserCombustionBluePool;
     public ParticleEffectPool laserCombustionRedPool;
@@ -43,7 +43,7 @@ public class ParticleHandler implements ApplicationObject {
     }
 
     @Override
-    public void update(float deltaTime) {
+    public void onStep(GameHandler gameHandler, float deltaTime) {
         for (int ii = 0; ii < effects.size; ii++) {
             PooledEffect effect = effects.get(ii);
             effect.update(deltaTime);
@@ -55,7 +55,7 @@ public class ParticleHandler implements ApplicationObject {
     }
 
     @Override
-    public void render(SpriteBatch batch) {
+    public void onDraw(SpriteBatch batch) {
         for (PooledEffect effect : effects) effect.draw(batch);
     }
 

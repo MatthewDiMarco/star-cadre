@@ -1,18 +1,19 @@
-package io.dim.spaceshooter.entity;
+package io.dim.spaceshooter.gameobject.entity;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import io.dim.spaceshooter.handler.EntityHandler;
-import io.dim.spaceshooter.handler.ParticleHandler;
+import io.dim.spaceshooter.gameobject.GameObject;
+import io.dim.spaceshooter.gameobject.handler.GameHandler;
 
-public abstract class Entity {
+public abstract class Entity implements GameObject {
 
     public Rectangle hitBox;
     public float movementSpeed;
     public boolean disposable;
 
-    public Entity(float xOrigin, float yOrigin, float width, float height, float movementSpeed) {
+    public Entity(float xOrigin, float yOrigin,
+        float width, float height,
+        float movementSpeed) {
         this.hitBox = new Rectangle(
             xOrigin - width / 2,
             yOrigin - height / 2,
@@ -57,10 +58,6 @@ public abstract class Entity {
             this.hitBox.y + this.hitBox.height / 2);
     }
 
-    public abstract void onStep(EntityHandler entityHandler, float deltaTime);
-
-    public abstract void onDestroy(EntityHandler entityHandler, ParticleHandler particleHandler);
-
-    public abstract void onDraw(SpriteBatch batch);
+    public abstract void onDestroy(GameHandler gameHandler);
 
 }

@@ -35,16 +35,15 @@ public abstract class Entity implements GameObject {
     public void translate(
         Vector2 point,
         float speed,
-        float proximityThreshold,
-        float[] boundaryDistances) {
+        float proximityThreshold) {
         Vector2 entityCentrePoint = getCenterPoint();
         float distanceToPoint = point.dst(entityCentrePoint);
         if (distanceToPoint > proximityThreshold) {
-            float xTouchDiff = point.x - entityCentrePoint.x;
-            float yTouchDiff = point.y - entityCentrePoint.y;
-            float xMove = xTouchDiff / distanceToPoint * speed;
-            float yMove = yTouchDiff / distanceToPoint * speed;
-            this.translate(xMove, yMove, boundaryDistances);
+            float xPointDiff = point.x - entityCentrePoint.x;
+            float yPointDiff = point.y - entityCentrePoint.y;
+            float xMove = xPointDiff / distanceToPoint * speed;
+            float yMove = yPointDiff / distanceToPoint * speed;
+            this.translate(xMove, yMove);
         }
     }
 

@@ -19,6 +19,7 @@ public class GameHandler implements GameObject {
 
     public final ParticleHandler particleHandler;
     private final ParallaxHandler parallaxHandler;
+    private final SpawnHandler spawnHandler;
 
     public PlayerShipEntity playerRef;
     public List<ShipEntity> ships;
@@ -27,14 +28,15 @@ public class GameHandler implements GameObject {
     public GameHandler(int width, int height,
         EntityFactory factory,
         ParticleHandler particleHandler,
-        ParallaxHandler parallaxHandler) {
+        ParallaxHandler parallaxHandler,
+        SpawnHandler spawnHandler) {
         boundary = new Rectangle(0, 0, width, height);
         this.factory = factory;
         this.particleHandler = particleHandler;
         this.parallaxHandler = parallaxHandler;
+        this.spawnHandler = spawnHandler;
         this.ships = new ArrayList<>();
         this.lasers = new ArrayList<>();
-
     }
 
     @Override
@@ -43,6 +45,7 @@ public class GameHandler implements GameObject {
         stepAll((List<Entity>)(List<?>)ships, deltaTime);
         stepAll((List<Entity>)(List<?>)lasers, deltaTime);
         particleHandler.onStep(gameHandler, deltaTime);
+        spawnHandler.onStep(gameHandler, deltaTime);
     }
 
     @Override

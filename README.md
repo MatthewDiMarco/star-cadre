@@ -13,3 +13,4 @@
 - [ ] Weapon powerups
 - [ ] Slow motion powerup
 - [ ] Invulnerability powerup
+- [ ] Basic sounds and music

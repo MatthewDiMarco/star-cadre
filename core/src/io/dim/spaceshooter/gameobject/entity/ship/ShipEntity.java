@@ -86,10 +86,9 @@ public abstract class ShipEntity extends Entity {
         }
     }
 
-    public void hit(LaserEntity laser) {
+    public void hit(int strength) {
         if (!invulnerabilityEnabled) {
-            laser.disposable = true;
-            hp = Math.max(hp - laser.strength, 0);
+            hp = Math.max(hp - strength, 0);
             if (hp == 0) {
                 disposable = true;
             }

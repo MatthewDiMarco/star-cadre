@@ -11,6 +11,7 @@ import io.dim.spaceshooter.factory.EntityFactory;
 import io.dim.spaceshooter.gameobject.handler.ParticleHandler;
 import io.dim.spaceshooter.gameobject.handler.ParallaxHandler;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
+import io.dim.spaceshooter.gameobject.handler.SpawnHandler;
 import java.util.Stack;
 
 public class GameState extends ApplicationState {
@@ -81,7 +82,8 @@ public class GameState extends ApplicationState {
             new ParticleHandler(textureAtlas),
             new ParallaxHandler(backgrounds,
                 WORLD_WIDTH, WORLD_HEIGHT,
-                true, false));
+                true, false),
+            new SpawnHandler());
 
         gameHandler.playerRef = gameHandler.factory.createPlayer(
                 (float)WORLD_WIDTH / 2,
@@ -90,14 +92,5 @@ public class GameState extends ApplicationState {
 
         gameRunning = true;
         stepping = true;
-
-        // temp TODO delete
-        gameHandler.ships.add(gameHandler.factory.createAlienBasic(
-            (float)WORLD_WIDTH / 2,
-            (float)WORLD_HEIGHT + 10));
-
-        gameHandler.ships.add(gameHandler.factory.createAlienPathTracer(
-            (float)WORLD_WIDTH / 2,
-            (float)WORLD_HEIGHT - 20));
     }
 }

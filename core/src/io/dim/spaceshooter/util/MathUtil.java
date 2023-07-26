@@ -1,23 +1,43 @@
 package io.dim.spaceshooter.util;
 
-import com.badlogic.gdx.math.BSpline;
 import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Path;
 import com.badlogic.gdx.math.Vector2;
 
 public class MathUtil {
 
-    public static Vector2[] calcBSplinePath( // TODO need offset for control points (marching patterns)
-        Vector2[] controlPoints, int fidelity) {
-        //CatmullRomSpline<Vector2> spline = new CatmullRomSpline<>(controlPoints, true);
-        BSpline<Vector2> spline = new BSpline<>(controlPoints, 3, true);
-        return calcPathFromSpline(spline, fidelity);
-    }
-
     public static Vector2[] calcCatmullRomPath(
         Vector2[] controlPoints, int fidelity) {
         CatmullRomSpline<Vector2> spline = new CatmullRomSpline<>(controlPoints, true);
         return calcPathFromSpline(spline, fidelity);
+    }
+
+    /**
+     * Repeats a pattern of control points through space N-times given vertical offset.
+     * @param pattern The pattern to repeat
+     * @param offset The Y amount to move the pattern each repeat
+     * @param repeats The number of repeats
+     * @return The sequence of control points.
+     */
+    public static Vector2[] repeatControlPointsVertically(
+        Vector2[] pattern,
+        float offset,
+        int repeats) {
+        int totalControlPoints = pattern.length + (pattern.length * repeats);
+        Vector2[] controlPoints = new Vector2[totalControlPoints];
+        for (int ii = 0; ii < pattern.length; ii++) {
+            controlPoints[ii] = new Vector2(pattern[ii]);
+        }
+        for (int rr = 1; rr <= repeats; rr++) {
+            for (int ii = 0; ii < pattern.length; ii++) {
+                int currIdx = ii + (pattern.length * rr);
+                Vector2 prevCorrespondingPoint = controlPoints[currIdx - (pattern.length - 1)];
+                controlPoints[currIdx] = new Vector2(
+                    prevCorrespondingPoint.x,
+                    prevCorrespondingPoint.y + offset);
+            }
+        }
+        return controlPoints;
     }
 
     /**

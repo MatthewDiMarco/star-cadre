@@ -69,15 +69,13 @@ public class PlayerShipEntity extends ShipEntity {
         }
 
         if (Gdx.input.isTouched()) {
+            fireLaser(gameHandler);
             Vector2 touchPoint = viewportRef.unproject(
                 new Vector2(Gdx.input.getX(), Gdx.input.getY()));
-
-            fireLaser(gameHandler);
             this.translate(
                 touchPoint,
                 movementSpeed * deltaTime,
-                2f,
-                boundaryDistances);
+                2f);
         }
     }
 

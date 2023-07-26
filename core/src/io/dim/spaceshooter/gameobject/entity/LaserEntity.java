@@ -29,24 +29,26 @@ public class LaserEntity extends Entity {
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
+        // movement
         hitBox.y += (movementSpeed * deltaTime) * Math.signum(direction);
-
-        if (hitBox.y > gameHandler.boundary.height || hitBox.y < -10) {
+        if (hitBox.y < -10 || hitBox.y > gameHandler.boundary.height) {
             disposable = true;
         }
 
+        // collision detection
         if (laserTarget == LaserTarget.ALIEN) {
             for (ShipEntity ship : gameHandler.ships) {
                 if (!ship.invulnerabilityEnabled &&
                     ship != gameHandler.playerRef &&
                     ship.intersects(this)) {
-                    ship.hit(this);
+                    ship.hit(this.strength);
                     disposable = true;
                 }
             }
         } else {
             if (gameHandler.playerRef.intersects(this)) {
-                gameHandler.playerRef.hit(this);
+                gameHandler.playerRef.hit(this.strength);
+                disposable = true;
             }
         }
     }

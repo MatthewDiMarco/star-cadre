@@ -2,16 +2,16 @@ package io.dim.spaceshooter.gameobject.entity.ship;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
 import io.dim.spaceshooter.util.EntityUtils;
+import java.util.Arrays;
 
 public class PathTracerShipEntity extends ShipEntity {
 
     public final float xOrigin;
     public final float yOrigin;
-    public final Vector2[] path;
     public int currPointIdx = 0;
+    public final Vector2[] path;
 
     public PathTracerShipEntity(float xOrigin, float yOrigin,
         float width, float height,
@@ -30,24 +30,27 @@ public class PathTracerShipEntity extends ShipEntity {
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
         super.onStep(gameHandler, deltaTime);
-
         fireLaser(gameHandler);
 
-        float[] boundaryDistances = EntityUtils.calcBoundaryDistances(
-            this.hitBox, gameHandler.boundary.width, gameHandler.boundary.height);
-
+        // path traversal
         Vector2 entityCentrePoint = getCenterPoint(); // TODO creating a new vector every time??
         Vector2 targetPoint = new Vector2(
-            path[currPointIdx].x + xOrigin,
-            path[currPointIdx].y + yOrigin);
-        float distanceToCurrPoint = targetPoint.dst(entityCentrePoint);
-        if (Float.compare(distanceToCurrPoint, 1f) < 0)
+            path[currPointIdx].x + xOrigin, path[currPointIdx].y + yOrigin);
+        if (Math.abs(targetPoint.x - entityCentrePoint.x) < 1 &&
+            Math.abs(targetPoint.y - entityCentrePoint.y) < 1) {
             currPointIdx = (currPointIdx + 1) % path.length;
-        this.translate(
-            targetPoint,
-            movementSpeed * deltaTime,
-            0f,
-            boundaryDistances);
+        }
+
+        // movement
+        this.translate(targetPoint, movementSpeed * deltaTime, 0f);
+        if (hitBox.y < -20) {
+            disposable = true;
+        }
+
+        // collision detection
+        if (gameHandler.playerRef.intersects(this)) {
+            gameHandler.playerRef.hit(1);
+        }
     }
 
     @Override

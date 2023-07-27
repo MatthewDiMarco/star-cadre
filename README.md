@@ -5,7 +5,6 @@
 - [x] More feedback on laser contact
 - [x] More feedback on entity deaths
 - [ ] Improve laser behaviour; add direction vector
-- [ ] Add acc and inertia to improve ship movement
 - [x] Particle system
 - [ ] Asteroids
 - [ ] Entity spawner

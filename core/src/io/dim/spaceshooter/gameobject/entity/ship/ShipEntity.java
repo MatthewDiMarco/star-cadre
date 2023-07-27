@@ -4,13 +4,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.dim.spaceshooter.gameobject.entity.Entity;
-import io.dim.spaceshooter.gameobject.entity.LaserEntity;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
 
 public abstract class ShipEntity extends Entity {
 
-    public static final float INVULNERABILITY_ALPHA_LOW = 0.25f;
-    public static final float INVULNERABILITY_ALPHA_JUMP_RATE = 0.1f;
+    public static final float INVULNERABILITY_ALPHA_LOW = 0f;
+    public static final float INVULNERABILITY_ALPHA_JUMP_RATE = 0.2f;
 
     public int hp;
     public int hpMax;
@@ -18,9 +17,9 @@ public abstract class ShipEntity extends Entity {
     public float invulnerabilityDuration;
     public boolean firingEnabled;
     public boolean invulnerabilityEnabled;
+    public float timerLastLaser;
+    public float timerLastHit;
 
-    protected float timerLastLaser;
-    protected float timerLastHit;
     protected float alpha;
     protected final TextureRegion shipTexture;
 

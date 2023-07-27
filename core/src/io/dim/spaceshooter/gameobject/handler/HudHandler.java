@@ -9,59 +9,76 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import io.dim.spaceshooter.gameobject.GameObject;
+import io.dim.spaceshooter.util.EntityUtils;
 import java.util.Locale;
 
 public class HudHandler implements GameObject {
 
-    private BitmapFont font;
-    private int scoreDisplay, scoreActual, playerHp;
-    private float hudVerticalMargin, hudLeftX, hudRightX, hudRow1Y, hudRow2Y, hudSectionWidth;
-    private TextureRegion shipIcon;
+    public static final float SHAKE_DURATION = 0.25f;
+
+    private final float hudColLeft, hudColRight, hudRowTop;
+    private final BitmapFont font;
+    private final TextureRegion shipIcon;
+    private final int iconWidth, iconHeight;
+
+    private int scoreDisplay, playerHp;
+    private float timerShake = SHAKE_DURATION;
 
     public HudHandler(
         FreeTypeFontGenerator fontGenerator,
         Rectangle hudBoundary,
         TextureRegion shipIcon) {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
-        this.shipIcon = shipIcon;
         fontParameter.size = 72;
         fontParameter.borderWidth = 3.6f;
         fontParameter.color = new Color(1, 1, 1, 0.3f);
         fontParameter.borderColor = new Color(0, 0, 0, 0.3f);
-        font = fontGenerator.generateFont(fontParameter);
-        font.getData().setScale(0.08f);
-        hudVerticalMargin = font.getCapHeight() / 2;
-        hudLeftX = hudVerticalMargin;
-        hudRightX = hudBoundary.width * 2 / 3 - hudLeftX;
-        hudRow1Y = hudBoundary.height - hudVerticalMargin;
-        hudRow2Y = hudRow1Y - hudVerticalMargin - font.getCapHeight();
-        hudSectionWidth = hudBoundary.width / 3;
+        this.font = fontGenerator.generateFont(fontParameter);
+        this.font.getData().setScale(0.08f);
 
-        scoreDisplay = 0;
-        scoreActual = 0;
+        float hudMargin = font.getCapHeight() / 2;
+        this.hudColLeft = hudMargin;
+        this.hudColRight = hudBoundary.width - hudMargin;
+        this.hudRowTop = hudBoundary.height - hudMargin;
+
+        this.shipIcon = shipIcon;
+        this.iconWidth = 5;
+        this.iconHeight = 5;
     }
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
-        scoreActual = gameHandler.score;
         playerHp = gameHandler.playerRef.hp;
-        if (scoreDisplay < scoreActual) {
+        timerShake = Math.min(SHAKE_DURATION, timerShake + deltaTime);
+        if (gameHandler.playerRef.timerLastHit == 0 && playerHp > 0) {
+            timerShake = 0f;
+        }
+        if (scoreDisplay < gameHandler.score) {
             scoreDisplay++;
         }
     }
 
     @Override
     public void onDraw(SpriteBatch batch) {
-        font.draw(batch, "Score", hudLeftX, hudRow1Y, hudSectionWidth, Align.left, false);
-        font.draw(batch, String.format(Locale.getDefault(), "%d", scoreDisplay),
-            hudLeftX, hudRow2Y, hudSectionWidth, Align.left, false);
+        boolean shake = timerShake - SHAKE_DURATION < 0;
+        float xShake = shake ? EntityUtils.random.nextFloat() / 2 : 0;
+        float yShake = shake ? EntityUtils.random.nextFloat() / 2 : 0;
+
+        font.draw(batch, String.format(Locale.getDefault(), "$ %d", scoreDisplay),
+            hudColLeft + xShake, hudRowTop + yShake, 0,
+            Align.left, false);
+
+        font.draw(batch, String.format(Locale.getDefault(), "%d ", playerHp),
+            (hudColRight - iconWidth) + xShake,
+            hudRowTop + yShake, 0,
+            Align.right, false);
 
         Color cc = batch.getColor();
-        batch.setColor(cc.r, cc.g, cc.b, 0.25f);
-        batch.draw(shipIcon, hudRightX + 20, hudRow1Y - 5, 4, 4);
+        batch.setColor(cc.r, cc.g, cc.b, 0.5f);
+        batch.draw(shipIcon,
+            (hudColRight - iconWidth) + xShake,
+            (hudRowTop - iconHeight) + yShake,
+            iconWidth, iconHeight);
         batch.setColor(cc.r, cc.g, cc.b, 1f);
-
-        font.draw(batch, String.format(Locale.getDefault(), "%d", playerHp),
-            hudRightX, hudRow2Y, hudSectionWidth, Align.right, false);
     }
 }

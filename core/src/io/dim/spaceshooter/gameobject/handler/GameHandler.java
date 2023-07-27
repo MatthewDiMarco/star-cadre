@@ -20,7 +20,9 @@ public class GameHandler implements GameObject {
     public final ParticleHandler particleHandler;
     private final ParallaxHandler parallaxHandler;
     private final SpawnHandler spawnHandler;
+    private final HudHandler hudHandler;
 
+    public int score = 0;
     public PlayerShipEntity playerRef;
     public List<ShipEntity> ships;
     public List<LaserEntity> lasers; // TODO replace with libGDX collections
@@ -29,12 +31,14 @@ public class GameHandler implements GameObject {
         EntityFactory factory,
         ParticleHandler particleHandler,
         ParallaxHandler parallaxHandler,
-        SpawnHandler spawnHandler) {
+        SpawnHandler spawnHandler,
+        HudHandler hudHandler) {
         boundary = new Rectangle(0, 0, width, height);
         this.factory = factory;
         this.particleHandler = particleHandler;
         this.parallaxHandler = parallaxHandler;
         this.spawnHandler = spawnHandler;
+        this.hudHandler = hudHandler;
         this.ships = new ArrayList<>();
         this.lasers = new ArrayList<>();
     }
@@ -46,6 +50,7 @@ public class GameHandler implements GameObject {
         stepAll((List<Entity>)(List<?>)lasers, deltaTime);
         particleHandler.onStep(gameHandler, deltaTime);
         spawnHandler.onStep(gameHandler, deltaTime);
+        hudHandler.onStep(gameHandler, deltaTime);
     }
 
     @Override
@@ -54,6 +59,7 @@ public class GameHandler implements GameObject {
         for (ShipEntity ship : ships) ship.onDraw(batch);
         for (LaserEntity laser : lasers) laser.onDraw(batch);
         particleHandler.onDraw(batch);
+        hudHandler.onDraw(batch);
     }
 
     private void stepAll(List<Entity> entities, float deltaTime) {

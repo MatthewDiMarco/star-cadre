@@ -42,6 +42,7 @@ public class LaserEntity extends Entity {
                     ship != gameHandler.playerRef &&
                     ship.intersects(this)) {
                     ship.hit(this.strength);
+                    gameHandler.score += 15;
                     disposable = true;
                 }
             }

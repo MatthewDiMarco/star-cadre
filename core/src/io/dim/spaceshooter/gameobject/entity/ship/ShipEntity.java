@@ -13,10 +13,18 @@ public abstract class ShipEntity extends Entity {
 
     public int hp;
     public int hpMax;
-    public float firingCooldownDuration;
-    public float invulnerabilityDuration;
-    public boolean firingEnabled;
+
+    public boolean lasersEnabled;
+    public int laserStrength;
+    public int laserPerShot;
+    public float laserArcLength;
+    public float laserSpeed;
+    public float laserScatter;
+    public float laserCooldownDuration;
+
     public boolean invulnerabilityEnabled;
+    public float invulnerabilityDuration;
+
     public float timerLastLaser;
     public float timerLastHit;
 
@@ -26,25 +34,37 @@ public abstract class ShipEntity extends Entity {
     public ShipEntity(float xOrigin, float yOrigin,
         float width, float height,
         float movementSpeed, int hp,
-        float firingCooldownDuration,
+        float laserCooldownDuration,
+        int laserStrength, int laserPerShot,
+        float laserArcLength,
+        float laserSpeed, float laserScatter,
         float invulnerabilityDuration,
         TextureRegion shipTexture) {
         super(xOrigin, yOrigin, width, height, movementSpeed);
         this.hp = hp;
         this.hpMax = hp;
-        this.firingCooldownDuration = firingCooldownDuration;
-        this.invulnerabilityDuration = invulnerabilityDuration;
-        this.firingEnabled = Float.compare(firingCooldownDuration, 0f) != 0;
+
+        this.lasersEnabled = Float.compare(laserCooldownDuration, 0f) != 0;
+        this.laserStrength = laserStrength;
+        this.laserPerShot = laserPerShot;
+        this.laserArcLength = laserArcLength;
+        this.laserSpeed = laserSpeed;
+        this.laserScatter = laserScatter;
+        this.laserCooldownDuration = laserCooldownDuration;
+
         this.invulnerabilityEnabled = false;
+        this.invulnerabilityDuration = invulnerabilityDuration;
+
         this.timerLastLaser = 0;
         this.timerLastHit = 0;
+
         this.alpha = 1f;
         this.shipTexture = shipTexture;
     }
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
-        this.timerLastLaser = Math.min(firingCooldownDuration, timerLastLaser + deltaTime);
+        this.timerLastLaser = Math.min(laserCooldownDuration, timerLastLaser + deltaTime);
         this.timerLastHit = Math.min(invulnerabilityDuration, timerLastHit + deltaTime);
         if (invulnerabilityEnabled) {
             this.alpha = (alpha + INVULNERABILITY_ALPHA_JUMP_RATE) % 1;
@@ -79,7 +99,7 @@ public abstract class ShipEntity extends Entity {
     public abstract void onFireLaser(GameHandler gameHandler);
 
     public void fireLaser(GameHandler gameHandler) {
-        if (firingEnabled && timerLastLaser - firingCooldownDuration >= 0) {
+        if (lasersEnabled && timerLastLaser - laserCooldownDuration >= 0) {
             this.onFireLaser(gameHandler);
             timerLastLaser = 0;
         }

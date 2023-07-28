@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import io.dim.spaceshooter.gameobject.entity.LaserEntity;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
 import io.dim.spaceshooter.util.EntityUtils;
 
@@ -15,12 +16,16 @@ public class PlayerShipEntity extends ShipEntity {
     public PlayerShipEntity(float xOrigin, float yOrigin,
         float width, float height,
         float movementSpeed, int hp,
-        float firingCooldownDuration,
+        float laserCooldownDuration,
+        int laserStrength, int laserPerShot,
+        float laserArcLength,
+        float laserSpeed, float laserScatter,
         float invulnerabilityDuration,
         TextureRegion shipTexture,
         Viewport viewportRef) {
         super(xOrigin, yOrigin, width, height, movementSpeed, hp,
-            firingCooldownDuration, invulnerabilityDuration, shipTexture);
+            laserCooldownDuration, laserStrength, laserPerShot, laserArcLength, laserSpeed, laserScatter,
+            invulnerabilityDuration, shipTexture);
         this.viewportRef = viewportRef;
     }
 
@@ -80,9 +85,17 @@ public class PlayerShipEntity extends ShipEntity {
     }
 
     @Override
-    public void onFireLaser(GameHandler gameHandler) {
-        gameHandler.lasers.add(gameHandler.factory.createPlayerLaser(
-            hitBox.x + hitBox.width * 0.5f,
-            hitBox.y + hitBox.height * 1.1f));
+    public void onFireLaser(GameHandler gameHandler) { // TODO gonna need to move this up (ShipEntity)
+        float arcRegionLength = laserArcLength / laserPerShot;
+        for (int ii = 0; ii < laserPerShot; ii++) {
+            float offset = (ii*arcRegionLength + arcRegionLength/2) - laserArcLength/2;
+            LaserEntity laser = gameHandler.factory.createPlayerLaser(
+                hitBox.x + hitBox.width * 0.5f,
+                hitBox.y + hitBox.height * 1.1f);
+            laser.strength = laserStrength;
+            laser.movementSpeed = laserSpeed;
+            laser.direction.x = offset;
+            gameHandler.lasers.add(laser);
+        }
     }
 }

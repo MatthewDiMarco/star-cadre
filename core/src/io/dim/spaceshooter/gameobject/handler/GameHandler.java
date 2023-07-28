@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import io.dim.spaceshooter.factory.EntityFactory;
 import io.dim.spaceshooter.gameobject.entity.Entity;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity;
+import io.dim.spaceshooter.gameobject.entity.pickup.Pickup;
 import io.dim.spaceshooter.gameobject.entity.ship.PlayerShipEntity;
 import io.dim.spaceshooter.gameobject.entity.ship.ShipEntity;
 import io.dim.spaceshooter.gameobject.GameObject;
@@ -26,6 +27,7 @@ public class GameHandler implements GameObject {
     public PlayerShipEntity playerRef;
     public List<ShipEntity> ships;
     public List<LaserEntity> lasers; // TODO replace with libGDX collections
+    public List<Pickup> pickups;
 
     public GameHandler(int width, int height,
         EntityFactory factory,
@@ -41,6 +43,7 @@ public class GameHandler implements GameObject {
         this.hudHandler = hudHandler;
         this.ships = new ArrayList<>();
         this.lasers = new ArrayList<>();
+        this.pickups = new ArrayList<>();
     }
 
     @Override
@@ -48,6 +51,7 @@ public class GameHandler implements GameObject {
         parallaxHandler.onStep(gameHandler, deltaTime);
         stepAll((List<Entity>)(List<?>)ships, deltaTime);
         stepAll((List<Entity>)(List<?>)lasers, deltaTime);
+        stepAll((List<Entity>)(List<?>)pickups, deltaTime);
         particleHandler.onStep(gameHandler, deltaTime);
         spawnHandler.onStep(gameHandler, deltaTime);
         hudHandler.onStep(gameHandler, deltaTime);
@@ -58,6 +62,7 @@ public class GameHandler implements GameObject {
         parallaxHandler.onDraw(batch);
         for (ShipEntity ship : ships) ship.onDraw(batch);
         for (LaserEntity laser : lasers) laser.onDraw(batch);
+        for (Pickup pickup : pickups) pickup.onDraw(batch);
         particleHandler.onDraw(batch);
         hudHandler.onDraw(batch);
     }

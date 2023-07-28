@@ -13,3 +13,8 @@
 - [ ] Slow motion powerup
 - [ ] Invulnerability powerup
 - [ ] Basic sounds and music
+
+Optimizations
+- [ ] Blending (?) (https://libgdx.com/wiki/graphics/2d/spritebatch-textureregions-and-sprites)
+- [ ] Object pooling (no "new" keywords throughout game)
+- [ ] Replace points (Vector2) with primitives and util functions

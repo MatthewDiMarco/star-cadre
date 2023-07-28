@@ -2,6 +2,7 @@ package io.dim.spaceshooter.gameobject.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
 import io.dim.spaceshooter.gameobject.entity.ship.ShipEntity;
 
@@ -9,8 +10,8 @@ public class LaserEntity extends Entity {
 
     public enum LaserTarget { PLAYER, ALIEN }
 
-    public int direction; // TODO: direction vector
     public int strength;
+    public Vector2 direction;
     public LaserTarget laserTarget;
 
     protected final TextureRegion laserTexture;
@@ -18,11 +19,11 @@ public class LaserEntity extends Entity {
     public LaserEntity(float xOrigin, float yOrigin,
         float width, float height,
         float movementSpeed,
-        int direction, int strength,
+        int direction, int strength, float horizontalOffset,
         LaserTarget target, TextureRegion laserTexture) {
         super(xOrigin, yOrigin, width, height, movementSpeed);
-        this.direction = direction;
         this.strength = strength;
+        this.direction = new Vector2(horizontalOffset, Math.signum(direction));
         this.laserTarget = target;
         this.laserTexture = laserTexture;
     }
@@ -30,7 +31,8 @@ public class LaserEntity extends Entity {
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
         // movement
-        hitBox.y += (movementSpeed * deltaTime) * Math.signum(direction);
+        hitBox.x += (movementSpeed * deltaTime) * direction.x;
+        hitBox.y += (movementSpeed * deltaTime) * direction.y;
         if (hitBox.y < -10 || hitBox.y > gameHandler.boundary.height) {
             disposable = true;
         }
@@ -57,7 +59,7 @@ public class LaserEntity extends Entity {
     @Override
     public void onDestroy(GameHandler gameHandler) {
         float xx = hitBox.x + hitBox.width / 2;
-        float yy = direction > 0 ? hitBox.y + hitBox.height : hitBox.y;
+        float yy = direction.y > 0 ? hitBox.y + hitBox.height : hitBox.y;
 
         if (laserTarget == LaserTarget.ALIEN) {
             gameHandler.particleHandler.createLaserBlueEffect(xx, yy);
@@ -70,7 +72,8 @@ public class LaserEntity extends Entity {
     public void onDraw(SpriteBatch batch) {
         batch.draw(
             laserTexture,
-            hitBox.x, hitBox.y,
-            hitBox.width, hitBox.height);
+            hitBox.x, hitBox.y, 0, 0,
+            hitBox.width, hitBox.height, 1, 1, // TODO width and height modified by strength
+            direction.angleDeg() + (Math.signum(direction.y) > 0 ? -90 : 90));
     }
 }

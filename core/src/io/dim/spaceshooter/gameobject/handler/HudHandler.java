@@ -61,7 +61,7 @@ public class HudHandler implements GameObject {
     @Override
     public void onDraw(SpriteBatch batch) {
         boolean shake = timerShake - SHAKE_DURATION < 0;
-        float xShake = shake ? EntityUtils.random.nextFloat() / 2 : 0;
+        float xShake = shake ? EntityUtils.random.nextFloat() / 2 : 0; // TODO put in step
         float yShake = shake ? EntityUtils.random.nextFloat() / 2 : 0;
 
         font.draw(batch, String.format(Locale.getDefault(), "$ %d", scoreDisplay),

@@ -9,7 +9,7 @@ import java.util.Stack;
 
 public class SpawnHandler implements GameObject {
 
-    public static final float DURATION_BETWEEN_SWARMS = 2.5f;
+    public static final float DURATION_BETWEEN_SWARMS = 2f;
 
     public Stack<Job> spawnJobs;
 

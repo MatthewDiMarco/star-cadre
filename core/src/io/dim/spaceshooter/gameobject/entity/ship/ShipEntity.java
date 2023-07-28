@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.dim.spaceshooter.gameobject.entity.Entity;
+import io.dim.spaceshooter.gameobject.entity.LaserEntity;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
 
 public abstract class ShipEntity extends Entity {
@@ -96,15 +97,6 @@ public abstract class ShipEntity extends Entity {
         batch.setColor(cc.r, cc.g, cc.b, 1f);
     }
 
-    public abstract void onFireLaser(GameHandler gameHandler);
-
-    public void fireLaser(GameHandler gameHandler) {
-        if (lasersEnabled && timerLastLaser - laserCooldownDuration >= 0) {
-            this.onFireLaser(gameHandler);
-            timerLastLaser = 0;
-        }
-    }
-
     public void hit(int strength) {
         if (!invulnerabilityEnabled) {
             hp = Math.max(hp - strength, 0);
@@ -117,4 +109,21 @@ public abstract class ShipEntity extends Entity {
             alpha = INVULNERABILITY_ALPHA_LOW;
         }
     }
+
+    public void fireLaser(GameHandler gameHandler) {
+        if (lasersEnabled && timerLastLaser - laserCooldownDuration >= 0) {
+            timerLastLaser = 0;
+            float arcRegionLength = laserArcLength / laserPerShot;
+            for (int ii = 0; ii < laserPerShot; ii++) {
+                float offset = (ii*arcRegionLength + arcRegionLength/2) - laserArcLength/2;
+                LaserEntity laser = this.getBaseLaser(gameHandler);
+                laser.strength = laserStrength;
+                laser.movementSpeed = laserSpeed;
+                laser.direction.x = offset;
+                gameHandler.lasers.add(laser);
+            }
+        }
+    }
+
+    public abstract LaserEntity getBaseLaser(GameHandler gameHandler);
 }

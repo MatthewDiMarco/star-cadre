@@ -2,10 +2,8 @@ package io.dim.spaceshooter.gameobject.entity.ship;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import io.dim.spaceshooter.gameobject.entity.LaserEntity;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
-import io.dim.spaceshooter.util.EntityUtils;
-import java.util.Arrays;
 
 public class PathTracerShipEntity extends ShipEntity {
 
@@ -59,9 +57,17 @@ public class PathTracerShipEntity extends ShipEntity {
     }
 
     @Override
-    public void onFireLaser(GameHandler gameHandler) {
-        gameHandler.lasers.add(gameHandler.factory.createAlienLaser(
+    public void onDestroy(GameHandler gameHandler) {
+        super.onDestroy(gameHandler);
+        gameHandler.rollRandomPickup(
+            hitBox.x + hitBox.width / 2,
+            hitBox.y + hitBox.height / 2);
+    }
+
+    @Override
+    public LaserEntity getBaseLaser(GameHandler gameHandler) {
+        return gameHandler.factory.createAlienLaser(
             hitBox.x + hitBox.width * 0.5f,
-            hitBox.y + hitBox.height * 1.1f));
+            hitBox.y + hitBox.height * 1.1f);
     }
 }

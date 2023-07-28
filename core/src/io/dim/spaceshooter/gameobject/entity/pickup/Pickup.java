@@ -44,6 +44,13 @@ public abstract class Pickup extends Entity {
     }
 
     @Override
+    public void onDestroy(GameHandler gameHandler) {
+        if (activated) {
+            onUndo(gameHandler);
+        }
+    }
+
+    @Override
     public void onDraw(SpriteBatch batch) {
         if (!activated) {
             batch.draw(
@@ -55,5 +62,12 @@ public abstract class Pickup extends Entity {
         }
     }
 
-    public abstract void onPickup(GameHandler gameHandler);
+    public void onPickup(GameHandler gameHandler) {
+        gameHandler.particleHandler.createExplosionEffect(
+            hitBox.x + hitBox.width / 2,
+            hitBox.y + hitBox.height / 2,
+            Math.max(hitBox.width, hitBox.height) / 10);  // temp
+    }
+
+    public abstract void onUndo(GameHandler gameHandler);
 }

@@ -4,12 +4,13 @@
 - [x] Player invulnerable for a few frames after hit
 - [x] More feedback on laser contact
 - [x] More feedback on entity deaths
-- [ ] Improve laser behaviour; add direction vector
+- [x] Improve laser behaviour; add direction vector
 - [x] Particle system
+- [ ] Simplify player movement (left and right only)
 - [ ] Asteroids
 - [ ] Entity spawner
 - [ ] More complex alien AI
-- [ ] Weapon powerups
+- [x] Weapon powerups
 - [ ] Slow motion powerup
 - [ ] Invulnerability powerup
 - [ ] Basic sounds and music

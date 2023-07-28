@@ -32,10 +32,9 @@ public class PlayerShipEntity extends ShipEntity {
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
         super.onStep(gameHandler, deltaTime);
+
         float[] boundaryDistances = EntityUtils.calcBoundaryDistances(
-            this.hitBox,
-            gameHandler.boundary.width,
-            gameHandler.boundary.height);
+            this.hitBox, gameHandler.boundary.width, gameHandler.boundary.height);
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP) ||
             Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -85,17 +84,9 @@ public class PlayerShipEntity extends ShipEntity {
     }
 
     @Override
-    public void onFireLaser(GameHandler gameHandler) { // TODO gonna need to move this up (ShipEntity)
-        float arcRegionLength = laserArcLength / laserPerShot;
-        for (int ii = 0; ii < laserPerShot; ii++) {
-            float offset = (ii*arcRegionLength + arcRegionLength/2) - laserArcLength/2;
-            LaserEntity laser = gameHandler.factory.createPlayerLaser(
-                hitBox.x + hitBox.width * 0.5f,
-                hitBox.y + hitBox.height * 1.1f);
-            laser.strength = laserStrength;
-            laser.movementSpeed = laserSpeed;
-            laser.direction.x = offset;
-            gameHandler.lasers.add(laser);
-        }
+    public LaserEntity getBaseLaser(GameHandler gameHandler) {
+        return gameHandler.factory.createPlayerLaser(
+            hitBox.x + hitBox.width * 0.5f,
+            hitBox.y + hitBox.height * 1.1f);
     }
 }

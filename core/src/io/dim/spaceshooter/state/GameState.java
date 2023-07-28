@@ -108,17 +108,6 @@ public class GameState extends ApplicationState {
                 (float)WORLD_HEIGHT / 4, viewport);
         gameHandler.ships.add(gameHandler.playerRef);
 
-        // temp
-        gameHandler.pickups.add(gameHandler.factory.createTestPickup(
-            (float)WORLD_WIDTH / 2,
-            (float)WORLD_HEIGHT + 5));
-        gameHandler.pickups.add(gameHandler.factory.createTestPickup(
-            (float)WORLD_WIDTH / 2,
-            (float)WORLD_HEIGHT + 15));
-        gameHandler.pickups.add(gameHandler.factory.createTestPickup(
-            (float)WORLD_WIDTH / 2,
-            (float)WORLD_HEIGHT + 25));
-
         gameRunning = true;
         stepping = true;
     }

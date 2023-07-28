@@ -9,6 +9,7 @@ import io.dim.spaceshooter.gameobject.entity.pickup.Pickup;
 import io.dim.spaceshooter.gameobject.entity.ship.PlayerShipEntity;
 import io.dim.spaceshooter.gameobject.entity.ship.ShipEntity;
 import io.dim.spaceshooter.gameobject.GameObject;
+import io.dim.spaceshooter.util.EntityUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -65,6 +66,14 @@ public class GameHandler implements GameObject {
         for (Pickup pickup : pickups) pickup.onDraw(batch);
         particleHandler.onDraw(batch);
         hudHandler.onDraw(batch);
+    }
+
+    public void rollRandomPickup(float xPos, float yPos) {
+        int type = EntityUtils.random.nextInt(50);
+        if (type < 2) {
+            Pickup pickup = factory.createPickup(xPos, yPos, type);
+            pickups.add(pickup);
+        }
     }
 
     private void stepAll(List<Entity> entities, float deltaTime) {

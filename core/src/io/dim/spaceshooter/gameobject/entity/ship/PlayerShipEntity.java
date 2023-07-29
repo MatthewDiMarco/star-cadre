@@ -18,14 +18,14 @@ public class PlayerShipEntity extends ShipEntity {
         float movementSpeed, int hp,
         float laserCooldownDuration,
         int laserStrength, int laserPerShot,
-        float laserArcLength,
-        float laserSpeed, float laserScatter,
+        float laserBarrelWidth,
+        float laserMovementSpeed,
         float invulnerabilityDuration,
         TextureRegion shipTexture,
         Viewport viewportRef) {
         super(xOrigin, yOrigin, width, height, movementSpeed, hp,
-            laserCooldownDuration, laserStrength, laserPerShot, laserArcLength, laserSpeed, laserScatter,
-            invulnerabilityDuration, shipTexture);
+            laserCooldownDuration, laserStrength, laserPerShot,
+            laserBarrelWidth, laserMovementSpeed, invulnerabilityDuration, shipTexture);
         this.viewportRef = viewportRef;
     }
 
@@ -85,8 +85,8 @@ public class PlayerShipEntity extends ShipEntity {
 
     @Override
     public LaserEntity getBaseLaser(GameHandler gameHandler) {
-        return gameHandler.factory.createPlayerLaser(
+        return gameHandler.factory.createBlankPlayerLaser(
             hitBox.x + hitBox.width * 0.5f,
-            hitBox.y + hitBox.height * 1.1f);
+            hitBox.y + hitBox.height);
     }
 }

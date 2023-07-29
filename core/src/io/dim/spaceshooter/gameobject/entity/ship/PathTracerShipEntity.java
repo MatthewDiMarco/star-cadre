@@ -17,14 +17,14 @@ public class PathTracerShipEntity extends ShipEntity {
         float movementSpeed, int hp,
         float laserCooldownDuration,
         int laserStrength, int laserPerShot,
-        float laserArcLength,
-        float laserSpeed, float laserScatter,
+        float laserBarrelWidth,
+        float laserMovementSpeed,
         float invulnerabilityDuration,
         TextureRegion shipTexture,
         Vector2[] path) {
         super(xOrigin, yOrigin, width, height, movementSpeed, hp,
-            laserCooldownDuration, laserStrength, laserPerShot, laserArcLength, laserSpeed, laserScatter,
-            invulnerabilityDuration, shipTexture);
+            laserCooldownDuration, laserStrength, laserPerShot,
+            laserBarrelWidth, laserMovementSpeed, invulnerabilityDuration, shipTexture);
         this.xOrigin = xOrigin;
         this.yOrigin = yOrigin;
         this.path = path;

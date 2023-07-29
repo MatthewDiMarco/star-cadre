@@ -6,7 +6,6 @@
 - [x] More feedback on entity deaths
 - [x] Improve laser behaviour; add direction vector
 - [x] Particle system
-- [ ] Simplify player movement (left and right only)
 - [ ] Asteroids
 - [ ] Entity spawner
 - [ ] More complex alien AI

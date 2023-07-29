@@ -10,6 +10,7 @@ public class LaserEntity extends Entity {
 
     public enum LaserTarget { PLAYER, ALIEN }
 
+    public float launchSpeedOffset;
     public int strength;
     public Vector2 direction;
     public LaserTarget laserTarget;
@@ -22,6 +23,7 @@ public class LaserEntity extends Entity {
         int direction, int strength, float horizontalOffset,
         LaserTarget target, TextureRegion laserTexture) {
         super(xOrigin, yOrigin, width, height, movementSpeed);
+        this.launchSpeedOffset = movementSpeed * 3;
         this.strength = strength;
         this.direction = new Vector2(horizontalOffset, Math.signum(direction));
         this.laserTarget = target;
@@ -31,8 +33,9 @@ public class LaserEntity extends Entity {
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
         // movement
-        hitBox.x += (movementSpeed * deltaTime) * direction.x;
-        hitBox.y += (movementSpeed * deltaTime) * direction.y;
+        hitBox.x += ((movementSpeed + launchSpeedOffset) * deltaTime) * direction.x;
+        hitBox.y += ((movementSpeed + launchSpeedOffset) * deltaTime) * direction.y;
+        if (launchSpeedOffset > 0.1f) launchSpeedOffset = launchSpeedOffset / 2;
         if (hitBox.y < -10 || hitBox.y > gameHandler.boundary.height) {
             disposable = true;
         }

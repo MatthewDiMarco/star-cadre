@@ -9,8 +9,14 @@ import io.dim.spaceshooter.gameobject.handler.GameHandler;
 
 public abstract class ShipEntity extends Entity {
 
-    public static final float INVULNERABILITY_ALPHA_LOW = 0f;
-    public static final float INVULNERABILITY_ALPHA_JUMP_RATE = 0.2f;
+    public static final int MAX_LASER_STRENGTH = 3;
+    public static final int MAX_LASER_PER_SHOT = 5;
+    public static final float MAX_LASER_BARREL_WIDTH = 1.15f;
+    public static final float MAX_LASER_MOVEMENT_SPEED = 200;
+    public static final float MIN_LASER_COOLDOWN = 0.15f;
+
+    private static final float INVULNERABILITY_ALPHA_LOW = 0f;
+    private static final float INVULNERABILITY_ALPHA_JUMP_RATE = 0.2f;
 
     public int hp;
     public int hpMax;
@@ -18,9 +24,8 @@ public abstract class ShipEntity extends Entity {
     public boolean lasersEnabled;
     public int laserStrength;
     public int laserPerShot;
-    public float laserArcLength;
-    public float laserSpeed;
-    public float laserScatter;
+    public float laserBarrelWidth;
+    public float laserMovementSpeed;
     public float laserCooldownDuration;
 
     public boolean invulnerabilityEnabled;
@@ -37,8 +42,8 @@ public abstract class ShipEntity extends Entity {
         float movementSpeed, int hp,
         float laserCooldownDuration,
         int laserStrength, int laserPerShot,
-        float laserArcLength,
-        float laserSpeed, float laserScatter,
+        float laserBarrelWidth,
+        float laserMovementSpeed,
         float invulnerabilityDuration,
         TextureRegion shipTexture) {
         super(xOrigin, yOrigin, width, height, movementSpeed);
@@ -48,9 +53,8 @@ public abstract class ShipEntity extends Entity {
         this.lasersEnabled = Float.compare(laserCooldownDuration, 0f) != 0;
         this.laserStrength = laserStrength;
         this.laserPerShot = laserPerShot;
-        this.laserArcLength = laserArcLength;
-        this.laserSpeed = laserSpeed;
-        this.laserScatter = laserScatter;
+        this.laserBarrelWidth = laserBarrelWidth;
+        this.laserMovementSpeed = laserMovementSpeed;
         this.laserCooldownDuration = laserCooldownDuration;
 
         this.invulnerabilityEnabled = false;
@@ -65,8 +69,8 @@ public abstract class ShipEntity extends Entity {
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
-        this.timerLastLaser = Math.min(laserCooldownDuration, timerLastLaser + deltaTime);
-        this.timerLastHit = Math.min(invulnerabilityDuration, timerLastHit + deltaTime);
+        this.timerLastLaser = timerLastLaser + deltaTime;
+        this.timerLastHit = timerLastHit + deltaTime;
         if (invulnerabilityEnabled) {
             this.alpha = (alpha + INVULNERABILITY_ALPHA_JUMP_RATE) % 1;
             if (timerLastHit - invulnerabilityDuration >= 0) {
@@ -111,14 +115,18 @@ public abstract class ShipEntity extends Entity {
     }
 
     public void fireLaser(GameHandler gameHandler) {
-        if (lasersEnabled && timerLastLaser - laserCooldownDuration >= 0) {
+        boolean nextLaserReady =
+            timerLastLaser - Math.max(laserCooldownDuration, MIN_LASER_COOLDOWN) >= 0;
+        if (lasersEnabled && nextLaserReady) {
             timerLastLaser = 0;
-            float arcRegionLength = laserArcLength / laserPerShot;
-            for (int ii = 0; ii < laserPerShot; ii++) {
-                float offset = (ii*arcRegionLength + arcRegionLength/2) - laserArcLength/2;
+            float barrelWidth = Math.min(laserBarrelWidth, MAX_LASER_BARREL_WIDTH);
+            float numLasers = Math.min(laserPerShot, MAX_LASER_PER_SHOT);
+            float laserRegionWidth = barrelWidth / numLasers;
+            for (int ii = 0; ii < numLasers; ii++) {
+                float offset = (ii*laserRegionWidth + laserRegionWidth/2) - barrelWidth/2;
                 LaserEntity laser = this.getBaseLaser(gameHandler);
-                laser.strength = laserStrength;
-                laser.movementSpeed = laserSpeed;
+                laser.strength = Math.min(laserStrength, MAX_LASER_STRENGTH);
+                laser.movementSpeed = Math.min(laserMovementSpeed, MAX_LASER_MOVEMENT_SPEED);
                 laser.direction.x = offset;
                 gameHandler.lasers.add(laser);
             }

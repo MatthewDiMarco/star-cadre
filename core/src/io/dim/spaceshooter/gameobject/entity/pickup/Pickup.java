@@ -7,6 +7,7 @@ import io.dim.spaceshooter.gameobject.handler.GameHandler;
 
 public abstract class Pickup extends Entity {
 
+    public static final float DEFAULT_TIMER = 10f;
     public boolean activated;
     public float timer;
 
@@ -16,7 +17,7 @@ public abstract class Pickup extends Entity {
         float movementSpeed, TextureRegion texture) {
         super(xOrigin, yOrigin, width, height, movementSpeed);
         this.activated = false;
-        this.timer = 10f;
+        this.timer = DEFAULT_TIMER;
         this.texture = texture;
     }
 

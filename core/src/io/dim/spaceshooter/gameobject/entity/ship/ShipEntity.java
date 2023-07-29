@@ -85,7 +85,7 @@ public abstract class ShipEntity extends Entity {
         gameHandler.particleHandler.createExplosionEffect(
             hitBox.x + hitBox.width / 2,
             hitBox.y + hitBox.height / 2,
-            Math.max(hitBox.width, hitBox.height) / 10);
+            Math.max(hitBox.width, hitBox.height) / 20);
     }
 
     @Override

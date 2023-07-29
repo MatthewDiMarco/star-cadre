@@ -65,9 +65,9 @@ public class LaserEntity extends Entity {
         float yy = direction.y > 0 ? hitBox.y + hitBox.height : hitBox.y;
 
         if (laserTarget == LaserTarget.ALIEN) {
-            gameHandler.particleHandler.createLaserBlueEffect(xx, yy);
+            gameHandler.particleHandler.createLaserSmokeBlueEffect(xx, yy);
         } else {
-            gameHandler.particleHandler.createLaserRedEffect(xx, yy);
+            gameHandler.particleHandler.createLaserSmokeRedEffect(xx, yy);
         }
     }
 

@@ -67,7 +67,7 @@ public abstract class Pickup extends Entity {
         gameHandler.particleHandler.createExplosionEffect(
             hitBox.x + hitBox.width / 2,
             hitBox.y + hitBox.height / 2,
-            Math.max(hitBox.width, hitBox.height) / 10);  // temp
+            Math.max(hitBox.width, hitBox.height) / 30);  // temp
     }
 
     public abstract void onUndo(GameHandler gameHandler);

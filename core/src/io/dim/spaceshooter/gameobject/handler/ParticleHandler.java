@@ -11,35 +11,43 @@ import io.dim.spaceshooter.gameobject.GameObject;
 
 public class ParticleHandler implements GameObject {
 
-    public ParticleEffectPool laserCombustionBluePool;
-    public ParticleEffectPool laserCombustionRedPool;
-    public ParticleEffectPool explosionPool;
+    public ParticleEffectPool laserSmokeBluePool;
+    public ParticleEffectPool laserSmokeRedPool;
+    public ParticleEffectPool explosionFlamePool;
+    public ParticleEffectPool explosionSmokePool;
     public Array<PooledEffect> effects;
 
     public ParticleHandler(TextureAtlas atlas) {
         this.effects = new Array<>();
 
-        ParticleEffect laserCombustionBlueEffect = new ParticleEffect();
-        laserCombustionBlueEffect.load(Gdx.files.internal(
-            "effects/laserCombustionBlue.party"), atlas);
-        laserCombustionBlueEffect.scaleEffect(0.1f);
+        ParticleEffect laserSmokeBlueEffect = new ParticleEffect();
+        laserSmokeBlueEffect.load(Gdx.files.internal(
+            "effects/laserSmokeBlue.party"), atlas);
+        laserSmokeBlueEffect.scaleEffect(0.1f);
 
-        ParticleEffect laserCombustionRedEffect = new ParticleEffect();
-        laserCombustionRedEffect.load(Gdx.files.internal(
-            "effects/laserCombustionRed.party"), atlas);
-        laserCombustionRedEffect.scaleEffect(0.1f);
+        ParticleEffect laserSmokeRedEffect = new ParticleEffect();
+        laserSmokeRedEffect.load(Gdx.files.internal(
+            "effects/laserSmokeRed.party"), atlas);
+        laserSmokeRedEffect.scaleEffect(0.1f);
 
-        ParticleEffect explosionEffect = new ParticleEffect();
-        explosionEffect.load(Gdx.files.internal(
-            "effects/explosion.party"), atlas);
-        explosionEffect.scaleEffect(0.2f);
+        ParticleEffect explosionFlameEffect = new ParticleEffect();
+        explosionFlameEffect.load(Gdx.files.internal(
+            "effects/explosionFlame.party"), atlas);
+        explosionFlameEffect.scaleEffect(0.2f);
 
-        laserCombustionBluePool = new ParticleEffectPool(
-            laserCombustionBlueEffect, 1, 2);
-        laserCombustionRedPool = new ParticleEffectPool(
-            laserCombustionRedEffect, 1, 2);
-        explosionPool = new ParticleEffectPool(
-            explosionEffect, 1, 2);
+        ParticleEffect explosionSmokeEffect = new ParticleEffect();
+        explosionSmokeEffect.load(Gdx.files.internal(
+            "effects/explosionSmoke.party"), atlas);
+        explosionSmokeEffect.scaleEffect(0.2f);
+
+        laserSmokeBluePool = new ParticleEffectPool(
+            laserSmokeBlueEffect, 1, 5);
+        laserSmokeRedPool = new ParticleEffectPool(
+            laserSmokeRedEffect, 1, 5);
+        explosionFlamePool = new ParticleEffectPool(
+            explosionFlameEffect, 1, 5);
+        explosionSmokePool = new ParticleEffectPool(
+            explosionSmokeEffect, 1, 5);
     }
 
     @Override
@@ -59,20 +67,23 @@ public class ParticleHandler implements GameObject {
         for (PooledEffect effect : effects) effect.draw(batch);
     }
 
-    public void createLaserBlueEffect(float xx, float yy) {
-        PooledEffect effect = laserCombustionBluePool.obtain();
+    public void createLaserSmokeBlueEffect(float xx, float yy) {
+        PooledEffect effect = laserSmokeBluePool.obtain();
         createEffect(effect, xx, yy);
     }
 
-    public void createLaserRedEffect(float xx, float yy) {
-        PooledEffect effect = laserCombustionRedPool.obtain();
+    public void createLaserSmokeRedEffect(float xx, float yy) {
+        PooledEffect effect = laserSmokeRedPool.obtain();
         createEffect(effect, xx, yy);
     }
 
     public void createExplosionEffect(float xx, float yy, float scale) {
-        PooledEffect effect = explosionPool.obtain();
-        effect.scaleEffect(scale);
-        createEffect(effect, xx, yy);
+        PooledEffect smokeEffect = explosionSmokePool.obtain();
+        PooledEffect flameEffect = explosionFlamePool.obtain();
+        smokeEffect.scaleEffect(scale);
+        flameEffect.scaleEffect(scale);
+        createEffect(smokeEffect, xx, yy);
+        createEffect(flameEffect, xx, yy);
     }
 
     private void createEffect(PooledEffect effect, float xx, float yy) {

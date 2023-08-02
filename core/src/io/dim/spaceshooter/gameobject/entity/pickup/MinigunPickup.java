@@ -6,8 +6,8 @@ import io.dim.spaceshooter.gameobject.handler.GameHandler;
 
 public class MinigunPickup extends Pickup {
 
-    public float laserCooldownDec = 0.15f;
-    public float laserSpeedInc = 15f;
+    public float laserCooldownDec = 0.2f;
+    public float laserSpeedInc = 20f;
 
     public MinigunPickup(float xOrigin, float yOrigin, float width, float height,
         float movementSpeed, TextureRegion texture) {

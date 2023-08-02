@@ -73,8 +73,7 @@ public class LaserEntity extends Entity {
 
     @Override
     public void onDraw(SpriteBatch batch) {
-        float rotation = direction.angleDeg() +
-            (Math.signum(direction.y) > 0 ? -90 : 90);
+        float rotation = direction.angleDeg() - 90;
         batch.draw(
             laserTexture,
             hitBox.x, hitBox.y,

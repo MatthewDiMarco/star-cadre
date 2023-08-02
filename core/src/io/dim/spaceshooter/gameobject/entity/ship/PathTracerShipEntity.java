@@ -38,7 +38,7 @@ public class PathTracerShipEntity extends ShipEntity {
         // path traversal
         Vector2 entityCentrePoint = getCenterPoint(); // TODO creating a new vector every time??
         Vector2 targetPoint = new Vector2(
-            path[currPointIdx].x + xOrigin, path[currPointIdx].y + yOrigin);
+            path[currPointIdx].x, path[currPointIdx].y);
         if (Math.abs(targetPoint.x - entityCentrePoint.x) < 1 &&
             Math.abs(targetPoint.y - entityCentrePoint.y) < 1) {
             currPointIdx = (currPointIdx + 1) % path.length;

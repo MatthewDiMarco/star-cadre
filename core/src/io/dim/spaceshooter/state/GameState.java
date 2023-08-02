@@ -92,7 +92,7 @@ public class GameState extends ApplicationState {
     private void init() {
         gameHandler = new GameHandler(
             WORLD_WIDTH, WORLD_HEIGHT,
-            new EntityFactory(textureAtlas),
+            new EntityFactory(textureAtlas, new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT)),
             new ParticleHandler(textureAtlas),
             new ParallaxHandler(backgrounds,
                 WORLD_WIDTH, WORLD_HEIGHT,

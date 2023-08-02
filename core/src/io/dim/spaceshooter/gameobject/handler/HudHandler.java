@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import io.dim.spaceshooter.gameobject.GameObject;
-import io.dim.spaceshooter.util.EntityUtils;
+import io.dim.spaceshooter.util.MathUtils;
 import java.util.Locale;
 
 public class HudHandler implements GameObject {
@@ -61,8 +61,8 @@ public class HudHandler implements GameObject {
     @Override
     public void onDraw(SpriteBatch batch) {
         boolean shake = timerShake - SHAKE_DURATION < 0;
-        float xShake = shake ? EntityUtils.random.nextFloat() / 2 : 0; // TODO put in step
-        float yShake = shake ? EntityUtils.random.nextFloat() / 2 : 0;
+        float xShake = shake ? MathUtils.random.nextFloat() / 2 : 0; // TODO put in step
+        float yShake = shake ? MathUtils.random.nextFloat() / 2 : 0;
 
         font.draw(batch, String.format(Locale.getDefault(), "$ %d", scoreDisplay),
             hudColLeft + xShake, hudRowTop + yShake, 0,

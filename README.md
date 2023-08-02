@@ -6,9 +6,10 @@
 - [x] More feedback on entity deaths
 - [x] Improve laser behaviour; add direction vector
 - [x] Particle system
+- [ ] Simplify powerups (stacking is too OP)
 - [ ] Asteroids
 - [ ] Entity spawner
-- [ ] More complex alien AI
+- [x] More complex alien AI
 - [x] Weapon powerups
 - [ ] Slow motion powerup
 - [ ] Invulnerability powerup

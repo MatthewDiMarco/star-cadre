@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
-import io.dim.spaceshooter.util.EntityUtils;
 
 public class PlayerShipEntity extends ShipEntity {
 
@@ -33,8 +32,12 @@ public class PlayerShipEntity extends ShipEntity {
     public void onStep(GameHandler gameHandler, float deltaTime) {
         super.onStep(gameHandler, deltaTime);
 
-        float[] boundaryDistances = EntityUtils.calcBoundaryDistances(
-            this.hitBox, gameHandler.boundary.width, gameHandler.boundary.height);
+        float[] boundaryDistances = new float[] {
+            gameHandler.boundary.height/3 - hitBox.y - hitBox.height, // up
+            gameHandler.boundary.width - hitBox.x - hitBox.width, // right
+            -hitBox.y, // down
+            -hitBox.x // left
+        };
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP) ||
             Gdx.input.isKeyPressed(Input.Keys.W)) {

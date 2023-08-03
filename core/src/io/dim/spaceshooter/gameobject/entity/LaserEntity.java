@@ -12,6 +12,7 @@ public class LaserEntity extends Entity {
 
     public float launchSpeedOffset;
     public int strength;
+    public boolean armourPiercing;
     public Vector2 direction;
     public LaserTarget laserTarget;
 
@@ -25,6 +26,7 @@ public class LaserEntity extends Entity {
         super(xOrigin, yOrigin, width, height, movementSpeed);
         this.launchSpeedOffset = movementSpeed * 3;
         this.strength = strength;
+        this.armourPiercing = false;
         this.direction = new Vector2(horizontalOffset, Math.signum(direction));
         this.laserTarget = target;
         this.laserTexture = laserTexture;
@@ -36,7 +38,7 @@ public class LaserEntity extends Entity {
         hitBox.x += ((movementSpeed + launchSpeedOffset) * deltaTime) * direction.x;
         hitBox.y += ((movementSpeed + launchSpeedOffset) * deltaTime) * direction.y;
         if (launchSpeedOffset > 0.1f) launchSpeedOffset = launchSpeedOffset / 2;
-        if (hitBox.y < -10 || hitBox.y > gameHandler.boundary.height) {
+        if (hitBox.y < -5 || hitBox.y > gameHandler.boundary.height) {
             disposable = true;
         }
 
@@ -48,13 +50,13 @@ public class LaserEntity extends Entity {
                     ship.intersects(this)) {
                     ship.hit(this.strength);
                     gameHandler.score += 15;
-                    disposable = true;
+                    if (!armourPiercing) disposable = true;
                 }
             }
         } else {
             if (gameHandler.playerRef.intersects(this)) {
                 gameHandler.playerRef.hit(this.strength);
-                disposable = true;
+                if (!armourPiercing) disposable = true;
             }
         }
     }

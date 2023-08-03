@@ -1,33 +1,32 @@
 package io.dim.spaceshooter.gameobject.handler;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import io.dim.spaceshooter.factory.EntityFactory.AlienType;
+import io.dim.spaceshooter.factory.EntityFactory.EnemyType;
 import io.dim.spaceshooter.gameobject.GameObject;
 import io.dim.spaceshooter.gameobject.entity.ship.ShipEntity;
-import io.dim.spaceshooter.util.MathUtils;
+import io.dim.spaceshooter.helper.MathUtils;
 import java.util.Arrays;
 import java.util.Stack;
 
 public class SpawnHandler implements GameObject {
-
-    public static final float DURATION_BETWEEN_SWARMS = 15f;
+    public static final float DURATION_BETWEEN_PICKUPS = 10f;
 
     public Stack<Job> spawnJobs;
 
-    protected float timerLastSwarm;
+    protected float timerLastPickup;
 
     public SpawnHandler() {
         this.spawnJobs = new Stack<>();
-        this.timerLastSwarm = DURATION_BETWEEN_SWARMS;
+        this.timerLastPickup = 0f;
     }
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
-        timerLastSwarm = Math.min(DURATION_BETWEEN_SWARMS, timerLastSwarm + deltaTime);
+        timerLastPickup = Math.min(DURATION_BETWEEN_PICKUPS, timerLastPickup - deltaTime);
+
         if (spawnJobs.empty() && gameHandler.ships.size() == 1) {
             int type = MathUtils.random.nextInt(2);
-            generateSwarm(gameHandler, AlienType.values()[type], 5, false, true);
-            timerLastSwarm = 0f;
+            generateSwarm(gameHandler, EnemyType.values()[type], 5);
         }
 
         if (!spawnJobs.empty()) {
@@ -44,20 +43,18 @@ public class SpawnHandler implements GameObject {
     public void onDraw(SpriteBatch batch) {}
 
     private void generateSwarm(
-        GameHandler gameHandler, AlienType alienType, int length, boolean mirror, boolean twin) {
+        GameHandler gameHandler, EnemyType alienType, int length) {
         for (int ii = 0; ii < length; ii++) {
-            ShipEntity[] aliens = new ShipEntity[twin ? 2 : 1];
-            aliens[0] = gameHandler.factory.createAlien(
+            ShipEntity[] aliens = new ShipEntity[2];
+            aliens[0] = gameHandler.factory.createEnemy(
                 gameHandler.boundary.width / 2,
-                gameHandler.boundary.height + 10,
-                mirror, alienType);
-            if (twin) {
-                aliens[1] = gameHandler.factory.createAlien(
-                    gameHandler.boundary.width / 2,
-                    gameHandler.boundary.height + 10,
-                    !mirror, alienType);
-            }
-            spawnJobs.push(new Job(aliens, 0.15f)); // TODO use yOffset to seperate, not spawn time
+                gameHandler.boundary.height + 5,
+                true, alienType);
+            aliens[1] = gameHandler.factory.createEnemy(
+                gameHandler.boundary.width / 2,
+                gameHandler.boundary.height + 5,
+                false, alienType);
+            spawnJobs.push(new Job(aliens, 0.15f));
         }
     }
 

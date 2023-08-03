@@ -4,28 +4,39 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import io.dim.spaceshooter.factory.EntityFactory.LaserType;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity;
+import io.dim.spaceshooter.gameobject.entity.PickupEntity;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
 
 public class PlayerShipEntity extends ShipEntity {
 
-    protected final Viewport viewportRef;
+    public PickupEntity pickup;
+
+    private TouchScreen touchScreen;
 
     public PlayerShipEntity(float xOrigin, float yOrigin,
         float width, float height,
         float movementSpeed, int hp,
-        float laserCooldownDuration,
-        int laserStrength, int laserPerShot,
-        float laserBarrelWidth,
-        float laserMovementSpeed,
         float invulnerabilityDuration,
-        TextureRegion shipTexture,
-        Viewport viewportRef) {
+        TextureRegion shipTexture, TouchScreen touchScreen) {
         super(xOrigin, yOrigin, width, height, movementSpeed, hp,
-            laserCooldownDuration, laserStrength, laserPerShot,
-            laserBarrelWidth, laserMovementSpeed, invulnerabilityDuration, shipTexture);
-        this.viewportRef = viewportRef;
+            0f, 0, 0,
+            0f, 0f,
+            invulnerabilityDuration, shipTexture);
+        this.setDefaultLaserState();
+        this.pickup = null;
+        this.touchScreen = touchScreen;
+    }
+
+    public void setDefaultLaserState() {
+        this.lasersEnabled = true;
+        this.laserArmourPiercing = false;
+        this.laserStrength = 1;
+        this.laserPerShot = 1;
+        this.laserBarrelWidth = 0f;
+        this.laserMovementSpeed = 148f;
+        this.laserCooldownDuration = 0.25f;
     }
 
     @Override
@@ -71,25 +82,27 @@ public class PlayerShipEntity extends ShipEntity {
                 boundaryDistances);
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            fireLaser(gameHandler);
+        if (Gdx.input.isTouched() && gameHandler.playerRef.hp > 0) {
+            float speed = gameHandler.playerRef.movementSpeed * deltaTime;
+            Vector2 touchPoint = touchScreen.getTouchPoint();
+            gameHandler.playerRef.fireLaser(gameHandler);
+            gameHandler.playerRef.translate(touchPoint, speed, 2f, boundaryDistances);
         }
 
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             fireLaser(gameHandler);
-            Vector2 touchPoint = viewportRef.unproject(
-                new Vector2(Gdx.input.getX(), Gdx.input.getY()));
-            this.translate(
-                touchPoint,
-                movementSpeed * deltaTime,
-                2f);
         }
     }
 
     @Override
     public LaserEntity getBaseLaser(GameHandler gameHandler) {
-        return gameHandler.factory.createBlankPlayerLaser(
+        return gameHandler.factory.createLaser(
             hitBox.x + hitBox.width * 0.5f,
-            hitBox.y + hitBox.height);
+            hitBox.y + hitBox.height,
+            LaserType.PLAYER);
+    }
+
+    public interface TouchScreen {
+        Vector2 getTouchPoint();
     }
 }

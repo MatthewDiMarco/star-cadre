@@ -6,11 +6,11 @@ import io.dim.spaceshooter.factory.EntityFactory;
 import io.dim.spaceshooter.factory.EntityFactory.PickupType;
 import io.dim.spaceshooter.gameobject.entity.Entity;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity;
-import io.dim.spaceshooter.gameobject.entity.pickup.Pickup;
+import io.dim.spaceshooter.gameobject.entity.PickupEntity;
 import io.dim.spaceshooter.gameobject.entity.ship.PlayerShipEntity;
 import io.dim.spaceshooter.gameobject.entity.ship.ShipEntity;
 import io.dim.spaceshooter.gameobject.GameObject;
-import io.dim.spaceshooter.util.MathUtils;
+import io.dim.spaceshooter.helper.MathUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -29,7 +29,7 @@ public class GameHandler implements GameObject {
     public PlayerShipEntity playerRef;
     public List<ShipEntity> ships;
     public List<LaserEntity> lasers; // TODO replace with libGDX collections
-    public List<Pickup> pickups;
+    public List<PickupEntity> pickupEntities;
 
     public GameHandler(int width, int height,
         EntityFactory factory,
@@ -45,7 +45,7 @@ public class GameHandler implements GameObject {
         this.hudHandler = hudHandler;
         this.ships = new ArrayList<>();
         this.lasers = new ArrayList<>();
-        this.pickups = new ArrayList<>();
+        this.pickupEntities = new ArrayList<>();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class GameHandler implements GameObject {
         parallaxHandler.onStep(gameHandler, deltaTime);
         stepAll((List<Entity>)(List<?>)ships, deltaTime);
         stepAll((List<Entity>)(List<?>)lasers, deltaTime);
-        stepAll((List<Entity>)(List<?>)pickups, deltaTime);
+        stepAll((List<Entity>)(List<?>) pickupEntities, deltaTime);
         particleHandler.onStep(gameHandler, deltaTime);
         spawnHandler.onStep(gameHandler, deltaTime);
         hudHandler.onStep(gameHandler, deltaTime);
@@ -64,16 +64,19 @@ public class GameHandler implements GameObject {
         parallaxHandler.onDraw(batch);
         for (ShipEntity ship : ships) ship.onDraw(batch);
         for (LaserEntity laser : lasers) laser.onDraw(batch);
-        for (Pickup pickup : pickups) pickup.onDraw(batch);
+        for (PickupEntity pickupEntity : pickupEntities) pickupEntity.onDraw(batch);
         particleHandler.onDraw(batch);
         hudHandler.onDraw(batch);
     }
 
     public void rollRandomPickup(float xPos, float yPos) {
-        int type = MathUtils.random.nextInt(50);
-        if (type < 3) {
-            Pickup pickup = factory.createPickup(xPos, yPos, PickupType.values()[type]);
-            pickups.add(pickup);
+        if (spawnHandler.timerLastPickup <= 0) {
+            int type = MathUtils.random.nextInt(10);
+            if (type < 3) {
+                PickupEntity pickupEntity = factory.createPickup(xPos, yPos, PickupType.values()[type]);
+                pickupEntities.add(pickupEntity);
+                spawnHandler.timerLastPickup = SpawnHandler.DURATION_BETWEEN_PICKUPS;
+            }
         }
     }
 

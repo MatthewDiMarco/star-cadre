@@ -10,13 +10,16 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.factory.EntityFactory;
+import io.dim.spaceshooter.factory.EntityFactory.PickupType;
 import io.dim.spaceshooter.gameobject.handler.HudHandler;
 import io.dim.spaceshooter.gameobject.handler.ParticleHandler;
 import io.dim.spaceshooter.gameobject.handler.ParallaxHandler;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
 import io.dim.spaceshooter.gameobject.handler.SpawnHandler;
+import io.dim.spaceshooter.helper.PathAtlas;
 import java.util.Stack;
 
 public class GameState extends ApplicationState {
@@ -53,7 +56,7 @@ public class GameState extends ApplicationState {
 
     @Override
     public void update(final float deltaTime) {
-        handleInput();
+        handleInput(deltaTime);
         if (stepping) {
             gameHandler.onStep(gameHandler, deltaTime);
             if (!gameRunning) stepping = false;
@@ -76,14 +79,16 @@ public class GameState extends ApplicationState {
         }
     }
 
-    private void handleInput() {
+    private void handleInput(float deltaTime) {
         if (Gdx.input.isKeyJustPressed(Keys.P)) {
             gameRunning = !gameRunning;
             if (!stepping) stepping = true;
         }
+
         if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
             stepping = true;
         }
+
         if (Gdx.input.isKeyJustPressed(Keys.R)) {
             init();
         }
@@ -92,7 +97,7 @@ public class GameState extends ApplicationState {
     private void init() {
         gameHandler = new GameHandler(
             WORLD_WIDTH, WORLD_HEIGHT,
-            new EntityFactory(textureAtlas, new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT)),
+            new EntityFactory(textureAtlas, new PathAtlas(new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT))),
             new ParticleHandler(textureAtlas),
             new ParallaxHandler(backgrounds,
                 WORLD_WIDTH, WORLD_HEIGHT,
@@ -104,9 +109,13 @@ public class GameState extends ApplicationState {
                 textureAtlas.findRegion("playerLife3_blue")));
 
         gameHandler.playerRef = gameHandler.factory.createPlayer(
-                (float)WORLD_WIDTH / 2,
-                (float)WORLD_HEIGHT / 4, viewport);
+            (float) WORLD_WIDTH / 2,
+            (float) WORLD_HEIGHT / 4,
+            () -> viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY())));
+
         gameHandler.ships.add(gameHandler.playerRef);
+
+        gameHandler.pickupEntities.add(gameHandler.factory.createPickup(50, 50, PickupType.SNIPER));
 
         gameRunning = true;
         stepping = true;

@@ -2,17 +2,18 @@ package io.dim.spaceshooter.gameobject.entity.ship;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import io.dim.spaceshooter.factory.EntityFactory.LaserType;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
 
-public class PathTracerShipEntity extends ShipEntity {
+public class EnemyShipEntity extends ShipEntity {
 
-    public final float xOrigin;
-    public final float yOrigin;
     public int currPointIdx = 0;
+    public final boolean mirrorPath;
     public final Vector2[] path;
 
-    public PathTracerShipEntity(float xOrigin, float yOrigin,
+    public EnemyShipEntity(
+        float xOrigin, float yOrigin,
         float width, float height,
         float movementSpeed, int hp,
         float laserCooldownDuration,
@@ -21,12 +22,11 @@ public class PathTracerShipEntity extends ShipEntity {
         float laserMovementSpeed,
         float invulnerabilityDuration,
         TextureRegion shipTexture,
-        Vector2[] path) {
+        Vector2[] path, boolean mirrorPath) {
         super(xOrigin, yOrigin, width, height, movementSpeed, hp,
             laserCooldownDuration, laserStrength, laserPerShot,
             laserBarrelWidth, laserMovementSpeed, invulnerabilityDuration, shipTexture);
-        this.xOrigin = xOrigin;
-        this.yOrigin = yOrigin;
+        this.mirrorPath = mirrorPath;
         this.path = path;
     }
 
@@ -38,7 +38,8 @@ public class PathTracerShipEntity extends ShipEntity {
         // path traversal
         Vector2 entityCentrePoint = getCenterPoint(); // TODO creating a new vector every time??
         Vector2 targetPoint = new Vector2(
-            path[currPointIdx].x, path[currPointIdx].y);
+            path[currPointIdx].x + (mirrorPath ? (gameHandler.boundary.width / 2 - path[currPointIdx].x) * 2 : 0),
+            path[currPointIdx].y);
         if (Math.abs(targetPoint.x - entityCentrePoint.x) < 1 &&
             Math.abs(targetPoint.y - entityCentrePoint.y) < 1) {
             currPointIdx = (currPointIdx + 1) % path.length;
@@ -66,8 +67,9 @@ public class PathTracerShipEntity extends ShipEntity {
 
     @Override
     public LaserEntity getBaseLaser(GameHandler gameHandler) {
-        return gameHandler.factory.createAlienLaser(
+        return gameHandler.factory.createLaser(
             hitBox.x + hitBox.width * 0.5f,
-            hitBox.y + hitBox.height * 1.1f);
+            hitBox.y + hitBox.height * 1.1f,
+            LaserType.ENEMY);
     }
 }

@@ -22,6 +22,16 @@ public abstract class Entity implements GameObject {
         disposable = false;
     }
 
+    public boolean intersects(Entity entity) {
+        return hitBox.overlaps(entity.hitBox);
+    }
+
+    public Vector2 getCenterPoint() {
+        return new Vector2(
+            this.hitBox.x + this.hitBox.width / 2,
+            this.hitBox.y + this.hitBox.height / 2);
+    }
+
     public void translate(float xAmount, float yAmount) {
         hitBox.setPosition(hitBox.x + xAmount, hitBox.y + yAmount);
     }
@@ -32,10 +42,7 @@ public abstract class Entity implements GameObject {
             Math.min(Math.max(yAmount, boundaryDistances[2]), boundaryDistances[0]));
     }
 
-    public void translate(
-        Vector2 point,
-        float speed,
-        float proximityThreshold) {
+    public void translate(Vector2 point, float speed, float proximityThreshold) {
         Vector2 entityCentrePoint = getCenterPoint();
         float distanceToPoint = point.dst(entityCentrePoint);
         if (distanceToPoint > proximityThreshold) {
@@ -47,16 +54,18 @@ public abstract class Entity implements GameObject {
         }
     }
 
-    public boolean intersects(Entity entity) {
-        return hitBox.overlaps(entity.hitBox);
-    }
-
-    public Vector2 getCenterPoint() {
-        return new Vector2(
-            this.hitBox.x + this.hitBox.width / 2,
-            this.hitBox.y + this.hitBox.height / 2);
+    public void translate(
+        Vector2 point, float speed, float proximityThreshold, float[] boundaryDistances) {
+        Vector2 entityCentrePoint = getCenterPoint();
+        float distanceToPoint = point.dst(entityCentrePoint);
+        if (distanceToPoint > proximityThreshold) {
+            float xPointDiff = point.x - entityCentrePoint.x;
+            float yPointDiff = point.y - entityCentrePoint.y;
+            float xMove = xPointDiff / distanceToPoint * speed;
+            float yMove = yPointDiff / distanceToPoint * speed;
+            this.translate(xMove, yMove, boundaryDistances);
+        }
     }
 
     public abstract void onDestroy(GameHandler gameHandler);
-
 }

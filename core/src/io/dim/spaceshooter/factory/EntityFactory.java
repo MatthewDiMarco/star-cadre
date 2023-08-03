@@ -2,157 +2,117 @@ package io.dim.spaceshooter.factory;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity.LaserTarget;
-import io.dim.spaceshooter.gameobject.entity.pickup.MinigunPickup;
-import io.dim.spaceshooter.gameobject.entity.pickup.LaserPickup;
-import io.dim.spaceshooter.gameobject.entity.pickup.Pickup;
-import io.dim.spaceshooter.gameobject.entity.pickup.ShotgunPickup;
-import io.dim.spaceshooter.gameobject.entity.ship.PathTracerShipEntity;
+import io.dim.spaceshooter.gameobject.entity.PickupEntity;
+import io.dim.spaceshooter.gameobject.entity.ship.EnemyShipEntity;
 import io.dim.spaceshooter.gameobject.entity.ship.PlayerShipEntity;
-import io.dim.spaceshooter.util.MathUtils;
+import io.dim.spaceshooter.gameobject.entity.ship.PlayerShipEntity.TouchScreen;
+import io.dim.spaceshooter.gameobject.entity.ship.ShipEntity;
+import io.dim.spaceshooter.helper.PathAtlas;
 
 public class EntityFactory {
 
-    public enum AlienType { SNAKE, INVADER }
-    public enum PickupType { LASER, SHOTGUN, MINIGUN }
+    public enum LaserType { PLAYER, ENEMY }
+    public enum PickupType { SNIPER, SHOTGUN, MINIGUN }
+    public enum EnemyType { SNAKE, INVADER }
 
-    public static final Vector2[] PATH_BLUEPRINT_SNAKE = {
-        new Vector2(-0.2f, 1.1f),
-        new Vector2(-0.2f, 0.9f),
-        new Vector2(0.9f, 0.5f),
-        new Vector2(0.1f, 0.05f),
-        new Vector2(1.1f, 0.05f),
-        new Vector2(1.1f, -1.0f),
-    };
+    private final TextureAtlas textureAtlas;
+    private final PathAtlas pathAtlas;
 
-    public static final Vector2[] PATH_BLUEPRINT_INVADER = {
-        new Vector2(0.1f, 0.9f),
-        new Vector2(0.4f, 0.5f),
-        new Vector2(0.1f, 0.5f),
-        new Vector2(0.4f, 0.9f),
-    };
-
-    private final TextureRegion playerTexture;
-    private final TextureRegion alienBasic1Texture;
-    private final TextureRegion alienBasic2Texture;
-    private final TextureRegion blueLaserTexture;
-    private final TextureRegion alienLaserTexture;
-    private final TextureRegion pickupTexture;
-
-    private final Vector2[] pathInvaderLeft, pathInvaderRight;
-    private final Vector2[] pathSnakeLeft, pathSnakeRight;
-
-    public EntityFactory(TextureAtlas atlas, Rectangle entityBoundary) {
-        this.playerTexture = atlas.findRegion("playerShip3_blue");
-        this.alienBasic1Texture = atlas.findRegion("enemyRed1");
-        this.alienBasic2Texture = atlas.findRegion("enemyRed2");
-        this.blueLaserTexture = atlas.findRegion("laserBlue16");
-        this.alienLaserTexture = atlas.findRegion("laserRed06");
-        this.pickupTexture = atlas.findRegion("powerupYellow_bolt");
-
-        this.pathInvaderLeft = MathUtils.calcControlPointsFromBlueprint(
-            PATH_BLUEPRINT_INVADER, entityBoundary.width, entityBoundary.height, false);
-        this.pathInvaderRight = MathUtils.calcControlPointsFromBlueprint(
-            PATH_BLUEPRINT_INVADER, entityBoundary.width, entityBoundary.height, true);
-
-        this.pathSnakeLeft = MathUtils.calcControlPointsFromBlueprint(
-            PATH_BLUEPRINT_SNAKE, entityBoundary.width, entityBoundary.height, false);
-        this.pathSnakeRight = MathUtils.calcControlPointsFromBlueprint(
-            PATH_BLUEPRINT_SNAKE, entityBoundary.width, entityBoundary.height, true);
+    public EntityFactory(TextureAtlas textureAtlas, PathAtlas pathAtlas) {
+        this.textureAtlas = textureAtlas;
+        this.pathAtlas = pathAtlas;
     }
 
-    public PlayerShipEntity createPlayer(
-        float xOrigin,
-        float yOrigin,
-        Viewport viewportRef) {
+    public PlayerShipEntity createPlayer(float xOrigin, float yOrigin, TouchScreen touchScreen) {
         return new PlayerShipEntity(
-            xOrigin, yOrigin, 8, 8, 32, 3,
-            0.5f, 1, 1,
-            0.15f, 100f,
-            0.25f, playerTexture, viewportRef);
+            xOrigin, yOrigin, 8, 8, 48f, 3, 1f,
+            textureAtlas.findRegion("playerShip3_blue"), touchScreen);
     }
 
-    public PathTracerShipEntity createAlien(
-        float xOrigin,
-        float yOrigin,
-        boolean mirror,
-        AlienType alienType) {
-        PathTracerShipEntity alien;
-        switch (alienType) {
+    public ShipEntity createEnemy(
+        float xOrigin, float yOrigin, boolean mirrorPath, EnemyType enemyType) {
+        switch (enemyType) {
             case SNAKE:
-                alien = new PathTracerShipEntity(
-                    xOrigin, yOrigin, 6, 6, 52f, 1,
+                return new EnemyShipEntity(
+                    xOrigin, yOrigin, 6, 6, 82f, 1,
                     0f, 0, 0,
                     0f, 0f,
-                    0f, alienBasic1Texture,
-                    mirror ? pathSnakeRight : pathSnakeLeft);
-                break;
+                    0f, textureAtlas.findRegion("enemyRed1"),
+                    pathAtlas.paths.get(0), mirrorPath);
             case INVADER:
-                alien = new PathTracerShipEntity(
+                return new EnemyShipEntity(
                     xOrigin, yOrigin, 6, 6, 48f, 1,
                     0f, 0, 0,
                     0f, 0f,
-                    0f, alienBasic2Texture,
-                    mirror ? pathInvaderRight : pathInvaderLeft);
-                break;
+                    0f, textureAtlas.findRegion("enemyRed2"),
+                    pathAtlas.paths.get(1), mirrorPath);
             default:
-                throw new RuntimeException("No alien available: " + alienType);
+                throw new RuntimeException("Error creating entity");
         }
-        return alien;
     }
 
-    public Pickup createPickup(
-        float xOrigin,
-        float yOrigin,
-        PickupType pickupType) {
-        Pickup pickup;
-        final float pickupMovementSpeed = 48f;
+    public PickupEntity createPickup(
+        float xOrigin, float yOrigin, PickupType pickupType) {
+        float speed = 32f;
+        TextureRegion pickupTexture = textureAtlas.findRegion("powerupYellow_bolt");
         switch (pickupType) {
-            case LASER:
-                pickup = new LaserPickup(xOrigin, yOrigin,
-                    (float)pickupTexture.getRegionWidth()/8,
-                    (float)pickupTexture.getRegionHeight()/8,
-                    pickupMovementSpeed, pickupTexture);
-                break;
+            case SNIPER:
+                return new PickupEntity(xOrigin, yOrigin,
+                    (float) pickupTexture.getRegionWidth() / 8,
+                    (float) pickupTexture.getRegionHeight() / 8,
+                    speed, pickupTexture,
+                    playerShip -> {
+                        playerShip.laserPerShot = 3;
+                        playerShip.laserBarrelWidth = 0.05f;
+                        playerShip.laserMovementSpeed = 350f;
+                        playerShip.laserCooldownDuration = 0.35f;
+                        playerShip.laserArmourPiercing = true;
+                    });
             case SHOTGUN:
-                pickup = new ShotgunPickup(xOrigin, yOrigin,
+                return new PickupEntity(xOrigin, yOrigin,
                     (float)pickupTexture.getRegionWidth()/8,
                     (float)pickupTexture.getRegionHeight()/8,
-                    pickupMovementSpeed, pickupTexture);
-                break;
+                    speed, pickupTexture,
+                    playerShip -> {
+                        playerShip.laserPerShot = 4;
+                        playerShip.laserBarrelWidth = 0.5f;
+                        playerShip.laserCooldownDuration = 0.5f;
+                    });
             case MINIGUN:
-                pickup = new MinigunPickup(xOrigin, yOrigin,
+                return new PickupEntity(xOrigin, yOrigin,
                     (float)pickupTexture.getRegionWidth()/8,
                     (float)pickupTexture.getRegionHeight()/8,
-                    pickupMovementSpeed, pickupTexture);
-                break;
+                    speed, pickupTexture,
+                    playerShip -> {
+                        playerShip.laserMovementSpeed = 300f;
+                        playerShip.laserCooldownDuration = 0.1f;
+                    });
             default:
-                throw new RuntimeException("No pickup available: " + pickupType);
+                throw new RuntimeException("Error creating entity");
         }
-        return pickup;
     }
 
-    public LaserEntity createBlankPlayerLaser(
-        float xOrigin,
-        float yOrigin) {
-        return new LaserEntity(xOrigin, yOrigin,
-            (float)(blueLaserTexture.getRegionWidth()/8),
-            (float)(blueLaserTexture.getRegionHeight()/8),
-            0f, 1, 0, 0f,
-            LaserTarget.ALIEN, blueLaserTexture);
-    }
-
-    public LaserEntity createAlienLaser(
-        float xOrigin,
-        float yOrigin) {
-        return new LaserEntity(xOrigin, yOrigin,
-            (float)alienLaserTexture.getRegionWidth()/8,
-            (float)alienLaserTexture.getRegionHeight()/8,
-            102f, -1, 1, 0f,
-            LaserTarget.PLAYER, alienLaserTexture);
+    public LaserEntity createLaser(
+        float xOrigin, float yOrigin, LaserType laserType) {
+        TextureRegion blueLaserTexture = textureAtlas.findRegion("laserBlue16");
+        TextureRegion redLaserTexture = textureAtlas.findRegion("laserRed06");
+        switch (laserType) {
+            case PLAYER:
+                return new LaserEntity(xOrigin, yOrigin,
+                    (float)(blueLaserTexture.getRegionWidth()/8),
+                    (float)(blueLaserTexture.getRegionHeight()/8),
+                    0f, 1, 0, 0f,
+                    LaserTarget.ALIEN, blueLaserTexture);
+            case ENEMY:
+                return new LaserEntity(xOrigin, yOrigin,
+                    (float)(redLaserTexture.getRegionWidth()/8),
+                    (float)(redLaserTexture.getRegionHeight()/8),
+                    102f, -1, 1, 0f,
+                    LaserTarget.PLAYER, redLaserTexture);
+            default:
+                throw new RuntimeException("Error creating entity");
+        }
     }
 }

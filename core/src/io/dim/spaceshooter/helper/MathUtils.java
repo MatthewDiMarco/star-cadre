@@ -1,4 +1,4 @@
-package io.dim.spaceshooter.util;
+package io.dim.spaceshooter.helper;
 
 import com.badlogic.gdx.math.CatmullRomSpline;
 import com.badlogic.gdx.math.Path;
@@ -10,11 +10,10 @@ public class MathUtils {
     public static Random random = new Random();
 
     public static Vector2[] calcControlPointsFromBlueprint(
-        Vector2[] blueprint, float worldWidth, float worldHeight, boolean mirror) {
+        Vector2[] blueprint, float worldWidth, float worldHeight) {
         Vector2[] controlPoints = new Vector2[blueprint.length];
         for (int ii = 0; ii < blueprint.length; ii++) {
             controlPoints[ii] = new Vector2(blueprint[ii]);
-            if (mirror) controlPoints[ii].x += (0.5 - controlPoints[ii].x) * 2;
             controlPoints[ii].x *= worldWidth;
             controlPoints[ii].y *= worldHeight;
         }

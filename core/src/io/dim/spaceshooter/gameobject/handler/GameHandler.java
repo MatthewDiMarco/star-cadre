@@ -72,7 +72,7 @@ public class GameHandler implements GameObject {
     public void rollRandomPickup(float xPos, float yPos) {
         if (spawnHandler.timerLastPickup <= 0) {
             int type = MathUtils.random.nextInt(10);
-            if (type < 3) {
+            if (type < 4) {
                 PickupEntity pickupEntity = factory.createPickup(xPos, yPos, PickupType.values()[type]);
                 pickupEntities.add(pickupEntity);
                 spawnHandler.timerLastPickup = SpawnHandler.DURATION_BETWEEN_PICKUPS;

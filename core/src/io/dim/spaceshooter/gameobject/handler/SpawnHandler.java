@@ -8,7 +8,24 @@ import io.dim.spaceshooter.helper.MathUtils;
 import java.util.Arrays;
 import java.util.Stack;
 
+/**
+ * Ideas on spawn algo:
+ * <p>
+ * A "Node" represents the sub-spawner for an enemy type.
+ * Nodes have a min-max length / speed, a weight (0f to 1f) and "activeFrom" representing the (game)
+ * time from which this node will be able to do spawning.
+ * <p>
+ * A spawn cycle is like a mini wave. On every cycle, a die will be rolled to decide which, out of
+ * the active nodes, will spawn. The node's weight will be a factor in this outcome.
+ * <p>
+ * The following global spawn properties will be treated as a function of game time elapsed:
+ * - swarm speed factor
+ * - swarm length factor
+ * - spawn cycle frequency
+ */
+
 public class SpawnHandler implements GameObject {
+
     public static final float DURATION_BETWEEN_PICKUPS = 10f;
 
     public Stack<Job> spawnJobs;
@@ -25,8 +42,9 @@ public class SpawnHandler implements GameObject {
         timerLastPickup = Math.min(DURATION_BETWEEN_PICKUPS, timerLastPickup - deltaTime);
 
         if (spawnJobs.empty() && gameHandler.ships.size() == 1) {
-            int type = MathUtils.random.nextInt(2);
-            generateSwarm(gameHandler, EnemyType.values()[type], 5);
+            int type = MathUtils.random.nextInt(3);
+            generateSwarm(gameHandler, EnemyType.values()[type], 10);
+//            generateSwarm(gameHandler, EnemyType.TANK, 1);
         }
 
         if (!spawnJobs.empty()) {

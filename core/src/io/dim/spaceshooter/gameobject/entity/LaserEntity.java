@@ -47,14 +47,17 @@ public class LaserEntity extends Entity {
             for (ShipEntity ship : gameHandler.ships) {
                 if (!ship.invulnerabilityEnabled &&
                     ship != gameHandler.playerRef &&
+                    ship.hitBox.y <= gameHandler.boundary.height - 5 &&
                     ship.intersects(this)) {
                     ship.hit(this.strength);
-                    gameHandler.score += 15;
+                    if (ship.hp <= 0) gameHandler.score += 5 * ship.hpMax;
                     if (!armourPiercing) disposable = true;
                 }
             }
         } else {
-            if (gameHandler.playerRef.intersects(this)) {
+            if (!gameHandler.playerRef.invulnerabilityEnabled &&
+                gameHandler.playerRef.intersects(this) &&
+                gameHandler.playerRef.hp > 0) {
                 gameHandler.playerRef.hit(this.strength);
                 if (!armourPiercing) disposable = true;
             }

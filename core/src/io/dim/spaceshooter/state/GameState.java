@@ -115,7 +115,7 @@ public class GameState extends ApplicationState {
 
         gameHandler.ships.add(gameHandler.playerRef);
 
-        gameHandler.pickupEntities.add(gameHandler.factory.createPickup(50, 50, PickupType.SNIPER));
+        gameHandler.pickupEntities.add(gameHandler.factory.createPickup(50, 50, PickupType.BOOMSTICK));
 
         gameRunning = true;
         stepping = true;

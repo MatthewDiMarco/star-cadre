@@ -14,7 +14,7 @@ import io.dim.spaceshooter.helper.PathAtlas;
 public class EntityFactory {
 
     public enum LaserType { PLAYER, ENEMY }
-    public enum PickupType { SNIPER, SHOTGUN, MINIGUN, BOOMSTICK }
+    public enum PickupType { MAGNUM, SHOTGUN, MINIGUN, BOOMSTICK }
     public enum EnemyType { SNAKE, INVADER, DRAGON, TANK }
 
     private final TextureAtlas textureAtlas;
@@ -72,14 +72,14 @@ public class EntityFactory {
         float speed = 32f;
         TextureRegion pickupTexture = textureAtlas.findRegion("powerupYellow_bolt");
         switch (pickupType) {
-            case SNIPER:
+            case MAGNUM:
                 return new PickupEntity(xOrigin, yOrigin,
                     (float) pickupTexture.getRegionWidth() / 8,
                     (float) pickupTexture.getRegionHeight() / 8,
                     speed, pickupTexture,
                     playerShip -> {
-                        playerShip.laserPerShot = 2;
-                        playerShip.laserBarrelWidth = 0.025f;
+                        playerShip.laserPerShot = 3;
+                        playerShip.laserBarrelWidth = 0.05f;
                         playerShip.laserMovementSpeed = 250f;
                         playerShip.laserArmourPiercing = true;
                     });
@@ -108,9 +108,8 @@ public class EntityFactory {
                     (float)pickupTexture.getRegionHeight()/8,
                     speed, pickupTexture,
                     playerShip -> {
-                        playerShip.laserPerShot = 6;
-                        playerShip.laserMovementSpeed = 75f;
-                        playerShip.laserBarrelWidth = 1.5f;
+                        playerShip.laserPerShot = 8;
+                        playerShip.laserBarrelWidth = 1f;
                         playerShip.laserCooldownDuration = 0.75f;
                     });
             default:

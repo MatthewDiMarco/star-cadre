@@ -13,7 +13,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.factory.EntityFactory;
-import io.dim.spaceshooter.factory.EntityFactory.PickupType;
 import io.dim.spaceshooter.gameobject.handler.HudHandler;
 import io.dim.spaceshooter.gameobject.handler.ParticleHandler;
 import io.dim.spaceshooter.gameobject.handler.ParallaxHandler;
@@ -114,8 +113,6 @@ public class GameState extends ApplicationState {
             () -> viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY())));
 
         gameHandler.ships.add(gameHandler.playerRef);
-
-        gameHandler.pickupEntities.add(gameHandler.factory.createPickup(50, 50, PickupType.BOOMSTICK));
 
         gameRunning = true;
         stepping = true;

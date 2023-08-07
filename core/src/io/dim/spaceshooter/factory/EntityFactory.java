@@ -36,24 +36,24 @@ public class EntityFactory {
         switch (enemyType) {
             case SNAKE:
                 return new EnemyShipEntity(
-                    xOrigin, yOrigin, 6, 6, 82f, 1,
+                    xOrigin, yOrigin, 5, 5, 60f, 1,
                     0f, 0, 0,
                     0f, 0f,
                     0f, textureAtlas.findRegion("enemyRed1"),
                     pathAtlas.paths.get(0), mirrorPath);
             case INVADER:
                 return new EnemyShipEntity(
-                    xOrigin, yOrigin, 6, 6, 48f, 1,
+                    xOrigin, yOrigin, 6, 6, 36f, 1,
                     0f, 0, 0,
                     0f, 0f,
                     0f, textureAtlas.findRegion("enemyRed2"),
                     pathAtlas.paths.get(1), mirrorPath);
             case DRAGON:
                 return new EnemyShipEntity(
-                    xOrigin, yOrigin, 6, 6, 72f, 1,
+                    xOrigin, yOrigin, 6, 6, 48f, 1,
                     0f, 0, 0,
                     0f, 0f,
-                    0f, textureAtlas.findRegion("enemyRed1"),
+                    0f, textureAtlas.findRegion("enemyRed3"),
                     pathAtlas.paths.get(2), mirrorPath);
             case TANK:
                 return new EnemyShipEntity(

@@ -8,43 +8,31 @@ import io.dim.spaceshooter.helper.MathUtils;
 import java.util.Arrays;
 import java.util.Stack;
 
-/**
- * Ideas on spawn algo:
- * <p>
- * A "Node" represents the sub-spawner for an enemy type.
- * Nodes have a min-max length / speed, a weight (0f to 1f) and "activeFrom" representing the (game)
- * time from which this node will be able to do spawning.
- * <p>
- * A spawn cycle is like a mini wave. On every cycle, a die will be rolled to decide which, out of
- * the active nodes, will spawn. The node's weight will be a factor in this outcome.
- * <p>
- * The following global spawn properties will be treated as a function of game time elapsed:
- * - swarm speed factor
- * - swarm length factor
- * - spawn cycle frequency
- */
-
 public class SpawnHandler implements GameObject {
 
     public static final float DURATION_BETWEEN_PICKUPS = 10f;
+    public static final float MIN_DELAY_BETWEEN_SWARMS = 0.25f;
+    public static final int MIN_SWARM_LENGTH = 2;
+    public static final int MAX_SWARM_LENGTH = 6;
 
     public Stack<Job> spawnJobs;
 
+    protected int waveNumber;
     protected float timerLastPickup;
 
     public SpawnHandler() {
         this.spawnJobs = new Stack<>();
-        this.timerLastPickup = 0f;
+        this.waveNumber = 0;
+        this.timerLastPickup = DURATION_BETWEEN_PICKUPS;
     }
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
-        timerLastPickup = Math.min(DURATION_BETWEEN_PICKUPS, timerLastPickup - deltaTime);
+        timerLastPickup = Math.min(
+            DURATION_BETWEEN_PICKUPS, timerLastPickup - deltaTime);
 
         if (spawnJobs.empty() && gameHandler.ships.size() == 1) {
-            int type = MathUtils.random.nextInt(3);
-            generateSwarm(gameHandler, EnemyType.values()[type], 10);
-//            generateSwarm(gameHandler, EnemyType.TANK, 1);
+            generateWave(gameHandler);
         }
 
         if (!spawnJobs.empty()) {
@@ -60,8 +48,33 @@ public class SpawnHandler implements GameObject {
     @Override
     public void onDraw(SpriteBatch batch) {}
 
+    private void generateWave(GameHandler gameHandler) {
+        waveNumber++;
+        if (waveNumber == 1) {
+            // intro wave
+            generateSwarm(gameHandler, EnemyType.SNAKE, 5f, 2);
+            generateSwarm(gameHandler, EnemyType.DRAGON, 0f, 2);
+            generateSwarm(gameHandler, EnemyType.INVADER, 3f, 2);
+            generateSwarm(gameHandler, EnemyType.INVADER, 0f, 2);
+        } else if (waveNumber % 10 == 0) {
+            // boss
+            generateSwarm(gameHandler, EnemyType.TANK, 0f, 1);
+        } else {
+            // random spawns
+            final int maxSwarmLength = Math.min(MAX_SWARM_LENGTH, waveNumber + MIN_SWARM_LENGTH);
+            int swarmLength = MathUtils.random.nextInt(
+                maxSwarmLength - MIN_SWARM_LENGTH) + MIN_SWARM_LENGTH;
+            int numSwarms = MathUtils.random.nextInt(4 - 2) + 2;
+            for (int ii = 0; ii < numSwarms; ii++) {
+                int type = MathUtils.random.nextInt(3);
+                generateSwarm(gameHandler, EnemyType.values()[type],
+                    Math.max(MIN_DELAY_BETWEEN_SWARMS, 2f / waveNumber), swarmLength);
+            }
+        }
+    }
+
     private void generateSwarm(
-        GameHandler gameHandler, EnemyType alienType, int length) {
+        GameHandler gameHandler, EnemyType alienType, float timeOffset, int length) {
         for (int ii = 0; ii < length; ii++) {
             ShipEntity[] aliens = new ShipEntity[2];
             aliens[0] = gameHandler.factory.createEnemy(
@@ -72,7 +85,8 @@ public class SpawnHandler implements GameObject {
                 gameHandler.boundary.width / 2,
                 gameHandler.boundary.height + 5,
                 false, alienType);
-            spawnJobs.push(new Job(aliens, 0.15f));
+            spawnJobs.push(new Job(aliens,
+                0.2f + (ii == length-1 ? timeOffset : 0f)));
         }
     }
 

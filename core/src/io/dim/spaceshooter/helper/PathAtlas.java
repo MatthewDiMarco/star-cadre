@@ -6,53 +6,42 @@ import com.badlogic.gdx.utils.Array;
 
 public class PathAtlas {
     public static final Vector2[] PATH_BLUEPRINT_SNAKE = {
-        new Vector2(-0.2f, 1.1f),
-        new Vector2(0.9f, 0.5f),
-        new Vector2(0.1f, 0.05f),
-        new Vector2(1.1f, 0.05f),
-        new Vector2(1.1f, -1.0f),
+        new Vector2(0.05f, 0.90f),
+        new Vector2(0.45f, 0.75f),
+        new Vector2(0.05f, 0.50f),
+        new Vector2(0.45f, 0.25f),
+        new Vector2(0.05f, 0.05f),
+        new Vector2(0.05f, -1.0f),
     };
 
     public static final Vector2[] PATH_BLUEPRINT_INVADER = {
-        new Vector2(0.1f, 0.9f),
-        new Vector2(0.1f, 0.8f),
-        new Vector2(0.5f, 0.8f),
-        new Vector2(0.5f, 0.7f),
-        new Vector2(0.1f, 0.7f),
-        new Vector2(0.1f, 0.6f),
-        new Vector2(0.5f, 0.6f),
-        new Vector2(0.5f, 0.5f),
-        new Vector2(0.1f, 0.5f),
-        new Vector2(0.1f, 0.4f),
-        new Vector2(0.5f, 0.4f),
-        new Vector2(0.5f, 0.3f),
-        new Vector2(0.1f, 0.3f),
-        new Vector2(0.1f, 0.2f),
-        new Vector2(0.5f, 0.2f),
-        new Vector2(0.5f, 0.1f),
-        new Vector2(0.1f, 0.1f),
+        new Vector2(0.05f, 0.9f),
+        new Vector2(0.05f, 0.8f),
+        new Vector2(0.35f, 0.8f),
+        new Vector2(0.35f, 0.7f),
+        new Vector2(0.05f, 0.7f),
+        new Vector2(0.05f, 0.6f),
+        new Vector2(0.35f, 0.6f),
+        new Vector2(0.35f, 0.5f),
+        new Vector2(0.05f, 0.5f),
+        new Vector2(0.05f, 0.4f),
+        new Vector2(0.45f, 0.4f),
+        new Vector2(0.45f, -1.0f),
     };
 
     public static final Vector2[] PATH_BLUEPRINT_DRAGON = {
-        new Vector2(0.10f, 0.9f),
-        new Vector2(0.45f, 0.8f),
-        new Vector2(0.10f, 0.7f),
-        new Vector2(0.45f, 0.6f),
-        new Vector2(0.10f, 0.5f),
-        new Vector2(0.45f, 0.4f),
-        new Vector2(0.10f, 0.3f),
-        new Vector2(0.45f, 0.2f),
-        new Vector2(0.30f, 0.1f),
-        new Vector2(0.15f, 0.2f),
-        new Vector2(0.30f, 0.3f),
-        new Vector2(0.45f, 0.2f),
+        new Vector2(0.45f, 1.10f),
+        new Vector2(0.45f, 0.30f),
+        new Vector2(0.05f, 0.30f),
+        new Vector2(0.05f, 0.05f),
+        new Vector2(0.45f, 0.05f),
         new Vector2(0.45f, -1.0f),
     };
 
 
     public static final Vector2[] PATH_BLUEPRINT_TANK = {
-        new Vector2(0.1f, 0.9f),
-        new Vector2(0.9f, 0.9f),
+        new Vector2(0.05f, 0.9f),
+        new Vector2(0.45f, 0.9f),
     };
 
     public Array<Vector2[]> paths;

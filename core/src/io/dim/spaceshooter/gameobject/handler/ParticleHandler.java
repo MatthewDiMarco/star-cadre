@@ -13,8 +13,9 @@ public class ParticleHandler implements GameObject {
 
     public ParticleEffectPool laserSmokeBluePool;
     public ParticleEffectPool laserSmokeRedPool;
-    public ParticleEffectPool explosionFlamePool;
-    public ParticleEffectPool explosionSmokePool;
+    public ParticleEffectPool explosionPool;
+    public ParticleEffectPool asteroidDebrisPool;
+    public ParticleEffectPool smokePool;
     public Array<PooledEffect> effects;
 
     public ParticleHandler(TextureAtlas atlas) {
@@ -30,24 +31,31 @@ public class ParticleHandler implements GameObject {
             "effects/laserSmokeRed.party"), atlas);
         laserSmokeRedEffect.scaleEffect(0.1f);
 
-        ParticleEffect explosionFlameEffect = new ParticleEffect();
-        explosionFlameEffect.load(Gdx.files.internal(
-            "effects/explosionFlame.party"), atlas);
-        explosionFlameEffect.scaleEffect(0.2f);
+        ParticleEffect explosionEffect = new ParticleEffect();
+        explosionEffect.load(Gdx.files.internal(
+            "effects/explosion.party"), atlas);
+        explosionEffect.scaleEffect(0.2f);
 
-        ParticleEffect explosionSmokeEffect = new ParticleEffect();
-        explosionSmokeEffect.load(Gdx.files.internal(
-            "effects/explosionSmoke.party"), atlas);
-        explosionSmokeEffect.scaleEffect(0.2f);
+        ParticleEffect asteroidDebrisEffect = new ParticleEffect();
+        asteroidDebrisEffect.load(Gdx.files.internal(
+            "effects/asteroidDebris.party"), atlas);
+        asteroidDebrisEffect.scaleEffect(0.075f);
+
+        ParticleEffect smokeEffect = new ParticleEffect();
+        smokeEffect.load(Gdx.files.internal(
+            "effects/smoke.party"), atlas);
+        smokeEffect.scaleEffect(0.125f);
 
         laserSmokeBluePool = new ParticleEffectPool(
             laserSmokeBlueEffect, 1, 5);
         laserSmokeRedPool = new ParticleEffectPool(
             laserSmokeRedEffect, 1, 5);
-        explosionFlamePool = new ParticleEffectPool(
-            explosionFlameEffect, 1, 5);
-        explosionSmokePool = new ParticleEffectPool(
-            explosionSmokeEffect, 1, 5);
+        asteroidDebrisPool = new ParticleEffectPool(
+            asteroidDebrisEffect, 1, 5);
+        explosionPool = new ParticleEffectPool(
+            explosionEffect, 1, 5);
+        smokePool = new ParticleEffectPool(
+            smokeEffect, 1, 5);
     }
 
     @Override
@@ -77,13 +85,17 @@ public class ParticleHandler implements GameObject {
         createEffect(effect, xx, yy);
     }
 
-    public void createExplosionEffect(float xx, float yy, float scale) {
-        PooledEffect smokeEffect = explosionSmokePool.obtain();
-        PooledEffect flameEffect = explosionFlamePool.obtain();
-        smokeEffect.scaleEffect(scale);
-        flameEffect.scaleEffect(scale);
+    public void createDebrisEffect(float xx, float yy) {
+        PooledEffect smokeEffect = smokePool.obtain();
+        PooledEffect debrisEffect = asteroidDebrisPool.obtain();
         createEffect(smokeEffect, xx, yy);
-        createEffect(flameEffect, xx, yy);
+        createEffect(debrisEffect, xx, yy);
+    }
+
+    public void createExplosionEffect(float xx, float yy, float scale) {
+        PooledEffect smokeEffect = explosionPool.obtain();
+        smokeEffect.scaleEffect(scale);
+        createEffect(smokeEffect, xx, yy);
     }
 
     private void createEffect(PooledEffect effect, float xx, float yy) {

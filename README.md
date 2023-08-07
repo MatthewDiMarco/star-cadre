@@ -7,13 +7,12 @@
 - [x] Improve laser behaviour; add direction vector
 - [x] Particle system
 - [x] Simplify powerups (stacking is too OP)
-- [ ] Asteroids
 - [x] Entity spawner
 - [x] More complex alien AI
 - [x] Weapon powerups
-- [ ] Slow motion powerup
-- [ ] Invulnerability powerup
+- [x] Asteroids
 - [ ] Basic sounds and music
+- [ ] Restart button
 
 Optimizations
 - [ ] Blending (?) (https://libgdx.com/wiki/graphics/2d/spritebatch-textureregions-and-sprites)

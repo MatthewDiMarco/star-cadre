@@ -54,6 +54,13 @@ public class LaserEntity extends Entity {
                     if (!armourPiercing) disposable = true;
                 }
             }
+            for (AsteroidEntity asteroid : gameHandler.asteroids) {
+                if (asteroid.hitBox.y <= gameHandler.boundary.height - 5 &&
+                    asteroid.intersects(this)) {
+                    asteroid.disposable = true;
+                    gameHandler.score += 5;
+                }
+            }
         } else {
             if (!gameHandler.playerRef.invulnerabilityEnabled &&
                 gameHandler.playerRef.intersects(this) &&

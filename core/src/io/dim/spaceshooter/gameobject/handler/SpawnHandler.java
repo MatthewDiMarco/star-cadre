@@ -11,6 +11,7 @@ import java.util.Stack;
 public class SpawnHandler implements GameObject {
 
     public static final float DURATION_BETWEEN_PICKUPS = 10f;
+    public static final float DURATION_BETWEEN_ASTEROIDS = 2.5f;
     public static final float MIN_DELAY_BETWEEN_SWARMS = 0.25f;
     public static final int MIN_SWARM_LENGTH = 2;
     public static final int MAX_SWARM_LENGTH = 6;
@@ -19,17 +20,21 @@ public class SpawnHandler implements GameObject {
 
     protected int waveNumber;
     protected float timerLastPickup;
+    protected float timerLastAsteroid;
 
     public SpawnHandler() {
         this.spawnJobs = new Stack<>();
         this.waveNumber = 0;
         this.timerLastPickup = DURATION_BETWEEN_PICKUPS;
+        this.timerLastAsteroid = DURATION_BETWEEN_ASTEROIDS;
     }
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
         timerLastPickup = Math.min(
             DURATION_BETWEEN_PICKUPS, timerLastPickup - deltaTime);
+        timerLastAsteroid = Math.min(
+            DURATION_BETWEEN_ASTEROIDS, timerLastAsteroid - deltaTime);
 
         if (spawnJobs.empty() && gameHandler.ships.size() == 1) {
             generateWave(gameHandler);
@@ -42,6 +47,18 @@ public class SpawnHandler implements GameObject {
                 gameHandler.ships.addAll(Arrays.asList(nextJob.aliens));
                 spawnJobs.pop();
             }
+        }
+
+        if (timerLastAsteroid <= 0) {
+            float xx = gameHandler.boundary.width / 2;
+            float yy = gameHandler.boundary.height + 5;
+            float numAsteroids = MathUtils.random.nextInt(3 - 1) + 1;
+            for (int ii = 0; ii < numAsteroids; ii++) {
+                gameHandler.asteroids.add(gameHandler.factory.createAsteroid(
+                    xx + MathUtils.random.nextInt(60) - 30,
+                    yy + MathUtils.random.nextInt(40 - 10 * ii) + 10 * ii));
+            }
+            timerLastAsteroid = DURATION_BETWEEN_ASTEROIDS;
         }
     }
 

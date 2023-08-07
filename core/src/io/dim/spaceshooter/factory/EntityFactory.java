@@ -2,6 +2,7 @@ package io.dim.spaceshooter.factory;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import io.dim.spaceshooter.gameobject.entity.AsteroidEntity;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity.LaserTarget;
 import io.dim.spaceshooter.gameobject.entity.PickupEntity;
@@ -9,7 +10,9 @@ import io.dim.spaceshooter.gameobject.entity.ship.EnemyShipEntity;
 import io.dim.spaceshooter.gameobject.entity.ship.PlayerShipEntity;
 import io.dim.spaceshooter.gameobject.entity.ship.PlayerShipEntity.TouchScreen;
 import io.dim.spaceshooter.gameobject.entity.ship.ShipEntity;
+import io.dim.spaceshooter.helper.MathUtils;
 import io.dim.spaceshooter.helper.PathAtlas;
+import java.util.Locale;
 
 public class EntityFactory {
 
@@ -137,5 +140,15 @@ public class EntityFactory {
             default:
                 throw new RuntimeException("Error creating entity");
         }
+    }
+
+    public AsteroidEntity createAsteroid(float xOrigin, float yOrigin) {
+        final float minSize = 6f;
+        final float maxSize = 8f;
+        final float asteroidSize = MathUtils.random.nextInt((int)(maxSize - minSize)) + minSize;
+        return new AsteroidEntity(
+            xOrigin, yOrigin, asteroidSize, asteroidSize, 48f,
+            textureAtlas.findRegion(String.format(Locale.getDefault(),
+                "meteorBrown_big%d", MathUtils.random.nextInt(4 - 1) + 1)));
     }
 }

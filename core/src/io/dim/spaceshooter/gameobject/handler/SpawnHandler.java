@@ -11,7 +11,7 @@ import java.util.Stack;
 public class SpawnHandler implements GameObject {
 
     public static final float DURATION_BETWEEN_PICKUPS = 10f;
-    public static final float DURATION_BETWEEN_ASTEROIDS = 2.5f;
+    public static final float DURATION_BETWEEN_ASTEROIDS = 10f;
     public static final float MIN_DELAY_BETWEEN_SWARMS = 0.25f;
     public static final int MIN_SWARM_LENGTH = 2;
     public static final int MAX_SWARM_LENGTH = 6;

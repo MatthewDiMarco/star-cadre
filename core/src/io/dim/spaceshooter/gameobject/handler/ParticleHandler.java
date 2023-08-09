@@ -86,9 +86,7 @@ public class ParticleHandler implements GameObject {
     }
 
     public void createDebrisEffect(float xx, float yy) {
-        PooledEffect smokeEffect = smokePool.obtain();
         PooledEffect debrisEffect = asteroidDebrisPool.obtain();
-        createEffect(smokeEffect, xx, yy);
         createEffect(debrisEffect, xx, yy);
     }
 

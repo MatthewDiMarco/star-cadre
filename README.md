@@ -12,7 +12,7 @@
 - [x] Weapon powerups
 - [x] Asteroids
 - [ ] Basic sounds and music
-- [ ] Restart button
+- [x] Restart button
 
 Optimizations
 - [ ] Blending (?) (https://libgdx.com/wiki/graphics/2d/spritebatch-textureregions-and-sprites)

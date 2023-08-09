@@ -95,6 +95,12 @@ public class PlayerShipEntity extends ShipEntity {
     }
 
     @Override
+    public void onDestroy(GameHandler gameHandler) {
+        super.onDestroy(gameHandler);
+        gameHandler.gameIsOver = true;
+    }
+
+    @Override
     public LaserEntity getBaseLaser(GameHandler gameHandler) {
         return gameHandler.factory.createLaser(
             hitBox.x + hitBox.width * 0.5f,

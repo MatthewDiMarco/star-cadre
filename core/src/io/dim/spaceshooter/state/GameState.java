@@ -25,8 +25,11 @@ public class GameState extends ApplicationState {
 
     public static final int WORLD_WIDTH = 72;
     public static final int WORLD_HEIGHT = 128;
+    public static final float BUTTON_WIDTH = 28f;
+    public static final float BUTTON_HEIGHT = 13.9f;
 
     private final TextureAtlas textureAtlas;
+    private final Texture restartTexture;
     private final Texture[] backgrounds = new Texture[3];
     private final FreeTypeFontGenerator fontGenerator;
 
@@ -43,6 +46,7 @@ public class GameState extends ApplicationState {
         backgrounds[1] = new Texture("backgrounds/backgrounds-1.png");
         backgrounds[2] = new Texture("backgrounds/backgrounds-2.png");
         textureAtlas = new TextureAtlas("textures/textures.atlas");
+        restartTexture = new Texture("textures/restart.png");
         fontGenerator = new FreeTypeFontGenerator(
             Gdx.files.internal("fonts/EdgeOfTheGalaxyRegular-OVEa6.otf"));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
@@ -66,12 +70,22 @@ public class GameState extends ApplicationState {
     public void render(SpriteBatch batch) {
         batch.begin();
         gameHandler.onDraw(batch);
+        if (gameHandler.gameIsOver) {
+            Color cc = batch.getColor();
+            batch.setColor(cc.r, cc.g, cc.b, 0.8f);
+            batch.draw(restartTexture,
+                ((float)(WORLD_WIDTH / 2) - BUTTON_WIDTH / 2),
+                ((float)(WORLD_HEIGHT / 2) - BUTTON_HEIGHT / 2),
+                BUTTON_WIDTH, BUTTON_HEIGHT);
+            batch.setColor(cc.r, cc.g, cc.b, 1f);
+        }
         batch.end();
     }
 
     @Override
     public void dispose() {
         textureAtlas.dispose();
+        restartTexture.dispose();
         fontGenerator.dispose();
         for (Texture bg : backgrounds) {
             bg.dispose();
@@ -79,13 +93,25 @@ public class GameState extends ApplicationState {
     }
 
     private void handleInput(float deltaTime) {
-        if (Gdx.input.isKeyJustPressed(Keys.P)) {
+        if (!gameHandler.gameIsOver && Gdx.input.isKeyJustPressed(Keys.P)) {
             gameRunning = !gameRunning;
             if (!stepping) stepping = true;
         }
 
-        if (Gdx.input.isKeyJustPressed(Keys.ENTER)) {
+        if (!gameHandler.gameIsOver && Gdx.input.isKeyJustPressed(Keys.ENTER)) {
             stepping = true;
+        }
+
+        if (gameHandler.gameIsOver && Gdx.input.isTouched()) {
+            float xButtonStart = (float)(WORLD_WIDTH / 2) - BUTTON_WIDTH / 2;
+            float xButtonEnd = (float)(WORLD_WIDTH / 2) + BUTTON_WIDTH / 2;
+            float yButtonStart = (float)(WORLD_HEIGHT / 2) - BUTTON_HEIGHT / 2;
+            float yButtonEnd = (float)(WORLD_HEIGHT / 2) + BUTTON_HEIGHT / 2;
+            Vector2 touchPoint = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+            if (touchPoint.x > xButtonStart && touchPoint.x < xButtonEnd &&
+                touchPoint.y > yButtonStart && touchPoint.y < yButtonEnd) {
+                init();
+            }
         }
 
         if (Gdx.input.isKeyJustPressed(Keys.R)) {

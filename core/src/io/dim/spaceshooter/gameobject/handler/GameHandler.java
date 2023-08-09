@@ -32,6 +32,7 @@ public class GameHandler implements GameObject {
     public List<AsteroidEntity> asteroids;
     public List<LaserEntity> lasers; // TODO replace with libGDX collections
     public List<PickupEntity> pickups;
+    public boolean gameIsOver;
 
     public GameHandler(int width, int height,
         EntityFactory factory,
@@ -49,6 +50,7 @@ public class GameHandler implements GameObject {
         this.asteroids = new ArrayList<>();
         this.lasers = new ArrayList<>();
         this.pickups = new ArrayList<>();
+        this.gameIsOver = false;
     }
 
     @Override

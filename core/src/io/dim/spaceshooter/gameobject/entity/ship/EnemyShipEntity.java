@@ -1,5 +1,6 @@
 package io.dim.spaceshooter.gameobject.entity.ship;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.dim.spaceshooter.factory.EntityFactory.LaserType;
@@ -22,10 +23,12 @@ public class EnemyShipEntity extends ShipEntity {
         float laserMovementSpeed,
         float invulnerabilityDuration,
         TextureRegion shipTexture,
+        Sound laserSound, Sound explosionSound,
         Vector2[] path, boolean mirrorPath) {
         super(xOrigin, yOrigin, width, height, movementSpeed, hp,
             laserCooldownDuration, laserStrength, laserPerShot,
-            laserBarrelWidth, laserMovementSpeed, invulnerabilityDuration, shipTexture);
+            laserBarrelWidth, laserMovementSpeed, invulnerabilityDuration,
+            shipTexture, laserSound, explosionSound);
         this.mirrorPath = mirrorPath;
         this.path = path;
     }

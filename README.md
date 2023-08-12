@@ -11,7 +11,7 @@
 - [x] More complex alien AI
 - [x] Weapon powerups
 - [x] Asteroids
-- [ ] Basic sounds and music
+- [x] Basic sounds and music
 - [x] Restart button
 
 Optimizations

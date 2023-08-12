@@ -1,5 +1,6 @@
 package io.dim.spaceshooter.factory;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.dim.spaceshooter.gameobject.entity.AsteroidEntity;
@@ -22,16 +23,24 @@ public class EntityFactory {
 
     private final TextureAtlas textureAtlas;
     private final PathAtlas pathAtlas;
+    private final Sound laserSound1;
+    private final Sound laserSound2;
+    private final Sound explosionSound1;
 
-    public EntityFactory(TextureAtlas textureAtlas, PathAtlas pathAtlas) {
+    public EntityFactory(TextureAtlas textureAtlas, PathAtlas pathAtlas,
+        Sound laserSound1, Sound laserSound2, Sound explosionSound1) {
         this.textureAtlas = textureAtlas;
         this.pathAtlas = pathAtlas;
+        this.laserSound1 = laserSound1;
+        this.laserSound2 = laserSound2;
+        this.explosionSound1 = explosionSound1;
     }
 
     public PlayerShipEntity createPlayer(float xOrigin, float yOrigin, TouchScreen touchScreen) {
         return new PlayerShipEntity(
             xOrigin, yOrigin, 7, 7, 52f, 3, 1f,
-            textureAtlas.findRegion("playerShip3_blue"), touchScreen);
+            textureAtlas.findRegion("playerShip3_blue"),
+            laserSound1, explosionSound1, touchScreen);
     }
 
     public ShipEntity createEnemy(
@@ -43,28 +52,28 @@ public class EntityFactory {
                     0f, 0, 0,
                     0f, 0f,
                     0f, textureAtlas.findRegion("enemyRed1"),
-                    pathAtlas.paths.get(0), mirrorPath);
+                    laserSound2, explosionSound1, pathAtlas.paths.get(0), mirrorPath);
             case INVADER:
                 return new EnemyShipEntity(
                     xOrigin, yOrigin, 6, 6, 36f, 1,
                     0f, 0, 0,
                     0f, 0f,
                     0f, textureAtlas.findRegion("enemyRed2"),
-                    pathAtlas.paths.get(1), mirrorPath);
+                    laserSound2, explosionSound1, pathAtlas.paths.get(1), mirrorPath);
             case DRAGON:
                 return new EnemyShipEntity(
                     xOrigin, yOrigin, 6, 6, 48f, 1,
                     0f, 0, 0,
                     0f, 0f,
                     0f, textureAtlas.findRegion("enemyRed3"),
-                    pathAtlas.paths.get(2), mirrorPath);
+                    laserSound2, explosionSound1, pathAtlas.paths.get(2), mirrorPath);
             case TANK:
                 return new EnemyShipEntity(
                     xOrigin, yOrigin, 10, 10, 24f, 5,
                     1f, 1, 2,
                     0.5f, 50f,
                     0.1f, textureAtlas.findRegion("enemyRed4"),
-                    pathAtlas.paths.get(3), mirrorPath);
+                    laserSound2, explosionSound1, pathAtlas.paths.get(3), mirrorPath);
             default:
                 throw new RuntimeException("Error creating entity");
         }

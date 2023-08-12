@@ -1,11 +1,13 @@
 package io.dim.spaceshooter.gameobject.entity.ship;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.dim.spaceshooter.gameobject.entity.Entity;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
+import io.dim.spaceshooter.helper.MathUtils;
 
 public abstract class ShipEntity extends Entity {
 
@@ -31,6 +33,8 @@ public abstract class ShipEntity extends Entity {
 
     protected float alpha;
     protected final TextureRegion shipTexture;
+    protected final Sound laserSound;
+    protected final Sound explosionSound;
 
     public ShipEntity(float xOrigin, float yOrigin,
         float width, float height,
@@ -40,7 +44,8 @@ public abstract class ShipEntity extends Entity {
         float laserBarrelWidth,
         float laserMovementSpeed,
         float invulnerabilityDuration,
-        TextureRegion shipTexture) {
+        TextureRegion shipTexture,
+        Sound laserSound, Sound explosionSound) {
         super(xOrigin, yOrigin, width, height, movementSpeed);
         this.hp = hp;
         this.hpMax = hp;
@@ -61,6 +66,8 @@ public abstract class ShipEntity extends Entity {
 
         this.alpha = 1f;
         this.shipTexture = shipTexture;
+        this.laserSound = laserSound;
+        this.explosionSound = explosionSound;
     }
 
     @Override
@@ -78,10 +85,13 @@ public abstract class ShipEntity extends Entity {
 
     @Override
     public void onDestroy(GameHandler gameHandler) {
-        gameHandler.particleHandler.createExplosionEffect(
-            hitBox.x + hitBox.width / 2,
-            hitBox.y + hitBox.height / 2,
-            Math.max(hitBox.width, hitBox.height) / 20);
+        if (hitBox.y > 0) {
+            explosionSound.play(0.75f);
+            gameHandler.particleHandler.createExplosionEffect(
+                hitBox.x + hitBox.width / 2,
+                hitBox.y + hitBox.height / 2,
+                Math.max(hitBox.width, hitBox.height) / 20);
+        }
     }
 
     @Override
@@ -113,6 +123,7 @@ public abstract class ShipEntity extends Entity {
     public void fireLaser(GameHandler gameHandler) {
         boolean nextLaserReady = timerLastLaser - laserCooldownDuration >= 0;
         if (lasersEnabled && nextLaserReady) {
+            laserSound.play(1.0f);
             timerLastLaser = 0;
             float laserRegionWidth = laserBarrelWidth / laserPerShot;
             for (int ii = 0; ii < laserPerShot; ii++) {

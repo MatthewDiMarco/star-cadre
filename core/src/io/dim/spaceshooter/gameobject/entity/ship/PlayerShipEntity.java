@@ -2,6 +2,7 @@ package io.dim.spaceshooter.gameobject.entity.ship;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import io.dim.spaceshooter.factory.EntityFactory.LaserType;
@@ -19,11 +20,14 @@ public class PlayerShipEntity extends ShipEntity {
         float width, float height,
         float movementSpeed, int hp,
         float invulnerabilityDuration,
-        TextureRegion shipTexture, TouchScreen touchScreen) {
+        TextureRegion shipTexture,
+        Sound laserSound, Sound explosionSound,
+        TouchScreen touchScreen) {
         super(xOrigin, yOrigin, width, height, movementSpeed, hp,
             0f, 0, 0,
             0f, 0f,
-            invulnerabilityDuration, shipTexture);
+            invulnerabilityDuration, shipTexture,
+            laserSound, explosionSound);
         this.setDefaultLaserState();
         this.pickup = null;
         this.touchScreen = touchScreen;

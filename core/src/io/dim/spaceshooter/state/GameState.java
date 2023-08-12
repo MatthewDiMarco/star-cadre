@@ -2,6 +2,7 @@ package io.dim.spaceshooter.state;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -32,6 +33,9 @@ public class GameState extends ApplicationState {
     private final Texture restartTexture;
     private final Texture[] backgrounds = new Texture[3];
     private final FreeTypeFontGenerator fontGenerator;
+    private final Sound laserSound1;
+    private final Sound laserSound2;
+    private final Sound explosionSound1;
 
     private boolean gameRunning = true;
     private boolean stepping = true;
@@ -49,6 +53,12 @@ public class GameState extends ApplicationState {
         restartTexture = new Texture("textures/restart.png");
         fontGenerator = new FreeTypeFontGenerator(
             Gdx.files.internal("fonts/EdgeOfTheGalaxyRegular-OVEa6.otf"));
+        laserSound1 = Gdx.audio.newSound(
+            Gdx.files.internal("sounds/laserShoot1.wav"));
+        laserSound2 = Gdx.audio.newSound(
+            Gdx.files.internal("sounds/laserShoot2.wav"));
+        explosionSound1 = Gdx.audio.newSound(
+            Gdx.files.internal("sounds/explosion1.wav"));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
         fontParameter.size = 72;
         fontParameter.borderWidth = 3.6f;
@@ -87,6 +97,9 @@ public class GameState extends ApplicationState {
         textureAtlas.dispose();
         restartTexture.dispose();
         fontGenerator.dispose();
+        laserSound1.dispose();
+        laserSound2.dispose();
+        explosionSound1.dispose();
         for (Texture bg : backgrounds) {
             bg.dispose();
         }
@@ -122,7 +135,9 @@ public class GameState extends ApplicationState {
     private void init() {
         gameHandler = new GameHandler(
             WORLD_WIDTH, WORLD_HEIGHT,
-            new EntityFactory(textureAtlas, new PathAtlas(new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT))),
+            new EntityFactory(
+                textureAtlas, new PathAtlas(new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT)),
+                laserSound1, laserSound2, explosionSound1),
             new ParticleHandler(textureAtlas),
             new ParallaxHandler(backgrounds,
                 WORLD_WIDTH, WORLD_HEIGHT,

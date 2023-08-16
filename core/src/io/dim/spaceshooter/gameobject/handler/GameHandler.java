@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import io.dim.spaceshooter.factory.EntityFactory;
 import io.dim.spaceshooter.factory.EntityFactory.PickupType;
-import io.dim.spaceshooter.gameobject.entity.AsteroidEntity;
 import io.dim.spaceshooter.gameobject.entity.Entity;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity;
 import io.dim.spaceshooter.gameobject.entity.PickupEntity;
@@ -29,7 +28,6 @@ public class GameHandler implements GameObject {
     public int score = 0;
     public PlayerShipEntity playerRef;
     public List<ShipEntity> ships;
-    public List<AsteroidEntity> asteroids;
     public List<LaserEntity> lasers; // TODO replace with libGDX collections
     public List<PickupEntity> pickups;
     public boolean gameIsOver;
@@ -47,7 +45,6 @@ public class GameHandler implements GameObject {
         this.spawnHandler = spawnHandler;
         this.hudHandler = hudHandler;
         this.ships = new ArrayList<>();
-        this.asteroids = new ArrayList<>();
         this.lasers = new ArrayList<>();
         this.pickups = new ArrayList<>();
         this.gameIsOver = false;
@@ -57,7 +54,6 @@ public class GameHandler implements GameObject {
     public void onStep(GameHandler gameHandler, float deltaTime) {
         parallaxHandler.onStep(gameHandler, deltaTime);
         stepAll((List<Entity>)(List<?>)ships, deltaTime);
-        stepAll((List<Entity>)(List<?>)asteroids, deltaTime);
         stepAll((List<Entity>)(List<?>)lasers, deltaTime);
         stepAll((List<Entity>)(List<?>) pickups, deltaTime);
         particleHandler.onStep(gameHandler, deltaTime);
@@ -69,7 +65,6 @@ public class GameHandler implements GameObject {
     public void onDraw(SpriteBatch batch) {
         parallaxHandler.onDraw(batch);
         for (ShipEntity ship : ships) ship.onDraw(batch);
-        for (AsteroidEntity asteroid : asteroids) asteroid.onDraw(batch);
         for (LaserEntity laser : lasers) laser.onDraw(batch);
         for (PickupEntity pickupEntity : pickups) pickupEntity.onDraw(batch);
         particleHandler.onDraw(batch);

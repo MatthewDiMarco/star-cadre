@@ -2,26 +2,17 @@ package io.dim.spaceshooter.gameobject.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import io.dim.spaceshooter.gameobject.entity.ship.PlayerShipEntity;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
+import io.dim.spaceshooter.helper.Assets;
 
 public class PickupEntity extends Entity {
 
-    public static final float DEFAULT_TIMER = 10f;
     public boolean draw;
     public float timer;
     public PickupMutator pickupMutator;
-
-    protected TextureRegion texture;
-
-    public PickupEntity(float xOrigin, float yOrigin, float width, float height,
-        float movementSpeed, TextureRegion texture, PickupMutator pickupMutator) {
-        super(xOrigin, yOrigin, width, height, movementSpeed);
-        this.draw = true;
-        this.timer = DEFAULT_TIMER;
-        this.pickupMutator = pickupMutator;
-        this.texture = texture;
-    }
+    public TextureRegion pickupTexture;
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
@@ -57,6 +48,17 @@ public class PickupEntity extends Entity {
     }
 
     @Override
+    public void onCreate(
+        float xOrigin, float yOrigin, float width, float height, Assets assets) {
+        this.hitBox = new Rectangle(xOrigin, yOrigin, width, height);
+        this.movementSpeed = 32f;
+        this.draw = true;
+        this.timer = 10f;
+        this.pickupMutator = playerShip -> {};
+        this.pickupTexture = assets.textureAtlas.findRegion("powerupYellow_bolt");
+    }
+
+    @Override
     public void onDestroy(GameHandler gameHandler) {
         if (gameHandler.playerRef.pickup == this) {
             gameHandler.playerRef.pickup = null;
@@ -68,7 +70,7 @@ public class PickupEntity extends Entity {
     public void onDraw(SpriteBatch batch) {
         if (draw) {
             batch.draw(
-                texture,
+                pickupTexture,
                 hitBox.x,
                 hitBox.y,
                 hitBox.width,

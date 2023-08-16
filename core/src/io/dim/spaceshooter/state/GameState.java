@@ -2,7 +2,6 @@ package io.dim.spaceshooter.state;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -19,7 +18,8 @@ import io.dim.spaceshooter.gameobject.handler.ParticleHandler;
 import io.dim.spaceshooter.gameobject.handler.ParallaxHandler;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
 import io.dim.spaceshooter.gameobject.handler.SpawnHandler;
-import io.dim.spaceshooter.helper.PathAtlas;
+import io.dim.spaceshooter.helper.Assets;
+import io.dim.spaceshooter.helper.Paths;
 import java.util.Stack;
 
 public class GameState extends ApplicationState {
@@ -29,14 +29,7 @@ public class GameState extends ApplicationState {
     public static final float BUTTON_WIDTH = 28f;
     public static final float BUTTON_HEIGHT = 13.9f;
 
-    private final TextureAtlas textureAtlas;
-    private final Texture restartTexture;
-    private final Texture[] backgrounds = new Texture[3];
-    private final FreeTypeFontGenerator fontGenerator;
-    private final Sound laserSound1;
-    private final Sound laserSound2;
-    private final Sound explosionSound1;
-
+    private final Assets assets = new Assets();
     private boolean gameRunning = true;
     private boolean stepping = true;
     private GameHandler gameHandler;
@@ -46,19 +39,21 @@ public class GameState extends ApplicationState {
         Viewport viewport,
         Stack<ApplicationState> manager) {
         super(camera, viewport, manager);
-        backgrounds[0] = new Texture("backgrounds/backgrounds-0.png");
-        backgrounds[1] = new Texture("backgrounds/backgrounds-1.png");
-        backgrounds[2] = new Texture("backgrounds/backgrounds-2.png");
-        textureAtlas = new TextureAtlas("textures/textures.atlas");
-        restartTexture = new Texture("textures/restart.png");
-        fontGenerator = new FreeTypeFontGenerator(
+        assets.backgrounds[0] = new Texture("backgrounds/backgrounds-0.png");
+        assets.backgrounds[1] = new Texture("backgrounds/backgrounds-1.png");
+        assets.backgrounds[2] = new Texture("backgrounds/backgrounds-2.png");
+        assets.textureAtlas = new TextureAtlas("textures/textures.atlas");
+        assets.restartTexture = new Texture("textures/restart.png");
+        assets.fontGenerator = new FreeTypeFontGenerator(
             Gdx.files.internal("fonts/EdgeOfTheGalaxyRegular-OVEa6.otf"));
-        laserSound1 = Gdx.audio.newSound(
+        assets.laserSound1 = Gdx.audio.newSound(
             Gdx.files.internal("sounds/laserShoot1.wav"));
-        laserSound2 = Gdx.audio.newSound(
+        assets.laserSound2 = Gdx.audio.newSound(
             Gdx.files.internal("sounds/laserShoot2.wav"));
-        explosionSound1 = Gdx.audio.newSound(
+        assets.explosionSound1 = Gdx.audio.newSound(
             Gdx.files.internal("sounds/explosion1.wav"));
+        assets.hurtSound1 = Gdx.audio.newSound(
+            Gdx.files.internal("sounds/hitHurt1.wav"));
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
         fontParameter.size = 72;
         fontParameter.borderWidth = 3.6f;
@@ -83,7 +78,7 @@ public class GameState extends ApplicationState {
         if (gameHandler.gameIsOver) {
             Color cc = batch.getColor();
             batch.setColor(cc.r, cc.g, cc.b, 0.8f);
-            batch.draw(restartTexture,
+            batch.draw(assets.restartTexture,
                 ((float)(WORLD_WIDTH / 2) - BUTTON_WIDTH / 2),
                 ((float)(WORLD_HEIGHT / 2) - BUTTON_HEIGHT / 2),
                 BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -94,13 +89,13 @@ public class GameState extends ApplicationState {
 
     @Override
     public void dispose() {
-        textureAtlas.dispose();
-        restartTexture.dispose();
-        fontGenerator.dispose();
-        laserSound1.dispose();
-        laserSound2.dispose();
-        explosionSound1.dispose();
-        for (Texture bg : backgrounds) {
+        assets.textureAtlas.dispose();
+        assets.restartTexture.dispose();
+        assets.fontGenerator.dispose();
+        assets.laserSound1.dispose();
+        assets.laserSound2.dispose();
+        assets.explosionSound1.dispose();
+        for (Texture bg : assets.backgrounds) {
             bg.dispose();
         }
     }
@@ -136,17 +131,17 @@ public class GameState extends ApplicationState {
         gameHandler = new GameHandler(
             WORLD_WIDTH, WORLD_HEIGHT,
             new EntityFactory(
-                textureAtlas, new PathAtlas(new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT)),
-                laserSound1, laserSound2, explosionSound1),
-            new ParticleHandler(textureAtlas),
-            new ParallaxHandler(backgrounds,
+                new Paths(new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT)),
+                assets),
+            new ParticleHandler(assets.textureAtlas),
+            new ParallaxHandler(assets.backgrounds,
                 WORLD_WIDTH, WORLD_HEIGHT,
                 true, false),
             new SpawnHandler(),
             new HudHandler(
-                fontGenerator,
+                assets.fontGenerator,
                 new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT),
-                textureAtlas.findRegion("playerLife3_blue")));
+                assets.textureAtlas.findRegion("playerLife3_blue")));
 
         gameHandler.playerRef = gameHandler.factory.createPlayer(
             (float) WORLD_WIDTH / 2,

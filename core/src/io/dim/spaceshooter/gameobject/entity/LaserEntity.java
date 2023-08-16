@@ -2,9 +2,11 @@ package io.dim.spaceshooter.gameobject.entity;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
 import io.dim.spaceshooter.gameobject.entity.ship.ShipEntity;
+import io.dim.spaceshooter.helper.Assets;
 
 public class LaserEntity extends Entity {
 
@@ -15,22 +17,7 @@ public class LaserEntity extends Entity {
     public boolean armourPiercing;
     public Vector2 direction;
     public LaserTarget laserTarget;
-
-    protected final TextureRegion laserTexture;
-
-    public LaserEntity(float xOrigin, float yOrigin,
-        float width, float height,
-        float movementSpeed,
-        int direction, int strength, float horizontalOffset,
-        LaserTarget target, TextureRegion laserTexture) {
-        super(xOrigin, yOrigin, width, height, movementSpeed);
-        this.launchSpeedOffset = movementSpeed * 3;
-        this.strength = strength;
-        this.armourPiercing = false;
-        this.direction = new Vector2(horizontalOffset, Math.signum(direction));
-        this.laserTarget = target;
-        this.laserTexture = laserTexture;
-    }
+    public TextureRegion laserTexture;
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
@@ -54,13 +41,6 @@ public class LaserEntity extends Entity {
                     if (!armourPiercing) disposable = true;
                 }
             }
-            for (AsteroidEntity asteroid : gameHandler.asteroids) {
-                if (asteroid.hitBox.y <= gameHandler.boundary.height - 5 &&
-                    asteroid.intersects(this)) {
-                    asteroid.disposable = true;
-                    gameHandler.score += 5;
-                }
-            }
         } else {
             if (!gameHandler.playerRef.invulnerabilityEnabled &&
                 gameHandler.playerRef.intersects(this) &&
@@ -69,6 +49,20 @@ public class LaserEntity extends Entity {
                 if (!armourPiercing) disposable = true;
             }
         }
+    }
+
+    @Override
+    public void onCreate(
+        float xOrigin, float yOrigin, float width, float height, Assets assets) {
+        TextureRegion texture = assets.textureAtlas.findRegion("laserBlue16");
+        this.hitBox = new Rectangle(xOrigin, yOrigin, width, height);
+        this.movementSpeed = 25f;
+        this.launchSpeedOffset = movementSpeed * 3;
+        this.strength = 1;
+        this.armourPiercing = false;
+        this.direction = new Vector2(0f, 1);
+        this.laserTarget = LaserTarget.ALIEN;
+        this.laserTexture = texture;
     }
 
     @Override

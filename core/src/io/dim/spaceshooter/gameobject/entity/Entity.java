@@ -4,23 +4,13 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.dim.spaceshooter.gameobject.GameObject;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
+import io.dim.spaceshooter.helper.Assets;
 
 public abstract class Entity implements GameObject {
 
     public Rectangle hitBox;
     public float movementSpeed;
-    public boolean disposable;
-
-    public Entity(float xOrigin, float yOrigin,
-        float width, float height,
-        float movementSpeed) {
-        this.hitBox = new Rectangle(
-            xOrigin - width / 2,
-            yOrigin - height / 2,
-            width, height);
-        this.movementSpeed = movementSpeed;
-        disposable = false;
-    }
+    public boolean disposable = false;
 
     public boolean intersects(Entity entity) {
         return hitBox.overlaps(entity.hitBox);
@@ -66,6 +56,9 @@ public abstract class Entity implements GameObject {
             this.translate(xMove, yMove, boundaryDistances);
         }
     }
+
+    public abstract void onCreate(
+        float xOrigin, float yOrigin, float width, float height, Assets assets);
 
     public abstract void onDestroy(GameHandler gameHandler);
 }

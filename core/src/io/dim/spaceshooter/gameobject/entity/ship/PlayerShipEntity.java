@@ -2,36 +2,18 @@ package io.dim.spaceshooter.gameobject.entity.ship;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import io.dim.spaceshooter.factory.EntityFactory.LaserType;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity;
 import io.dim.spaceshooter.gameobject.entity.PickupEntity;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
+import io.dim.spaceshooter.helper.Assets;
 
 public class PlayerShipEntity extends ShipEntity {
 
     public PickupEntity pickup;
-
-    private TouchScreen touchScreen;
-
-    public PlayerShipEntity(float xOrigin, float yOrigin,
-        float width, float height,
-        float movementSpeed, int hp,
-        float invulnerabilityDuration,
-        TextureRegion shipTexture,
-        Sound laserSound, Sound explosionSound,
-        TouchScreen touchScreen) {
-        super(xOrigin, yOrigin, width, height, movementSpeed, hp,
-            0f, 0, 0,
-            0f, 0f,
-            invulnerabilityDuration, shipTexture,
-            laserSound, explosionSound);
-        this.setDefaultLaserState();
-        this.pickup = null;
-        this.touchScreen = touchScreen;
-    }
+    public TouchScreen touchScreen;
 
     public void setDefaultLaserState() {
         this.lasersEnabled = true;
@@ -96,6 +78,27 @@ public class PlayerShipEntity extends ShipEntity {
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
             fireLaser(gameHandler);
         }
+    }
+
+    @Override
+    public void onCreate(
+        float xOrigin, float yOrigin, float width, float height, Assets assets) {
+        this.hitBox = new Rectangle(
+            xOrigin - width / 2, yOrigin - height / 2, width, height);
+        this.movementSpeed = 48f;
+        this.hp = 3;
+        this.hpMax = hp;
+        this.invulnerabilityEnabled = false;
+        this.invulnerabilityDuration = 1f;
+        this.timerLastLaser = 0;
+        this.timerLastHit = invulnerabilityDuration;
+        this.alpha = 1f;
+        this.shipTexture = assets.textureAtlas.findRegion("playerShip3_blue");
+        this.laserSound = assets.laserSound1;
+        this.explosionSound = assets.explosionSound1;
+        this.hurtSound = assets.hurtSound1;
+        this.pickup = null;
+        this.setDefaultLaserState();
     }
 
     @Override

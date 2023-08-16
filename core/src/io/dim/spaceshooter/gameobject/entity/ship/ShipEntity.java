@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import io.dim.spaceshooter.gameobject.entity.Entity;
 import io.dim.spaceshooter.gameobject.entity.LaserEntity;
 import io.dim.spaceshooter.gameobject.handler.GameHandler;
-import io.dim.spaceshooter.helper.MathUtils;
 
 public abstract class ShipEntity extends Entity {
 
@@ -31,44 +30,11 @@ public abstract class ShipEntity extends Entity {
     public float timerLastLaser;
     public float timerLastHit;
 
-    protected float alpha;
-    protected final TextureRegion shipTexture;
-    protected final Sound laserSound;
-    protected final Sound explosionSound;
-
-    public ShipEntity(float xOrigin, float yOrigin,
-        float width, float height,
-        float movementSpeed, int hp,
-        float laserCooldownDuration,
-        int laserStrength, int laserPerShot,
-        float laserBarrelWidth,
-        float laserMovementSpeed,
-        float invulnerabilityDuration,
-        TextureRegion shipTexture,
-        Sound laserSound, Sound explosionSound) {
-        super(xOrigin, yOrigin, width, height, movementSpeed);
-        this.hp = hp;
-        this.hpMax = hp;
-
-        this.lasersEnabled = Float.compare(laserCooldownDuration, 0f) != 0;
-        this.laserArmourPiercing = false;
-        this.laserStrength = laserStrength;
-        this.laserPerShot = laserPerShot;
-        this.laserBarrelWidth = laserBarrelWidth;
-        this.laserMovementSpeed = laserMovementSpeed;
-        this.laserCooldownDuration = laserCooldownDuration;
-
-        this.invulnerabilityEnabled = false;
-        this.invulnerabilityDuration = invulnerabilityDuration;
-
-        this.timerLastLaser = 0;
-        this.timerLastHit = invulnerabilityDuration;
-
-        this.alpha = 1f;
-        this.shipTexture = shipTexture;
-        this.laserSound = laserSound;
-        this.explosionSound = explosionSound;
-    }
+    public float alpha;
+    public TextureRegion shipTexture;
+    public Sound laserSound;
+    public Sound explosionSound;
+    public Sound hurtSound;
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
@@ -86,7 +52,7 @@ public abstract class ShipEntity extends Entity {
     @Override
     public void onDestroy(GameHandler gameHandler) {
         if (hitBox.y > 0) {
-            explosionSound.play(0.75f);
+            explosionSound.play(1f);
             gameHandler.particleHandler.createExplosionEffect(
                 hitBox.x + hitBox.width / 2,
                 hitBox.y + hitBox.height / 2,
@@ -112,8 +78,9 @@ public abstract class ShipEntity extends Entity {
             hp = Math.max(hp - strength, 0);
             if (hp == 0) {
                 disposable = true;
+            } else {
+                hurtSound.play(1f);
             }
-
             invulnerabilityEnabled = true;
             timerLastHit = 0;
             alpha = INVULNERABILITY_ALPHA_LOW;

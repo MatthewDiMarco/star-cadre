@@ -23,7 +23,6 @@ public class SpaceShooterGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		viewport = new StretchViewport(GameState.WORLD_WIDTH, GameState.WORLD_HEIGHT, camera);
-
 		applicationStateManager = new Stack<>();
 		applicationStateManager.push(new GameState(camera, viewport, applicationStateManager));
 	}
@@ -32,7 +31,6 @@ public class SpaceShooterGame extends ApplicationAdapter {
 	public void render() {
 		applicationStateManager.peek().update(Gdx.graphics.getDeltaTime());
 		applicationStateManager.peek().render(batch);
-
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
 			Gdx.app.exit();
 			System.exit(0);

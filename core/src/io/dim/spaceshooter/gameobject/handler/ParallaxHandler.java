@@ -39,7 +39,6 @@ public class ParallaxHandler implements GameObject {
         }
     }
 
-    // TODO allow for toggling speed of x/y scroll
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
         int base = backgroundOffsets.length * 2;

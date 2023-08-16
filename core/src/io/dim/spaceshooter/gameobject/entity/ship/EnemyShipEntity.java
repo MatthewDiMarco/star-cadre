@@ -21,7 +21,7 @@ public class EnemyShipEntity extends ShipEntity {
         fireLaser(gameHandler);
 
         // path traversal
-        Vector2 entityCentrePoint = getCenterPoint(); // TODO creating a new vector every time??
+        Vector2 entityCentrePoint = getCenterPoint();
         Vector2 targetPoint = new Vector2(
             path[currPointIdx].x + (mirrorPath ? (gameHandler.boundary.width / 2 - path[currPointIdx].x) * 2 : 0),
             path[currPointIdx].y);

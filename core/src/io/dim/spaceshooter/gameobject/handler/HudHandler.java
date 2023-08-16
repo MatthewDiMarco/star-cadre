@@ -27,8 +27,8 @@ public class HudHandler implements GameObject {
 
     public HudHandler(
         FreeTypeFontGenerator fontGenerator,
-        Rectangle hudBoundary,
-        TextureRegion shipIcon) {
+        TextureRegion shipIcon,
+        Rectangle hudBoundary) {
         FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontParameter();
         fontParameter.size = 72;
         fontParameter.borderWidth = 3.6f;
@@ -36,6 +36,7 @@ public class HudHandler implements GameObject {
         fontParameter.borderColor = new Color(0, 0, 0, 0.3f);
         this.font = fontGenerator.generateFont(fontParameter);
         this.font.getData().setScale(0.08f);
+        this.shipIcon = shipIcon;
 
         float hudMargin = font.getCapHeight() / 2;
         this.hudColLeft = hudMargin;
@@ -43,7 +44,6 @@ public class HudHandler implements GameObject {
         this.hudRowTop = hudBoundary.height - hudMargin;
         this.iconWidth = 5;
         this.iconHeight = 5;
-        this.shipIcon = shipIcon;
 
         this.xShake = 0f;
         this.yShake = 0f;

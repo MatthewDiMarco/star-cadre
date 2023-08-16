@@ -2,6 +2,8 @@ package io.dim.spaceshooter.gameobject.handler;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Array.ArrayIterator;
 import io.dim.spaceshooter.factory.EntityFactory;
 import io.dim.spaceshooter.factory.EntityFactory.PickupType;
 import io.dim.spaceshooter.gameobject.entity.Entity;
@@ -11,9 +13,6 @@ import io.dim.spaceshooter.gameobject.entity.ship.PlayerShipEntity;
 import io.dim.spaceshooter.gameobject.entity.ship.ShipEntity;
 import io.dim.spaceshooter.gameobject.GameObject;
 import io.dim.spaceshooter.helper.MathUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ListIterator;
 
 public class GameHandler implements GameObject {
 
@@ -22,43 +21,39 @@ public class GameHandler implements GameObject {
 
     public final ParticleHandler particleHandler;
     private final ParallaxHandler parallaxHandler;
-    private final SpawnHandler spawnHandler;
     private final HudHandler hudHandler;
+    private final SpawnHandler spawnHandler;
 
     public int score = 0;
     public PlayerShipEntity playerRef;
-    public List<ShipEntity> ships;
-    public List<LaserEntity> lasers; // TODO replace with libGDX collections
-    public List<PickupEntity> pickups;
-    public boolean gameIsOver;
+    public Array<ShipEntity> ships = new Array<>();
+    public Array<LaserEntity> lasers = new Array<>();;
+    public Array<PickupEntity> pickups = new Array<>();;
+    public boolean gameIsOver = false;
 
     public GameHandler(int width, int height,
         EntityFactory factory,
         ParticleHandler particleHandler,
         ParallaxHandler parallaxHandler,
-        SpawnHandler spawnHandler,
-        HudHandler hudHandler) {
+        HudHandler hudHandler,
+        SpawnHandler spawnHandler) {
         boundary = new Rectangle(0, 0, width, height);
         this.factory = factory;
         this.particleHandler = particleHandler;
         this.parallaxHandler = parallaxHandler;
-        this.spawnHandler = spawnHandler;
         this.hudHandler = hudHandler;
-        this.ships = new ArrayList<>();
-        this.lasers = new ArrayList<>();
-        this.pickups = new ArrayList<>();
-        this.gameIsOver = false;
+        this.spawnHandler = spawnHandler;
     }
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
         parallaxHandler.onStep(gameHandler, deltaTime);
-        stepAll((List<Entity>)(List<?>)ships, deltaTime);
-        stepAll((List<Entity>)(List<?>)lasers, deltaTime);
-        stepAll((List<Entity>)(List<?>) pickups, deltaTime);
+        stepAll((Array<Entity>)(Array<?>)ships, deltaTime);
+        stepAll((Array<Entity>)(Array<?>)lasers, deltaTime);
+        stepAll((Array<Entity>)(Array<?>) pickups, deltaTime);
         particleHandler.onStep(gameHandler, deltaTime);
-        spawnHandler.onStep(gameHandler, deltaTime);
         hudHandler.onStep(gameHandler, deltaTime);
+        spawnHandler.onStep(gameHandler, deltaTime);
     }
 
     @Override
@@ -82,8 +77,8 @@ public class GameHandler implements GameObject {
         }
     }
 
-    private void stepAll(List<Entity> entities, float deltaTime) {
-        ListIterator<Entity> iterator = entities.listIterator();
+    private void stepAll(Array<Entity> entities, float deltaTime) {
+        ArrayIterator<Entity> iterator = entities.iterator();
         while (iterator.hasNext()) {
             Entity entity = iterator.next();
             if (entity.disposable) {

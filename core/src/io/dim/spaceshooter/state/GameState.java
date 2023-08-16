@@ -29,6 +29,7 @@ public class GameState extends ApplicationState {
     public static final float BUTTON_WIDTH = 28f;
     public static final float BUTTON_HEIGHT = 13.9f;
 
+    private final Paths paths;
     private final Assets assets = new Assets();
     private boolean gameRunning = true;
     private boolean stepping = true;
@@ -39,6 +40,7 @@ public class GameState extends ApplicationState {
         Viewport viewport,
         Stack<ApplicationState> manager) {
         super(camera, viewport, manager);
+        paths = new Paths(new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT));
         assets.backgrounds[0] = new Texture("backgrounds/backgrounds-0.png");
         assets.backgrounds[1] = new Texture("backgrounds/backgrounds-1.png");
         assets.backgrounds[2] = new Texture("backgrounds/backgrounds-2.png");
@@ -128,26 +130,20 @@ public class GameState extends ApplicationState {
     }
 
     private void init() {
-        gameHandler = new GameHandler(
-            WORLD_WIDTH, WORLD_HEIGHT,
-            new EntityFactory(
-                new Paths(new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT)),
-                assets),
+        gameHandler = new GameHandler(WORLD_WIDTH, WORLD_HEIGHT,
+            new EntityFactory(paths, assets),
             new ParticleHandler(assets.textureAtlas),
             new ParallaxHandler(assets.backgrounds,
-                WORLD_WIDTH, WORLD_HEIGHT,
-                true, false),
-            new SpawnHandler(),
-            new HudHandler(
-                assets.fontGenerator,
-                new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT),
-                assets.textureAtlas.findRegion("playerLife3_blue")));
+                WORLD_WIDTH, WORLD_HEIGHT, true, false),
+            new HudHandler(assets.fontGenerator,
+                assets.textureAtlas.findRegion("playerLife3_blue"),
+                new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT)),
+            new SpawnHandler());
 
         gameHandler.playerRef = gameHandler.factory.createPlayer(
             (float) WORLD_WIDTH / 2,
             (float) WORLD_HEIGHT / 4,
             () -> viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY())));
-
         gameHandler.ships.add(gameHandler.playerRef);
 
         gameRunning = true;

@@ -5,7 +5,6 @@ import io.dim.spaceshooter.factory.EntityFactory.EnemyType;
 import io.dim.spaceshooter.gameobject.GameObject;
 import io.dim.spaceshooter.gameobject.entity.ship.ShipEntity;
 import io.dim.spaceshooter.helper.MathUtils;
-import java.util.Arrays;
 import java.util.Stack;
 
 public class SpawnHandler implements GameObject {
@@ -31,7 +30,7 @@ public class SpawnHandler implements GameObject {
         timerLastPickup = Math.min(
             DURATION_BETWEEN_PICKUPS, timerLastPickup - deltaTime);
 
-        if (spawnJobs.empty() && gameHandler.ships.size() == 1) {
+        if (spawnJobs.empty() && gameHandler.ships.size == 1) {
             generateWave(gameHandler);
         }
 
@@ -39,7 +38,7 @@ public class SpawnHandler implements GameObject {
             Job nextJob = spawnJobs.peek();
             nextJob.timeToSpawn = nextJob.timeToSpawn - deltaTime;
             if (nextJob.timeToSpawn <= 0) {
-                gameHandler.ships.addAll(Arrays.asList(nextJob.aliens));
+                gameHandler.ships.addAll(nextJob.aliens);
                 spawnJobs.pop();
             }
         }

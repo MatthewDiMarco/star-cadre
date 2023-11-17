@@ -88,6 +88,10 @@ public class EntityFactory {
         }
     }
 
+    public void freeEnemy(EnemyShipEntity enemyShip) {
+        enemyShipPool.free(enemyShip);
+    }
+
     public PickupEntity createPickup(
         float xOrigin, float yOrigin, PickupType pickupType) {
         PickupEntity pickup = pickupPool.obtain();
@@ -126,6 +130,10 @@ public class EntityFactory {
         }
     }
 
+    public void freePickup(PickupEntity pickup) {
+        pickupPool.free(pickup);
+    }
+
     public LaserEntity createLaser(
         float xOrigin, float yOrigin, LaserType laserType) {
         TextureRegion laserTexture;
@@ -151,5 +159,9 @@ public class EntityFactory {
             default:
                 throw new RuntimeException("Error creating entity");
         }
+    }
+
+    public void freeLaser(LaserEntity laser) {
+        laserPool.free(laser);
     }
 }

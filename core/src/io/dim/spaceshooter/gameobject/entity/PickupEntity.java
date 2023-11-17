@@ -50,6 +50,7 @@ public class PickupEntity extends Entity {
     @Override
     public void onCreate(
         float xOrigin, float yOrigin, float width, float height, Assets assets) {
+        this.disposable = false;
         this.hitBox = new Rectangle(xOrigin, yOrigin, width, height);
         this.movementSpeed = 32f;
         this.draw = true;
@@ -64,6 +65,7 @@ public class PickupEntity extends Entity {
             gameHandler.playerRef.pickup = null;
             gameHandler.playerRef.setDefaultLaserState();
         }
+        gameHandler.factory.freePickup(this);
     }
 
     @Override

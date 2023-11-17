@@ -47,6 +47,8 @@ public class EnemyShipEntity extends ShipEntity {
         float xOrigin, float yOrigin, float width, float height, Assets assets) {
         this.hitBox = new Rectangle(
             xOrigin - width / 2, yOrigin - height / 2, width, height);
+        this.disposable = false;
+        this.currPointIdx = 0;
         this.movementSpeed = 60f;
         this.hp = 1;
         this.hpMax = hp;
@@ -80,6 +82,7 @@ public class EnemyShipEntity extends ShipEntity {
         gameHandler.rollRandomPickup(
             hitBox.x + hitBox.width / 2,
             hitBox.y + hitBox.height / 2);
+        gameHandler.factory.freeEnemy(this);
     }
 
     @Override

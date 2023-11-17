@@ -35,6 +35,7 @@ public class HudHandler implements GameObject {
         fontParameter.color = new Color(1, 1, 1, 0.3f);
         fontParameter.borderColor = new Color(0, 0, 0, 0.3f);
         this.font = fontGenerator.generateFont(fontParameter);
+        this.font.setUseIntegerPositions(false);
         this.font.getData().setScale(0.08f);
         this.shipIcon = shipIcon;
 

@@ -85,6 +85,7 @@ public class PlayerShipEntity extends ShipEntity {
         float xOrigin, float yOrigin, float width, float height, Assets assets) {
         this.hitBox = new Rectangle(
             xOrigin - width / 2, yOrigin - height / 2, width, height);
+        this.disposable = false;
         this.movementSpeed = 48f;
         this.hp = 3;
         this.hpMax = hp;

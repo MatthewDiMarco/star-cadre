@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.dim.spaceshooter.state.ApplicationState;
@@ -22,7 +23,7 @@ public class SpaceShooterGame extends ApplicationAdapter {
 	public void create() {
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
-		viewport = new StretchViewport(GameState.WORLD_WIDTH, GameState.WORLD_HEIGHT, camera);
+		viewport = new FitViewport(GameState.WORLD_WIDTH, GameState.WORLD_HEIGHT, camera);
 		applicationStateManager = new Stack<>();
 		applicationStateManager.push(new GameState(camera, viewport, applicationStateManager));
 	}

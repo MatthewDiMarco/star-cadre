@@ -55,6 +55,7 @@ public class LaserEntity extends Entity {
     public void onCreate(
         float xOrigin, float yOrigin, float width, float height, Assets assets) {
         TextureRegion texture = assets.textureAtlas.findRegion("laserBlue16");
+        this.disposable = false;
         this.hitBox = new Rectangle(xOrigin, yOrigin, width, height);
         this.movementSpeed = 25f;
         this.launchSpeedOffset = movementSpeed * 3;
@@ -75,6 +76,8 @@ public class LaserEntity extends Entity {
         } else {
             gameHandler.particleHandler.createLaserSmokeRedEffect(xx, yy);
         }
+
+        gameHandler.factory.freeLaser(this);
     }
 
     @Override

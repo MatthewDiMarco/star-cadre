@@ -34,6 +34,8 @@ public class SpaceShooterGame extends ApplicationAdapter {
 
 	@Override
 	public void render() {
+		Gdx.gl.glClearColor(0.227f, 0.18f, 0.247f, 1f);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		applicationStateManager.peek().update(Gdx.graphics.getDeltaTime());
 		applicationStateManager.peek().render(batch);
 		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {

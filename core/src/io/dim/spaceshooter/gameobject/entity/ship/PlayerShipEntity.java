@@ -12,6 +12,7 @@ import io.dim.spaceshooter.helper.Assets;
 
 public class PlayerShipEntity extends ShipEntity {
 
+    public static final float BG_ACC = 1.5f;
     public PickupEntity pickup;
     public TouchScreen touchScreen;
 
@@ -30,7 +31,7 @@ public class PlayerShipEntity extends ShipEntity {
         super.onStep(gameHandler, deltaTime);
 
         float[] boundaryDistances = new float[] {
-            gameHandler.boundary.height/3 - hitBox.y - hitBox.height, // up
+            gameHandler.boundary.height/2 - hitBox.y - hitBox.height, // up
             gameHandler.boundary.width - hitBox.x - hitBox.width, // right
             -hitBox.y, // down
             -hitBox.x // left
@@ -71,6 +72,10 @@ public class PlayerShipEntity extends ShipEntity {
         if (Gdx.input.isTouched() && gameHandler.playerRef.hp > 0) {
             float speed = gameHandler.playerRef.movementSpeed * deltaTime;
             Vector2 touchPoint = touchScreen.getTouchPoint();
+            touchPoint.set(touchPoint.x, touchPoint.y + 5);
+            float horizontalDir = (this.hitBox.x + this.hitBox.width / 2) - touchPoint.x;
+            gameHandler.parallaxHandler.accelerateHorizontal(
+                horizontalDir < 2f && horizontalDir > -2f ? 0f : BG_ACC * -Math.signum(horizontalDir));
             gameHandler.playerRef.fireLaser(gameHandler);
             gameHandler.playerRef.translate(touchPoint, speed, 2f, boundaryDistances);
         }
@@ -106,6 +111,9 @@ public class PlayerShipEntity extends ShipEntity {
     public void onDestroy(GameHandler gameHandler) {
         super.onDestroy(gameHandler);
         gameHandler.gameIsOver = true;
+        if (gameHandler.score > gameHandler.highscore) {
+            gameHandler.updateHighscore();
+        }
     }
 
     @Override

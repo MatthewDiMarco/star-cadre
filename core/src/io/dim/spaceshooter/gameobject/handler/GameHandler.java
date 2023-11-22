@@ -1,5 +1,7 @@
 package io.dim.spaceshooter.gameobject.handler;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -19,11 +21,13 @@ public class GameHandler implements GameObject {
     public final Rectangle boundary;
     public final EntityFactory factory;
 
+    public final ParallaxHandler parallaxHandler;
     public final ParticleHandler particleHandler;
     private final HudHandler hudHandler;
     private final SpawnHandler spawnHandler;
 
-    public int score = 0;
+    public int score;
+    public int highscore;
     public PlayerShipEntity playerRef;
     public Array<ShipEntity> ships = new Array<>();
     public Array<LaserEntity> lasers = new Array<>();;
@@ -32,18 +36,30 @@ public class GameHandler implements GameObject {
 
     public GameHandler(int width, int height,
         EntityFactory factory,
+        ParallaxHandler parallaxHandler,
         ParticleHandler particleHandler,
         HudHandler hudHandler,
         SpawnHandler spawnHandler) {
         boundary = new Rectangle(0, 0, width, height);
         this.factory = factory;
+        this.parallaxHandler = parallaxHandler;
         this.particleHandler = particleHandler;
         this.hudHandler = hudHandler;
         this.spawnHandler = spawnHandler;
+        this.score = 0;
+        Preferences prefs = Gdx.app.getPreferences("My Preferences");
+        highscore = prefs.getInteger("highscore");
+        prefs.flush();
+        hudHandler.setScores(highscore);
+    }
+
+    public int getWaveNumber() {
+        return spawnHandler.waveNumber;
     }
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
+        parallaxHandler.onStep(gameHandler, deltaTime);
         stepAll((Array<Entity>)(Array<?>)ships, deltaTime);
         stepAll((Array<Entity>)(Array<?>)lasers, deltaTime);
         stepAll((Array<Entity>)(Array<?>) pickups, deltaTime);
@@ -72,8 +88,10 @@ public class GameHandler implements GameObject {
         }
     }
 
-    public int getWaveNumber() {
-        return spawnHandler.waveNumber;
+    public void updateHighscore() {
+        Preferences prefs = Gdx.app.getPreferences("My Preferences");
+        prefs.putInteger("highscore", score);
+        prefs.flush();
     }
 
     private void stepAll(Array<Entity> entities, float deltaTime) {

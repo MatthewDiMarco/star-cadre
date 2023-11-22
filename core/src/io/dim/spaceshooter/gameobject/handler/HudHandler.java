@@ -16,12 +16,12 @@ public class HudHandler implements GameObject {
 
     public static final float SHAKE_DURATION = 0.25f;
 
-    private final float hudColLeft, hudColRight, hudRowTop;
+    private final float hudColLeft, hudColRight, hudRowTop, hudRowSecond;
     private final int iconWidth, iconHeight;
     private final BitmapFont font;
     private final TextureRegion shipIcon;
 
-    private int scoreDisplay, playerHp;
+    private int scoreDisplay, highscoreDisplay, playerHp;
     private float xShake, yShake;
     private float timerShake = SHAKE_DURATION;
 
@@ -39,10 +39,11 @@ public class HudHandler implements GameObject {
         this.font.getData().setScale(0.08f);
         this.shipIcon = shipIcon;
 
-        float hudMargin = font.getCapHeight() / 2;
+        float hudMargin = font.getCapHeight() / 4;
         this.hudColLeft = hudMargin;
         this.hudColRight = hudBoundary.width - hudMargin;
         this.hudRowTop = hudBoundary.height - hudMargin;
+        this.hudRowSecond = hudBoundary.height - font.getCapHeight() - hudMargin * 2;
         this.iconWidth = 5;
         this.iconHeight = 5;
 
@@ -66,12 +67,21 @@ public class HudHandler implements GameObject {
         if (scoreDisplay < gameHandler.score) {
             scoreDisplay++;
         }
+        if (highscoreDisplay < gameHandler.score) {
+            highscoreDisplay++;
+        }
     }
 
     @Override
     public void onDraw(SpriteBatch batch) {
-        font.draw(batch, String.format(Locale.getDefault(), "$ %d", scoreDisplay),
+        font.setColor(Color.GOLD);
+        font.draw(batch, String.format(Locale.getDefault(), "$ %d", highscoreDisplay),
             hudColLeft + xShake, hudRowTop + yShake, 0,
+            Align.left, false);
+
+        font.setColor(Color.WHITE);
+        font.draw(batch, String.format(Locale.getDefault(), "$ %d", scoreDisplay),
+            hudColLeft + xShake, hudRowSecond + yShake, 0,
             Align.left, false);
 
         font.draw(batch, String.format(Locale.getDefault(), "%d ", playerHp),
@@ -86,5 +96,10 @@ public class HudHandler implements GameObject {
             (hudRowTop - iconHeight) + yShake,
             iconWidth, iconHeight);
         batch.setColor(cc.r, cc.g, cc.b, 1f);
+    }
+
+    public void setScores(int high) {
+        scoreDisplay = 0;
+        highscoreDisplay = high;
     }
 }

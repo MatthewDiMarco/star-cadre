@@ -33,7 +33,6 @@ public class GameState extends ApplicationState {
     private final Assets assets = new Assets();
     private boolean gameRunning = true;
     private boolean stepping = true;
-    private ParallaxHandler parallaxHandler;
     private GameHandler gameHandler;
 
     public GameState(
@@ -69,7 +68,6 @@ public class GameState extends ApplicationState {
     @Override
     public void update(final float deltaTime) {
         handleInput(deltaTime);
-        parallaxHandler.onStep(gameHandler, deltaTime);
         if (stepping) {
             gameHandler.onStep(gameHandler, deltaTime);
             if (!gameRunning) stepping = false;
@@ -80,7 +78,7 @@ public class GameState extends ApplicationState {
     public void render(SpriteBatch batch) {
         batch.begin();
         bgViewport.apply();
-        parallaxHandler.onDraw(batch);
+        gameHandler.parallaxHandler.onDraw(batch);
         gameViewport.apply();
         gameHandler.onDraw(batch);
         if (gameHandler.gameIsOver) {
@@ -136,10 +134,10 @@ public class GameState extends ApplicationState {
     }
 
     private void init() {
-        parallaxHandler = new ParallaxHandler(assets.backgrounds,
-            WORLD_WIDTH, WORLD_HEIGHT, true, false);
         gameHandler = new GameHandler(WORLD_WIDTH, WORLD_HEIGHT,
             new EntityFactory(paths, assets),
+            new ParallaxHandler(assets.backgrounds,
+                WORLD_WIDTH, WORLD_HEIGHT),
             new ParticleHandler(assets.textureAtlas),
             new HudHandler(assets.fontGenerator,
                 assets.textureAtlas.findRegion("playerLife3_blue"),

@@ -8,7 +8,8 @@ import io.dim.spaceshooter.gameobject.GameObject;
 
 public class ParallaxHandler implements GameObject {
 
-    public static final float MAX_SCROLL_SPEED = 32f;
+    public static final float MIN_SCROLL_SPEED = 12f;
+    public static final float MAX_SCROLL_SPEED = 96f;
 
     private final float[][] backgroundOffsets = { {0, 0}, {0, 0}, {0, 0} }; // [image][x/y toggle]
     private final TextureRegion[] scrollingBackgrounds;
@@ -16,6 +17,7 @@ public class ParallaxHandler implements GameObject {
     private final float worldHeight;
     private final boolean verticalRepeat;
     private final boolean horizontalRepeat;
+    private float scrollSpeed;
 
     public ParallaxHandler(
         Texture[] backgrounds,
@@ -37,14 +39,17 @@ public class ParallaxHandler implements GameObject {
             scrollingBackgrounds[ii] = new TextureRegion(
                 backgrounds[ii], 0, 0, bgWidth, bgHeight);
         }
+
+        this.scrollSpeed = 0f;
     }
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
+        scrollSpeed = Math.min(gameHandler.getWaveNumber() + MIN_SCROLL_SPEED, MAX_SCROLL_SPEED);
         int base = backgroundOffsets.length * 2;
         for (int ii = 0; ii < backgroundOffsets.length; ii++) {
-            backgroundOffsets[ii][0] += deltaTime * MAX_SCROLL_SPEED / base;
-            backgroundOffsets[ii][1] += deltaTime * MAX_SCROLL_SPEED / base;
+            backgroundOffsets[ii][0] += deltaTime * scrollSpeed / base;
+            backgroundOffsets[ii][1] += deltaTime * scrollSpeed / base;
             base = base / 2;
         }
     }

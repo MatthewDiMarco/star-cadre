@@ -3,7 +3,6 @@ package io.dim.spaceshooter.state;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -34,13 +33,15 @@ public class GameState extends ApplicationState {
     private final Assets assets = new Assets();
     private boolean gameRunning = true;
     private boolean stepping = true;
+    private ParallaxHandler parallaxHandler;
     private GameHandler gameHandler;
 
     public GameState(
         OrthographicCamera camera,
-        Viewport viewport,
+        Viewport bgViewport,
+        Viewport gameViewport,
         Stack<ApplicationState> manager) {
-        super(camera, viewport, manager);
+        super(camera, bgViewport, gameViewport, manager);
         paths = new Paths(new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT));
         assets.backgrounds[0] = new Texture("backgrounds/backgrounds-0.png");
         assets.backgrounds[1] = new Texture("backgrounds/backgrounds-1.png");
@@ -68,6 +69,7 @@ public class GameState extends ApplicationState {
     @Override
     public void update(final float deltaTime) {
         handleInput(deltaTime);
+        parallaxHandler.onStep(gameHandler, deltaTime);
         if (stepping) {
             gameHandler.onStep(gameHandler, deltaTime);
             if (!gameRunning) stepping = false;
@@ -76,9 +78,10 @@ public class GameState extends ApplicationState {
 
     @Override
     public void render(SpriteBatch batch) {
-        Gdx.gl.glClearColor(0.227f, 0.18f, 0.247f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
+        bgViewport.apply();
+        parallaxHandler.onDraw(batch);
+        gameViewport.apply();
         gameHandler.onDraw(batch);
         if (gameHandler.gameIsOver) {
             Color cc = batch.getColor();
@@ -120,7 +123,7 @@ public class GameState extends ApplicationState {
             float xButtonEnd = (float)(WORLD_WIDTH / 2) + BUTTON_WIDTH / 2;
             float yButtonStart = (float)(WORLD_HEIGHT / 2) - BUTTON_HEIGHT / 2;
             float yButtonEnd = (float)(WORLD_HEIGHT / 2) + BUTTON_HEIGHT / 2;
-            Vector2 touchPoint = viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
+            Vector2 touchPoint = gameViewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY()));
             if (touchPoint.x > xButtonStart && touchPoint.x < xButtonEnd &&
                 touchPoint.y > yButtonStart && touchPoint.y < yButtonEnd) {
                 init();
@@ -133,11 +136,11 @@ public class GameState extends ApplicationState {
     }
 
     private void init() {
+        parallaxHandler = new ParallaxHandler(assets.backgrounds,
+            WORLD_WIDTH, WORLD_HEIGHT, true, false);
         gameHandler = new GameHandler(WORLD_WIDTH, WORLD_HEIGHT,
             new EntityFactory(paths, assets),
             new ParticleHandler(assets.textureAtlas),
-            new ParallaxHandler(assets.backgrounds,
-                WORLD_WIDTH, WORLD_HEIGHT, true, false),
             new HudHandler(assets.fontGenerator,
                 assets.textureAtlas.findRegion("playerLife3_blue"),
                 new Rectangle(0, 0, WORLD_WIDTH, WORLD_HEIGHT)),
@@ -146,7 +149,7 @@ public class GameState extends ApplicationState {
         gameHandler.playerRef = gameHandler.factory.createPlayer(
             (float) WORLD_WIDTH / 2,
             (float) WORLD_HEIGHT / 4,
-            () -> viewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY())));
+            () -> gameViewport.unproject(new Vector2(Gdx.input.getX(), Gdx.input.getY())));
         gameHandler.ships.add(gameHandler.playerRef);
 
         gameRunning = true;

@@ -8,15 +8,18 @@ import java.util.Stack;
 public abstract class ApplicationState {
 
     protected OrthographicCamera camera;
-    protected Viewport viewport;
+    protected Viewport bgViewport;
+    protected Viewport gameViewport;
     protected Stack<ApplicationState> manager;
 
     public ApplicationState(
         OrthographicCamera camera,
-        Viewport viewport,
+        Viewport bgViewport,
+        Viewport gameViewport,
         Stack<ApplicationState> manager) {
         this.camera = camera;
-        this.viewport = viewport;
+        this.bgViewport = bgViewport;
+        this.gameViewport = gameViewport;
         this.manager = manager;
 
     }

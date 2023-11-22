@@ -20,7 +20,6 @@ public class GameHandler implements GameObject {
     public final EntityFactory factory;
 
     public final ParticleHandler particleHandler;
-    private final ParallaxHandler parallaxHandler;
     private final HudHandler hudHandler;
     private final SpawnHandler spawnHandler;
 
@@ -34,20 +33,17 @@ public class GameHandler implements GameObject {
     public GameHandler(int width, int height,
         EntityFactory factory,
         ParticleHandler particleHandler,
-        ParallaxHandler parallaxHandler,
         HudHandler hudHandler,
         SpawnHandler spawnHandler) {
         boundary = new Rectangle(0, 0, width, height);
         this.factory = factory;
         this.particleHandler = particleHandler;
-        this.parallaxHandler = parallaxHandler;
         this.hudHandler = hudHandler;
         this.spawnHandler = spawnHandler;
     }
 
     @Override
     public void onStep(GameHandler gameHandler, float deltaTime) {
-        parallaxHandler.onStep(gameHandler, deltaTime);
         stepAll((Array<Entity>)(Array<?>)ships, deltaTime);
         stepAll((Array<Entity>)(Array<?>)lasers, deltaTime);
         stepAll((Array<Entity>)(Array<?>) pickups, deltaTime);
@@ -58,7 +54,6 @@ public class GameHandler implements GameObject {
 
     @Override
     public void onDraw(SpriteBatch batch) {
-        parallaxHandler.onDraw(batch);
         for (ShipEntity ship : ships) ship.onDraw(batch);
         for (LaserEntity laser : lasers) laser.onDraw(batch);
         for (PickupEntity pickupEntity : pickups) pickupEntity.onDraw(batch);
@@ -75,6 +70,10 @@ public class GameHandler implements GameObject {
                 spawnHandler.timerLastPickup = SpawnHandler.DURATION_BETWEEN_PICKUPS;
             }
         }
+    }
+
+    public int getWaveNumber() {
+        return spawnHandler.waveNumber;
     }
 
     private void stepAll(Array<Entity> entities, float deltaTime) {
